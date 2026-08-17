@@ -1,6 +1,6 @@
 import { DASALON_LOGO } from "./brand-logos";
 
-const templateSlots = Array.from({ length: 6 }, (_, index) => index + 1);
+const templateSlots = Array.from({ length: 4 }, (_, index) => index + 3);
 
 function Brand() {
   return (
@@ -49,6 +49,62 @@ export default function Home() {
             </div>
 
             <div className="template-grid">
+              <article className="template-card template-card-live">
+                <a
+                  className="template-link"
+                  href="/template-1"
+                  aria-label="Open the Maison Élan salon template"
+                >
+                  <div className="template-preview template-preview-live">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/template-1/location-bandra.jpg"
+                      alt="Fictional Maison Élan salon atelier"
+                      width={1536}
+                      height={1024}
+                    />
+                    <div className="template-preview-identity">
+                      <span>Private hair atelier</span>
+                      <strong>Maison Élan</strong>
+                    </div>
+                    <span className="template-open">Explore template <span aria-hidden="true">↗</span></span>
+                    <span className="template-number">01</span>
+                  </div>
+                  <div className="template-meta template-meta-live">
+                    <span>Maison Élan</span>
+                    <span>Luxury salon · Live</span>
+                  </div>
+                </a>
+              </article>
+
+              <article className="template-card template-card-live">
+                <a
+                  className="template-link"
+                  href="/template-2"
+                  aria-label="Open the Atelier salon template"
+                >
+                  <div className="template-preview template-preview-live">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/template-2/atelier-hero-higgsfield-clean.png"
+                      alt="Atelier private beauty house with an elegant female model"
+                      width={2048}
+                      height={1152}
+                    />
+                    <div className="template-preview-identity">
+                      <span>The private beauty house</span>
+                      <strong>Atelier</strong>
+                    </div>
+                    <span className="template-open">Explore template <span aria-hidden="true">↗</span></span>
+                    <span className="template-number">02</span>
+                  </div>
+                  <div className="template-meta template-meta-live">
+                    <span>Atelier</span>
+                    <span>Immersive salon · Live</span>
+                  </div>
+                </a>
+              </article>
+
               {templateSlots.map((slot) => (
                 <article className="template-card" key={slot}>
                   <div
