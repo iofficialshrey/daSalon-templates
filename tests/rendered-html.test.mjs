@@ -1,36 +1,32 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+const appOutput = new URL("../.next/server/app/", import.meta.url);
 
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
+function readRoute(fileName) {
+  return readFile(new URL(fileName, appOutput), "utf8");
 }
 
-test("renders the Da Salon template collection", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+test("renders the da Salon template collection", async () => {
+  const html = await readRoute("index.html");
 
-  const html = await response.text();
   assert.match(html, /<title>Da Salon — Custom Templates<\/title>/i);
-  assert.match(html, /Your salon\. Your brand\. Your frontend/);
-  assert.match(html, /Designed for every salon brand/);
+  assert.match(html, /Designed Around Your Brand, Built for Your Customers/);
+  assert.match(html, /href="\/template-1"/);
+  assert.match(html, /href="\/template-2"/);
   assert.match(html, /Coming soon/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
+});
+
+test("prerenders both salon templates", async () => {
+  const [templateOne, templateTwo] = await Promise.all([
+    readRoute("template-1.html"),
+    readRoute("template-2.html"),
+  ]);
+
+  assert.match(templateOne, /<title>Maison Élan — Private Hair Atelier<\/title>/i);
+  assert.match(templateOne, /Book an appointment/i);
+  assert.match(templateTwo, /<title>Atelier — Beauty, Made Personal<\/title>/i);
+  assert.match(templateTwo, /Beauty, made/);
 });
