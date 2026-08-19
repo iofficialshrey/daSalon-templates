@@ -113,7 +113,7 @@ const venues: Venue[] = [
     address: "Pali Hill, Bandra West",
     note: "The original house",
     hours: "Open until 8:30 PM",
-    image: "/template-2/location-bandra.jpg",
+    image: "/brand-home-2/location-bandra.jpg",
   },
   {
     name: "The Lodhi House",
@@ -121,7 +121,7 @@ const venues: Venue[] = [
     address: "Lodhi Colony, South Delhi",
     note: "Private colour rooms",
     hours: "Open until 8:00 PM",
-    image: "/template-2/location-lodhi.jpg",
+    image: "/brand-home-2/location-lodhi.jpg",
   },
   {
     name: "Indiranagar Studio",
@@ -129,7 +129,7 @@ const venues: Venue[] = [
     address: "12th Main, Indiranagar",
     note: "Garden ritual terrace",
     hours: "Open until 9:00 PM",
-    image: "/template-2/location-indiranagar.jpg",
+    image: "/brand-home-2/location-indiranagar.jpg",
   },
 ];
 
@@ -311,7 +311,7 @@ export default function Atelier() {
   const selectedVenueData = venues.find((venue) => venue.name === selectedVenue) ?? venues[0];
 
   return (
-    <div className="atelier-template" id="top">
+    <div className="atelier-brand-home" id="top">
       <header className="me-header">
         <a className="me-logo" href="#top" aria-label="Atelier home">
           <Mark />
@@ -347,7 +347,7 @@ export default function Atelier() {
         >
           <div className="me-hero-media" aria-hidden="true">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/template-2/atelier-hero-higgsfield-clean.png" alt="" width={2048} height={1152} />
+            <img src="/brand-home-2/atelier-hero-higgsfield-clean.png" alt="" width={2048} height={1152} />
             <div className="me-hero-vignette" />
             <div className="me-hero-glass me-hero-glass-one" />
             <div className="me-hero-glass me-hero-glass-two" />
@@ -378,7 +378,7 @@ export default function Atelier() {
           <div className="at-experience-sticky">
             <div className="at-scene">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="at-scene-image" src="/template-2/atelier-entry-higgsfield.png" alt="A calm private salon interior beyond open timber doors" width={2048} height={1152} />
+              <img className="at-scene-image" src="/brand-home-2/atelier-entry-higgsfield.png" alt="A calm private salon interior beyond open timber doors" width={2048} height={1152} />
               <div className="at-scene-vignette" aria-hidden="true" />
               <div className="at-portal at-portal-one" aria-hidden="true" />
               <div className="at-portal at-portal-two" aria-hidden="true" />
@@ -419,7 +419,7 @@ export default function Atelier() {
               <span className="me-ritual-frame frame-two" aria-hidden="true" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/template-2/atelier-ritual.jpg"
+                src="/brand-home-2/atelier-ritual.jpg"
                 alt="Woman receiving an attentive luxury hair ritual in a mirror-lined salon"
                 width={2336}
                 height={1744}

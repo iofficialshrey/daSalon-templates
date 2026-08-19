@@ -113,7 +113,7 @@ const venues: Venue[] = [
     address: "Pali Hill, Bandra West",
     note: "The original house",
     hours: "Open until 8:30 PM",
-    image: "/template-1/location-bandra.jpg",
+    image: "/brand-home-1/location-bandra.jpg",
   },
   {
     name: "The Lodhi House",
@@ -121,7 +121,7 @@ const venues: Venue[] = [
     address: "Lodhi Colony, South Delhi",
     note: "Private colour rooms",
     hours: "Open until 8:00 PM",
-    image: "/template-1/location-lodhi.jpg",
+    image: "/brand-home-1/location-lodhi.jpg",
   },
   {
     name: "Indiranagar Studio",
@@ -129,7 +129,7 @@ const venues: Venue[] = [
     address: "12th Main, Indiranagar",
     note: "Garden ritual terrace",
     hours: "Open until 9:00 PM",
-    image: "/template-1/location-indiranagar.jpg",
+    image: "/brand-home-1/location-indiranagar.jpg",
   },
 ];
 
@@ -285,9 +285,9 @@ export default function MaisonElan() {
               muted
               loop
               playsInline
-              poster="/template-1/maison-elan-hero.jpg"
+              poster="/brand-home-1/maison-elan-hero.jpg"
             >
-              <source src="/template-1/maison-elan-hero.mp4" type="video/mp4" />
+              <source src="/brand-home-1/maison-elan-hero.mp4" type="video/mp4" />
             </video>
             <div className="me-hero-vignette" />
             <div className="me-hero-glass me-hero-glass-one" />
@@ -329,7 +329,7 @@ export default function MaisonElan() {
               <span className="me-ritual-frame frame-two" aria-hidden="true" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/template-1/maison-elan-ritual.jpg"
+                src="/brand-home-1/maison-elan-ritual.jpg"
                 alt="Woman receiving an attentive luxury hair ritual in a mirror-lined salon"
                 width={2336}
                 height={1744}

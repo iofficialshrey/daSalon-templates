@@ -1,5 +1,5 @@
 import Atelier from "./atelier";
 
-export default function TemplateTwoPage() {
+export default function BrandHomeTwoPage() {
   return <Atelier />;
 }

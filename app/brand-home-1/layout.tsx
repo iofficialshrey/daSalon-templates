@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import "./template.css";
+import "./brand-home.css";
 
 export const metadata: Metadata = {
   title: "Maison Élan — Private Hair Atelier",
   description:
-    "A luxury multi-venue salon storefront template with services, memberships, loyalty, gift cards and online booking.",
+    "A luxury multi-venue salon storefront Brand Home with services, memberships, loyalty, gift cards and online booking.",
 };
 
-export default function TemplateOneLayout({
+export default function BrandHomeOneLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return children;

@@ -1,5 +1,5 @@
 import MaisonElan from "./maison-elan";
 
-export default function TemplateOnePage() {
+export default function BrandHomeOnePage() {
   return <MaisonElan />;
 }

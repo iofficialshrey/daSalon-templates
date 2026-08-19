@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./template.css";
+import "./brand-home.css";
 
 export const metadata: Metadata = {
   title: "Atelier — Beauty, Made Personal",
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "An immersive multi-venue beauty storefront with services, offers, membership, loyalty, gift cards and online booking.",
 };
 
-export default function TemplateTwoLayout({
+export default function BrandHomeTwoLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return children;

@@ -1,4 +1,4 @@
-# da Salon Templates
+# da Salon Brand Home
 
 A collection of custom salon and spa frontends built with Next.js.
 
@@ -23,8 +23,8 @@ npm run lint
 npm test
 ```
 
-`npm test` creates a production build and verifies that the collection and both
-template routes are prerendered correctly.
+`npm test` creates a production build and verifies that the collection and all
+Brand Home routes are prerendered correctly.
 
 ## Deploy to Vercel
 

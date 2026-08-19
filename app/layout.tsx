@@ -10,8 +10,8 @@ const manrope = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Da Salon — Custom Templates",
-  description: "A collection of custom frontends for salons and spas.",
+  title: "da Salon Brand Home",
+  description: "A collection of custom Brand Homes for salons and spas.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
