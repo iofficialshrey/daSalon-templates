@@ -37,3 +37,11 @@ Import the GitHub repository into Vercel. Vercel will detect Next.js and use:
 
 No environment variables, databases, storage bindings, or custom output
 directory are required for the current site.
+
+## Backend integration boundary
+
+The six Brand Homes currently keep catalog, availability, and booking data in
+the frontend. `app/salon-booking.tsx` is the shared integration point for a
+future availability and booking API. It deliberately keeps the current demo
+flow local, so personal data is not transmitted until a backend endpoint and
+its validation contract are added.

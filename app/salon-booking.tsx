@@ -14,6 +14,8 @@ type SalonBookingProps = {
   onClose: () => void;
 };
 
+// Future API boundary: replace these demo slots with salon-specific availability
+// while keeping the booking UI independent from the backend response format.
 const bookingDates = ["Today, 18 Aug", "Tomorrow, 19 Aug", "Thursday, 20 Aug"];
 const bookingTimes = ["10:00", "11:30", "14:00", "16:30", "18:00"];
 
@@ -37,6 +39,8 @@ export default function SalonBooking({ brand, services, onClose }: SalonBookingP
 
   function confirm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // A booking API submission belongs here. Until that endpoint exists, no
+    // personal data leaves the browser and the modal stays a visual prototype.
     setStep(4);
   }
 
