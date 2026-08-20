@@ -16,7 +16,9 @@ test("renders da Salon Brand Home", async () => {
   assert.match(html, /href="\/brand-home-1"/);
   assert.match(html, /href="\/brand-home-2"/);
   assert.match(html, /href="\/brand-home-3"/);
+  assert.match(html, /href="\/brand-home-4"/);
   assert.match(html, /Serein House/);
+  assert.match(html, /Paloma/);
   assert.match(html, /Coming soon/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });

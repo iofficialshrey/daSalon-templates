@@ -1,6 +1,6 @@
 import { DASALON_LOGO } from "./brand-logos";
 
-const brandHomeSlots = Array.from({ length: 3 }, (_, index) => index + 4);
+const brandHomeSlots = Array.from({ length: 2 }, (_, index) => index + 5);
 
 function Brand() {
   return (
@@ -131,6 +131,34 @@ export default function Home() {
                   <div className="brand-home-meta brand-home-meta-live">
                     <span>Serein House</span>
                     <span>Immersive spa · Live</span>
+                  </div>
+                </a>
+              </article>
+
+              <article className="brand-home-card brand-home-card-live">
+                <a
+                  className="brand-home-link"
+                  href="/brand-home-4"
+                  aria-label="Open the Paloma hair studio Brand Home"
+                >
+                  <div className="brand-home-preview brand-home-preview-live">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/brand-home-4/hero.png"
+                      alt="Paloma editorial hair studio portrait"
+                      width={1672}
+                      height={941}
+                    />
+                    <div className="brand-home-preview-identity">
+                      <span>Hair, form and colour</span>
+                      <strong>Paloma</strong>
+                    </div>
+                    <span className="brand-home-open">Explore Brand Home <span aria-hidden="true">↗</span></span>
+                    <span className="brand-home-number">04</span>
+                  </div>
+                  <div className="brand-home-meta brand-home-meta-live">
+                    <span>Paloma</span>
+                    <span>Editorial salon · Live</span>
                   </div>
                 </a>
               </article>
