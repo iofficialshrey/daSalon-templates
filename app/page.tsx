@@ -1,6 +1,6 @@
 import { DASALON_LOGO } from "./brand-logos";
 
-const brandHomeSlots = Array.from({ length: 2 }, (_, index) => index + 5);
+const brandHomeSlots = Array.from({ length: 1 }, (_, index) => index + 6);
 
 function Brand() {
   return (
@@ -159,6 +159,34 @@ export default function Home() {
                   <div className="brand-home-meta brand-home-meta-live">
                     <span>Paloma</span>
                     <span>Editorial salon · Live</span>
+                  </div>
+                </a>
+              </article>
+
+              <article className="brand-home-card brand-home-card-live">
+                <a
+                  className="brand-home-link"
+                  href="/brand-home-5"
+                  aria-label="Open the Oru spa Brand Home"
+                >
+                  <div className="brand-home-preview brand-home-preview-live brand-home-preview-oru">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/brand-home-3/threshold.png"
+                      alt="A serene architectural threshold for Oru Spa"
+                      width={1680}
+                      height={945}
+                    />
+                    <div className="brand-home-preview-identity">
+                      <span>A slower rhythm</span>
+                      <strong>oru</strong>
+                    </div>
+                    <span className="brand-home-open">Explore Brand Home <span aria-hidden="true">↗</span></span>
+                    <span className="brand-home-number">05</span>
+                  </div>
+                  <div className="brand-home-meta brand-home-meta-live">
+                    <span>Oru Spa</span>
+                    <span>Scroll-led spa · Live</span>
                   </div>
                 </a>
               </article>

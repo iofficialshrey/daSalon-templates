@@ -17,18 +17,21 @@ test("renders da Salon Brand Home", async () => {
   assert.match(html, /href="\/brand-home-2"/);
   assert.match(html, /href="\/brand-home-3"/);
   assert.match(html, /href="\/brand-home-4"/);
+  assert.match(html, /href="\/brand-home-5"/);
   assert.match(html, /Serein House/);
   assert.match(html, /Paloma/);
+  assert.match(html, /Oru Spa/);
   assert.match(html, /Coming soon/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
 
 test("prerenders all standalone salon Brand Homes", async () => {
-  const [brandHomeOne, brandHomeTwo, brandHomeThree, brandHomeFour] = await Promise.all([
+  const [brandHomeOne, brandHomeTwo, brandHomeThree, brandHomeFour, brandHomeFive] = await Promise.all([
     readRoute("brand-home-1.html"),
     readRoute("brand-home-2.html"),
     readRoute("brand-home-3.html"),
     readRoute("brand-home-4.html"),
+    readRoute("brand-home-5.html"),
   ]);
 
   assert.match(brandHomeOne, /<title>Maison Élan — Private Hair Atelier<\/title>/i);
@@ -39,10 +42,26 @@ test("prerenders all standalone salon Brand Homes", async () => {
   assert.match(brandHomeThree, /brand-home-3-site\/index\.html/);
   assert.match(brandHomeFour, /<title>Paloma — Hair, Form and Colour<\/title>/i);
   assert.match(brandHomeFour, /Form follows/);
+  assert.match(brandHomeFive, /<title>Oru Spa \| Quiet Begins Here<\/title>/i);
+  assert.match(brandHomeFive, /Quiet begins here/);
 });
 
 test("ships the Serein House entrance film at its runtime URL", async () => {
   const video = await stat(new URL("../public/assets/spa-entrance.mp4", import.meta.url));
 
   assert.ok(video.size > 1_000_000, "Serein House entrance film is missing or unexpectedly empty");
+});
+
+test("ships Maison Élan with both cinematic scrub clips", async () => {
+  const html = await readRoute("brand-home-1.html");
+  const [arrival, ritual] = await Promise.all([
+    stat(new URL("../public/brand-home-1/scroll-film/leg-01.mp4", import.meta.url)),
+    stat(new URL("../public/brand-home-1/scroll-film/leg-02.mp4", import.meta.url)),
+  ]);
+
+  assert.match(html, /<title>Maison Élan — Private Hair Atelier<\/title>/i);
+  assert.match(html, /The ritual begins before the chair/);
+  assert.match(html, /Arrive where care becomes ritual/);
+  assert.ok(arrival.size > 1_000_000, "Maison Élan arrival clip is missing or unexpectedly empty");
+  assert.ok(ritual.size > 1_000_000, "Maison Élan ritual clip is missing or unexpectedly empty");
 });

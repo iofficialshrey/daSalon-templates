@@ -219,6 +219,22 @@ h2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.brand-home-preview-oru {
+  background: #dbe6dc;
+}
+
+.brand-home-preview-oru img {
+  filter: saturate(.42) hue-rotate(42deg) contrast(.86) brightness(1.08);
+}
+
+.brand-home-preview-oru::after {
+  background: linear-gradient(90deg, rgb(219 230 220 / 18%), transparent 50%, rgb(23 51 43 / 14%));
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
 .brand-home-card {
   min-width: 0;
 }
