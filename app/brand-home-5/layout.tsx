@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./brand-home.css";
 
 export const metadata: Metadata = {
-  title: "Oru Spa | Quiet Begins Here",
+  title: "Oru Spa | The Art of Exhale",
   description:
-    "A contemporary spa Brand Home with scroll-led storytelling, treatments, membership, locations, and booking.",
+    "Oru Spa is an expressive urban spa for touch, water, warmth, and a slower rhythm, with treatments, journeys, membership, gifting, and booking.",
 };
 
 export default function BrandHomeFiveLayout({

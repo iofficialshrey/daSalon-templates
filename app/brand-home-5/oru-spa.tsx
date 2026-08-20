@@ -3,335 +3,245 @@
 import { useEffect, useRef, useState } from "react";
 import SalonBooking, { type BookingService } from "../salon-booking";
 
-const services: BookingService[] = [
-  { name: "Grounding Massage", duration: "75 min", price: "₹4,800" },
-  { name: "Mineral Facial", duration: "60 min", price: "₹3,900" },
-  { name: "Warm Stone Ritual", duration: "90 min", price: "₹5,600" },
-  { name: "Water and Steam", duration: "45 min", price: "₹2,800" },
+const services: (BookingService & { index: string; note: string })[] = [
+  { index: "01", name: "Deep Exhale Massage", duration: "75 min", price: "₹4,900", note: "Long pressure, warm botanical oil, and breath-led pacing for a body that has been holding too much." },
+  { index: "02", name: "Oru Skin Reset", duration: "60 min", price: "₹4,200", note: "A barrier-first facial with gentle enzymes, cool sculpting tools, and concentrated hydration." },
+  { index: "03", name: "Headspace Ritual", duration: "45 min", price: "₹3,300", note: "Scalp, neck, jaw, and facial release for screen-heavy days and restless sleep." },
+  { index: "04", name: "Mineral Body Polish", duration: "60 min", price: "₹4,500", note: "Mineral exfoliation, a warm rinse, and eucalyptus body serum for smooth, rested skin." },
 ];
 
-const chapters = [
-  {
-    id: "arrival",
-    label: "Arrival",
-    title: "Quiet begins here.",
-    body: "Step out of the city and into a slower rhythm designed around touch, water, warmth, and rest.",
-    align: "left",
-  },
-  {
-    id: "ritual",
-    label: "Ritual",
-    title: "Choose your ritual.",
-    body: "Massage, skin, and hydrotherapy sessions are shaped around what your body needs today.",
-    align: "right",
-  },
-  {
-    id: "touch",
-    label: "Touch",
-    title: "Attention changes everything.",
-    body: "Every treatment is unhurried, tactile, and guided by trained hands rather than a fixed script.",
-    align: "left",
-  },
-  {
-    id: "return",
-    label: "Return",
-    title: "Leave feeling more like yourself.",
-    body: "Book one visit or make restoration part of your week with the Oru House membership.",
-    align: "right",
-  },
-] as const;
-
-const treatmentNotes = [
-  "Long, grounding pressure with breath-led pacing and warm botanical oil.",
-  "A barrier-first skin ritual with mineral compresses and a cooling sculptural massage.",
-  "Heated basalt, slow stretching, and deep pressure for tired backs and shoulders.",
-  "Private steam, contrast bathing, and a quiet recovery lounge with seasonal tea.",
+const journeys = [
+  { index: "A", title: "The Deep Exhale", time: "120 min", price: "₹7,200", note: "Steam, full-body massage, and quiet pool time." },
+  { index: "B", title: "Skin and Stillness", time: "105 min", price: "₹6,400", note: "Mineral steam, Skin Reset, and cooling tea." },
+  { index: "C", title: "Sunday at Oru", time: "180 min", price: "₹9,800", note: "Pool, massage, seasonal lunch, and no clock." },
 ];
 
 const locations = [
-  { city: "Mumbai", address: "Bandra West", hours: "Daily, 9:00 to 21:00" },
-  { city: "Bengaluru", address: "Indiranagar", hours: "Daily, 8:00 to 20:00" },
+  { city: "Mumbai", area: "Bandra West", hours: "09:00 to 21:00" },
+  { city: "Bengaluru", area: "Indiranagar", hours: "08:00 to 20:00" },
 ];
 
 function OruMark() {
   return (
-    <span className="oru-mark" aria-hidden="true">
-      <i />
-      <b>oru</b>
+    <span className="o2-mark">
+      <span aria-hidden="true"><i /><b /></span>
+      <strong>oru</strong>
     </span>
   );
 }
 
+function clamp(value: number) {
+  return Math.min(1, Math.max(0, value));
+}
+
 export default function OruSpa() {
-  const journeyRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [activeChapter, setActiveChapter] = useState(0);
-  const [activeTreatment, setActiveTreatment] = useState(0);
+  const homeRef = useRef<HTMLDivElement>(null);
+  const [activeService, setActiveService] = useState(0);
+  const [giftValue, setGiftValue] = useState("₹5,000");
   const [bookingOpen, setBookingOpen] = useState(false);
 
   useEffect(() => {
-    const journey = journeyRef.current;
-    const video = videoRef.current;
-    if (!journey || !video) return;
+    const home = homeRef.current;
+    if (!home) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let destroyed = false;
     let frame = 0;
-    let ready = false;
-    let objectUrl = "";
-    let current = 0;
-    let target = 0;
-    let lastActive = -1;
-    const controller = new AbortController();
+    let scheduled = false;
 
-    const measure = () => {
-      const rect = journey.getBoundingClientRect();
-      const distance = Math.max(rect.height - window.innerHeight, 1);
-      target = Math.min(1, Math.max(0, -rect.top / distance));
-      const nextActive = Math.min(chapters.length - 1, Math.floor(target * chapters.length));
-      if (nextActive !== lastActive) {
-        lastActive = nextActive;
-        setActiveChapter(nextActive);
-      }
+    const paint = () => {
+      scheduled = false;
+      const pageDistance = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      home.style.setProperty("--o2-page", clamp(window.scrollY / pageDistance).toFixed(4));
+      home.querySelectorAll<HTMLElement>("[data-o2-section]").forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const range = window.innerHeight + rect.height;
+        const progress = clamp((window.innerHeight - rect.top) / range);
+        section.style.setProperty("--o2-view", progress.toFixed(4));
+      });
     };
 
-    const tick = () => {
-      if (destroyed) return;
-      current += (target - current) * 0.085;
-      journey.style.setProperty("--oru-scroll", current.toFixed(4));
-      if (ready && !video.seeking && Number.isFinite(video.duration)) {
-        const time = Math.min(video.duration - 0.03, Math.max(0, current * video.duration));
-        if (Math.abs(video.currentTime - time) > 0.018) {
-          try {
-            video.currentTime = time;
-          } catch {
-            // The exact poster remains visible while the decoder catches up.
-          }
-        }
-      }
-      frame = window.requestAnimationFrame(tick);
+    const requestPaint = () => {
+      if (scheduled) return;
+      scheduled = true;
+      frame = window.requestAnimationFrame(paint);
     };
 
-    const showPaintedFrame = () => {
-      journey.dataset.videoPainted = "true";
-    };
-
-    const prime = async () => {
-      if (!ready) return;
-      try {
-        await video.play();
-        video.pause();
-      } catch {
-        // Muted inline scrubbing can continue without an autoplay retry loop.
-      }
-    };
-
-    const loadFilm = async () => {
-      if (reducedMotion) return;
-      try {
-        const response = await fetch("/assets/spa-entrance.mp4", { signal: controller.signal });
-        if (!response.ok) throw new Error("Film unavailable");
-        const blob = await response.blob();
-        if (destroyed) return;
-        objectUrl = URL.createObjectURL(blob);
-        video.src = objectUrl;
-        video.load();
-      } catch (error) {
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
-          journey.dataset.videoFailed = "true";
-        }
-      }
-    };
-
-    const onMetadata = () => {
-      ready = true;
-      measure();
-    };
-    const onScroll = () => measure();
-    const onResize = () => measure();
-
-    video.addEventListener("loadedmetadata", onMetadata);
-    video.addEventListener("seeked", showPaintedFrame);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-    window.addEventListener("pointerdown", prime, { once: true, passive: true });
-    measure();
-    void loadFilm();
-    frame = window.requestAnimationFrame(tick);
-
+    paint();
+    window.addEventListener("scroll", requestPaint, { passive: true });
+    window.addEventListener("resize", requestPaint);
     return () => {
-      destroyed = true;
-      controller.abort();
       window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("pointerdown", prime);
-      video.removeEventListener("loadedmetadata", onMetadata);
-      video.removeEventListener("seeked", showPaintedFrame);
-      video.pause();
-      video.removeAttribute("src");
-      video.load();
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-      journey.style.removeProperty("--oru-scroll");
+      window.removeEventListener("scroll", requestPaint);
+      window.removeEventListener("resize", requestPaint);
     };
   }, []);
 
-  function jumpToChapter(index: number) {
-    document.getElementById(chapters[index].id)?.scrollIntoView({ behavior: "smooth" });
-  }
-
   return (
-    <div className="oru-home">
-      <header className="oru-nav">
-        <a href="#arrival" aria-label="Oru Spa home"><OruMark /></a>
+    <div className="o2-home" id="o2-top" ref={homeRef}>
+      <div className="o2-breath-meter" aria-hidden="true">
+        <span>Inhale</span><i><b /></i><span>Exhale</span>
+      </div>
+
+      <header className="o2-nav">
+        <a href="#o2-top" aria-label="Oru Spa home"><OruMark /></a>
         <nav aria-label="Primary navigation">
-          <a href="#treatments">Treatments</a>
-          <a href="#house">Oru House</a>
-          <a href="#locations">Locations</a>
+          <a href="#o2-treatments">Treatments</a>
+          <a href="#o2-house">Oru House</a>
+          <a href="#o2-locations">Locations</a>
         </nav>
-        <button className="oru-nav-book" type="button" onClick={() => setBookingOpen(true)}>
-          <span>Book now</span><i aria-hidden="true" />
-        </button>
+        <button type="button" onClick={() => setBookingOpen(true)}>Book a ritual <span>↗</span></button>
       </header>
 
       <main>
-        <section className="oru-journey" ref={journeyRef} aria-label="The Oru experience">
-          <div className="oru-film-stage">
-            <div className="oru-film-aperture" aria-hidden="true">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="oru-film-poster" src="/brand-home-3/threshold.png" alt="" />
-              <video ref={videoRef} className="oru-film" muted playsInline preload="none" poster="/brand-home-3/threshold.png" />
-              <span className="oru-film-grade" />
+        <section className="o2-hero" data-o2-section>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand-home-5/oru-hero.png" alt="A guest standing beside the lavender-tiled thermal bath at Oru Spa" />
+          <span className="o2-hero-wash" aria-hidden="true" />
+          <div className="o2-hero-copy">
+            <p>Urban spa · Mumbai and Bengaluru</p>
+            <h1><span>The art of</span><strong>exhale.</strong></h1>
+            <div>
+              <p>Rest is not an escape. It is how you return with more of yourself.</p>
+              <button type="button" onClick={() => setBookingOpen(true)}><span>Begin at Oru</span><i>↘</i></button>
             </div>
-            <div className="oru-orbit oru-orbit-one" />
-            <div className="oru-orbit oru-orbit-two" />
-            <div className="oru-progress" aria-hidden="true"><i /></div>
-            <nav className="oru-route" aria-label="Experience chapters">
-              {chapters.map((chapter, index) => (
-                <button
-                  type="button"
-                  key={chapter.id}
-                  aria-current={activeChapter === index ? "step" : undefined}
-                  onClick={() => jumpToChapter(index)}
-                >
-                  <span>{chapter.label}</span><i />
-                </button>
-              ))}
-            </nav>
           </div>
+          <span className="o2-hero-edition">Oru / 05</span>
+          <a className="o2-hero-scroll" href="#o2-manifesto">Scroll to soften <i /></a>
+        </section>
 
-          <div className="oru-story">
-            {chapters.map((chapter, index) => {
-              const Heading = index === 0 ? "h1" : "h2";
-              return (
-                <article className="oru-chapter" id={chapter.id} data-align={chapter.align} key={chapter.id}>
-                  <div className="oru-chapter-pin">
-                    <div className="oru-chapter-copy">
-                      <Heading>{chapter.title}</Heading>
-                      <p>{chapter.body}</p>
-                      {index === 0 && (
-                        <button className="oru-journey-cta" type="button" onClick={() => jumpToChapter(1)}>
-                          <span>View treatments</span><i aria-hidden="true">↘</i>
-                        </button>
-                      )}
-                      {index === chapters.length - 1 && (
-                        <button className="oru-return-cta" type="button" onClick={() => setBookingOpen(true)}>
-                          Book now <span aria-hidden="true">↗</span>
-                        </button>
-                      )}
-                    </div>
+        <section className="o2-manifesto" id="o2-manifesto" data-o2-section aria-labelledby="o2-manifesto-title">
+          <div className="o2-section-label"><span>01</span><p>Our point of view</p></div>
+          <div className="o2-manifesto-copy">
+            <h2 id="o2-manifesto-title">Your body is not another thing to optimise.</h2>
+            <div>
+              <p>Oru is a house for touch, water, warmth, and the minutes between them. We listen first, then shape the ritual around what you need today.</p>
+              <a href="#o2-treatments">Explore the treatment index <span>↘</span></a>
+            </div>
+          </div>
+          <span className="o2-orbit o2-orbit-one" aria-hidden="true" />
+          <span className="o2-orbit o2-orbit-two" aria-hidden="true" />
+        </section>
+
+        <section className="o2-treatments" id="o2-treatments" data-o2-section aria-labelledby="o2-treatments-title">
+          <header>
+            <div className="o2-section-label"><span>02</span><p>Treatment index</p></div>
+            <h2 id="o2-treatments-title">Choose what you need, not what you should.</h2>
+          </header>
+          <div className="o2-treatment-grid">
+            <div className="o2-treatment-image">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand-home-5/oru-ritual.png" alt="Botanical oil being prepared for an Oru ritual" />
+              <span>Every ritual begins with a short conversation.</span>
+            </div>
+            <div className="o2-treatment-list">
+              {services.map((service, index) => (
+                <article className={activeService === index ? "is-active" : ""} key={service.name}>
+                  <button type="button" onClick={() => setActiveService(index)} aria-expanded={activeService === index}>
+                    <span>{service.index}</span>
+                    <strong>{service.name}</strong>
+                    <small>{service.duration}</small>
+                    <b>{service.price}</b>
+                    <i aria-hidden="true" />
+                  </button>
+                  <div className="o2-treatment-detail">
+                    <p>{service.note}</p>
+                    <button type="button" onClick={() => setBookingOpen(true)}>Reserve this treatment <span>↗</span></button>
                   </div>
                 </article>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="oru-treatments" id="treatments" aria-labelledby="oru-treatments-title">
-          <header>
-            <p>Four ways to return</p>
-            <h2 id="oru-treatments-title">Treatments that begin with listening.</h2>
-          </header>
-          <div className="oru-treatment-list">
-            {services.map((service, index) => (
-              <article className={activeTreatment === index ? "is-open" : ""} key={service.name}>
-                <button type="button" onClick={() => setActiveTreatment(index)} aria-expanded={activeTreatment === index}>
-                  <span className="oru-treatment-symbol" aria-hidden="true"><i /><b /></span>
-                  <strong>{service.name}</strong>
-                  <small>{service.duration}</small>
-                  <b>{service.price}</b>
-                  <i className="oru-treatment-plus" aria-hidden="true" />
-                </button>
-                <div className="oru-treatment-detail">
-                  <p>{treatmentNotes[index]}</p>
-                  <button type="button" onClick={() => setBookingOpen(true)}>Choose this ritual <span>↗</span></button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="oru-method" aria-labelledby="oru-method-title">
-          <div className="oru-breathing-form" aria-hidden="true">
-            <span /><i /><b />
-          </div>
-          <div className="oru-method-copy">
-            <h2 id="oru-method-title">A room for your nervous system.</h2>
-            <p>Oru is designed for the minutes before and after treatment too. Warm light, low sound, natural scent, and no rushed departures.</p>
-            <dl>
-              <div><dt>Before</dt><dd>Tea, conversation, and time to settle</dd></div>
-              <div><dt>During</dt><dd>Pressure and pace chosen with you</dd></div>
-              <div><dt>After</dt><dd>Quiet recovery with no immediate checkout</dd></div>
-            </dl>
-          </div>
-        </section>
-
-        <section className="oru-house" id="house" aria-labelledby="oru-house-title">
-          <div className="oru-house-art" aria-hidden="true">
-            <div className="oru-house-window">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand-home-3/threshold.png" alt="" />
+              ))}
             </div>
-            <span>ORU</span>
-          </div>
-          <div className="oru-house-copy">
-            <p>Oru House</p>
-            <h2 id="oru-house-title">Rest works best as a rhythm.</h2>
-            <p>One monthly treatment, priority booking, and open use of the steam and recovery rooms.</p>
-            <ul>
-              <li><span>Monthly treatment credit</span><b>1</b></li>
-              <li><span>Steam and recovery access</span><b>Any day</b></li>
-              <li><span>Guest treatment saving</span><b>10%</b></li>
-              <li><span>Monthly membership</span><b>₹6,800</b></li>
-            </ul>
-            <button type="button" onClick={() => setBookingOpen(true)}>
-              <span>Join Oru House</span><i aria-hidden="true" />
-            </button>
           </div>
         </section>
 
-        <section className="oru-locations" id="locations" aria-labelledby="oru-locations-title">
-          <h2 id="oru-locations-title">Find your quiet.</h2>
-          <div>
-            {locations.map((location) => (
-              <article key={location.city}>
-                <h3>{location.city}</h3>
-                <p>{location.address}</p>
-                <span>{location.hours}</span>
-                <button type="button" onClick={() => setBookingOpen(true)}>Book now <i>↗</i></button>
+        <section className="o2-journeys" data-o2-section aria-labelledby="o2-journeys-title">
+          <header>
+            <div className="o2-section-label"><span>03</span><p>Stay a little longer</p></div>
+            <h2 id="o2-journeys-title">Half a day can change the shape of a week.</h2>
+          </header>
+          <div className="o2-journey-list">
+            {journeys.map((journey) => (
+              <article key={journey.title}>
+                <span>{journey.index}</span>
+                <h3>{journey.title}</h3>
+                <p>{journey.note}</p>
+                <div><small>{journey.time}</small><strong>{journey.price}</strong></div>
+                <button type="button" onClick={() => setBookingOpen(true)}>Choose journey <i>↗</i></button>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="oru-finale" aria-labelledby="oru-finale-title">
+        <section className="o2-house" id="o2-house" data-o2-section aria-labelledby="o2-house-title">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand-home-5/oru-house.png" alt="The lavender pool and recovery room at Oru House" />
+          <span className="o2-house-grade" aria-hidden="true" />
+          <div className="o2-house-copy">
+            <div className="o2-section-label"><span>04</span><p>Oru House</p></div>
+            <h2 id="o2-house-title">Come for the treatment. Stay for the quiet.</h2>
+            <p>Membership makes recovery part of your ordinary rhythm, with a monthly ritual and open access to the pool, steam, and resting room.</p>
+            <ul>
+              <li><span>Monthly treatment</span><strong>1 credit</strong></li>
+              <li><span>Pool and steam</span><strong>Any day</strong></li>
+              <li><span>Guest treatments</span><strong>10% less</strong></li>
+              <li><span>Monthly</span><strong>₹6,800</strong></li>
+            </ul>
+            <button type="button" onClick={() => setBookingOpen(true)}>Join Oru House <span>↗</span></button>
+          </div>
+        </section>
+
+        <section className="o2-gift" data-o2-section aria-labelledby="o2-gift-title">
+          <div className="o2-gift-copy">
+            <div className="o2-section-label"><span>05</span><p>Oru, for someone else</p></div>
+            <h2 id="o2-gift-title">Give them somewhere to put everything down.</h2>
+            <p>Send instantly or choose a wrapped card with a handwritten note.</p>
+          </div>
+          <div className="o2-gift-builder">
+            <div className="o2-gift-card">
+              <OruMark />
+              <p>A little room<br />for yourself.</p>
+              <strong>{giftValue}</strong>
+              <span aria-hidden="true"><i /><b /></span>
+            </div>
+            <div className="o2-gift-values" aria-label="Choose gift card value">
+              {["₹3,500", "₹5,000", "₹7,500", "₹10,000"].map((value) => (
+                <button className={giftValue === value ? "is-selected" : ""} type="button" key={value} onClick={() => setGiftValue(value)}>{value}</button>
+              ))}
+            </div>
+            <button className="o2-gift-send" type="button">Send an Oru card <span>↗</span></button>
+          </div>
+        </section>
+
+        <section className="o2-quote" data-o2-section aria-labelledby="o2-quote-title">
+          <div className="o2-section-label"><span>06</span><p>After Oru</p></div>
+          <blockquote id="o2-quote-title">“I did not realise how much noise I was carrying until it was gone.”</blockquote>
+          <p>Leena M. · Mumbai</p>
+        </section>
+
+        <section className="o2-locations" id="o2-locations" data-o2-section aria-labelledby="o2-locations-title">
+          <header>
+            <div className="o2-section-label"><span>07</span><p>Find Oru</p></div>
+            <h2 id="o2-locations-title">Two houses.<br />One slower rhythm.</h2>
+          </header>
+          <div>
+            {locations.map((location, index) => (
+              <article key={location.city}>
+                <span>0{index + 1}</span>
+                <h3>{location.city}</h3>
+                <p>{location.area}</p>
+                <small>Daily · {location.hours}</small>
+                <button type="button" onClick={() => setBookingOpen(true)}>Book this house <i>↗</i></button>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="o2-finale" data-o2-section aria-labelledby="o2-finale-title">
           <OruMark />
-          <h2 id="oru-finale-title">Keep a little room for yourself.</h2>
-          <button type="button" onClick={() => setBookingOpen(true)}><span>Book now</span><i>↗</i></button>
+          <h2 id="o2-finale-title">You have time<br />to feel better.</h2>
+          <button type="button" onClick={() => setBookingOpen(true)}><span>Book a ritual</span><i>↗</i></button>
           <footer>
             <span>Oru Spa</span>
-            <span>Mumbai and Bengaluru</span>
-            <a href="#arrival">Back to quiet ↑</a>
+            <span>Mumbai · Bengaluru</span>
+            <a href="#o2-top">Return to the top ↑</a>
           </footer>
         </section>
       </main>

@@ -1,7 +1,5 @@
 import { DASALON_LOGO } from "./brand-logos";
 
-const brandHomeSlots = Array.from({ length: 1 }, (_, index) => index + 7);
-
 function Brand() {
   return (
     <a className="brand-lockup" href="#top" aria-label="da Salon Brand Home">
@@ -172,10 +170,10 @@ export default function Home() {
                   <div className="brand-home-preview brand-home-preview-live brand-home-preview-oru">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/brand-home-3/threshold.png"
-                      alt="A serene architectural threshold for Oru Spa"
-                      width={1680}
-                      height={945}
+                      src="/brand-home-5/oru-hero.png"
+                      alt="The lavender-tiled thermal bath at Oru Spa"
+                      width={1718}
+                      height={915}
                     />
                     <div className="brand-home-preview-identity">
                       <span>A slower rhythm</span>
@@ -186,7 +184,7 @@ export default function Home() {
                   </div>
                   <div className="brand-home-meta brand-home-meta-live">
                     <span>Oru Spa</span>
-                    <span>Scroll-led spa · Live</span>
+                    <span>Editorial urban spa · Live</span>
                   </div>
                 </a>
               </article>
@@ -219,34 +217,6 @@ export default function Home() {
                 </a>
               </article>
 
-              {brandHomeSlots.map((slot) => (
-                <article className="brand-home-card" key={slot}>
-                  <div
-                    className="brand-home-preview"
-                    aria-label={`Reserved Brand Home space ${slot}`}
-                  >
-                    <div className="preview-toolbar" aria-hidden="true">
-                      <span />
-                      <span />
-                      <span />
-                      <i />
-                    </div>
-                    <div className="preview-placeholder" aria-hidden="true">
-                      <span className="placeholder-label" />
-                      <span className="placeholder-title" />
-                      <span className="placeholder-title placeholder-title-short" />
-                      <span className="placeholder-button" />
-                    </div>
-                    <span className="brand-home-number">
-                      {String(slot).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <div className="brand-home-meta">
-                    <span>Brand Home space</span>
-                    <span>Coming soon</span>
-                  </div>
-                </article>
-              ))}
             </div>
           </div>
         </section>

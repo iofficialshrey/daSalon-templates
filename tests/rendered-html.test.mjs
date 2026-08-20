@@ -23,7 +23,7 @@ test("renders da Salon Brand Home", async () => {
   assert.match(html, /Paloma/);
   assert.match(html, /Oru Spa/);
   assert.match(html, /Néroli House/);
-  assert.match(html, /Coming soon/);
+  assert.doesNotMatch(html, /Coming soon|Reserved Brand Home space 7/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
 
@@ -45,11 +45,21 @@ test("prerenders all standalone salon Brand Homes", async () => {
   assert.match(brandHomeThree, /brand-home-3-site\/index\.html/);
   assert.match(brandHomeFour, /<title>Paloma — Hair, Form and Colour<\/title>/i);
   assert.match(brandHomeFour, /Form follows/);
-  assert.match(brandHomeFive, /<title>Oru Spa \| Quiet Begins Here<\/title>/i);
-  assert.match(brandHomeFive, /Quiet begins here/);
+  assert.match(brandHomeFive, /<title>Oru Spa \| The Art of Exhale<\/title>/i);
+  assert.match(brandHomeFive, /Choose what you need, not what you should/);
+  assert.match(brandHomeFive, /The art of/);
   assert.match(brandHomeSix, /<title>Néroli House \| Water, Warmth, Return<\/title>/i);
   assert.match(brandHomeSix, /Come back/);
   assert.match(brandHomeSix, /Rituals shaped around how you arrive/);
+});
+
+test("features the final Oru Template 5 on the collection page", async () => {
+  const collection = await readRoute("index.html");
+
+  assert.match(collection, /href="\/brand-home-5"/);
+  assert.match(collection, /src="\/brand-home-5\/oru-hero.png"/);
+  assert.match(collection, /Editorial urban spa · Live/);
+  assert.doesNotMatch(collection, /brand-home-5-rework/);
 });
 
 test("ships the Serein House entrance film at its runtime URL", async () => {
