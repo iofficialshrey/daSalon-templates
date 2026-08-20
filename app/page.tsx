@@ -1,6 +1,6 @@
 import { DASALON_LOGO } from "./brand-logos";
 
-const brandHomeSlots = Array.from({ length: 1 }, (_, index) => index + 6);
+const brandHomeSlots = Array.from({ length: 1 }, (_, index) => index + 7);
 
 function Brand() {
   return (
@@ -186,6 +186,34 @@ export default function Home() {
                   </div>
                   <div className="brand-home-meta brand-home-meta-live">
                     <span>Oru Spa</span>
+                    <span>Scroll-led spa · Live</span>
+                  </div>
+                </a>
+              </article>
+
+              <article className="brand-home-card brand-home-card-live">
+                <a
+                  className="brand-home-link"
+                  href="/brand-home-6"
+                  aria-label="Open the Néroli House spa Brand Home"
+                >
+                  <div className="brand-home-preview brand-home-preview-live brand-home-preview-neroli">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/brand-home-6/neroli-arrival.png"
+                      alt="The luminous mineral-water interior of Néroli House"
+                      width={1536}
+                      height={1024}
+                    />
+                    <div className="brand-home-preview-identity">
+                      <span>Water, warmth, return</span>
+                      <strong>Néroli House</strong>
+                    </div>
+                    <span className="brand-home-open">Explore Brand Home <span aria-hidden="true">↗</span></span>
+                    <span className="brand-home-number">06</span>
+                  </div>
+                  <div className="brand-home-meta brand-home-meta-live">
+                    <span>Néroli House</span>
                     <span>Scroll-led spa · Live</span>
                   </div>
                 </a>

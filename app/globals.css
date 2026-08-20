@@ -235,6 +235,19 @@ h2 {
   position: absolute;
 }
 
+.brand-home-preview-neroli {
+  background: #dce8e5;
+}
+
+.brand-home-preview-neroli img {
+  filter: saturate(.78) contrast(.94) brightness(1.04);
+  object-position: center 58%;
+}
+
+.brand-home-preview-live.brand-home-preview-neroli::after {
+  background: linear-gradient(180deg, rgb(238 243 240 / 4%) 24%, rgb(24 48 46 / 74%) 100%);
+}
+
 .brand-home-card {
   min-width: 0;
 }

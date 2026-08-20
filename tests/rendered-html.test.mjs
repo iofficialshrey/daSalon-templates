@@ -18,20 +18,23 @@ test("renders da Salon Brand Home", async () => {
   assert.match(html, /href="\/brand-home-3"/);
   assert.match(html, /href="\/brand-home-4"/);
   assert.match(html, /href="\/brand-home-5"/);
+  assert.match(html, /href="\/brand-home-6"/);
   assert.match(html, /Serein House/);
   assert.match(html, /Paloma/);
   assert.match(html, /Oru Spa/);
+  assert.match(html, /Néroli House/);
   assert.match(html, /Coming soon/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
 
 test("prerenders all standalone salon Brand Homes", async () => {
-  const [brandHomeOne, brandHomeTwo, brandHomeThree, brandHomeFour, brandHomeFive] = await Promise.all([
+  const [brandHomeOne, brandHomeTwo, brandHomeThree, brandHomeFour, brandHomeFive, brandHomeSix] = await Promise.all([
     readRoute("brand-home-1.html"),
     readRoute("brand-home-2.html"),
     readRoute("brand-home-3.html"),
     readRoute("brand-home-4.html"),
     readRoute("brand-home-5.html"),
+    readRoute("brand-home-6.html"),
   ]);
 
   assert.match(brandHomeOne, /<title>Maison Élan — Private Hair Atelier<\/title>/i);
@@ -44,6 +47,9 @@ test("prerenders all standalone salon Brand Homes", async () => {
   assert.match(brandHomeFour, /Form follows/);
   assert.match(brandHomeFive, /<title>Oru Spa \| Quiet Begins Here<\/title>/i);
   assert.match(brandHomeFive, /Quiet begins here/);
+  assert.match(brandHomeSix, /<title>Néroli House \| Water, Warmth, Return<\/title>/i);
+  assert.match(brandHomeSix, /Come back/);
+  assert.match(brandHomeSix, /Rituals shaped around how you arrive/);
 });
 
 test("ships the Serein House entrance film at its runtime URL", async () => {
