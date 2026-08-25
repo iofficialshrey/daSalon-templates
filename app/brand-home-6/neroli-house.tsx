@@ -1,38 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SalonBooking, { type BookingService } from "../salon-booking";
-
-const treatments: (BookingService & { note: string; index: string })[] = [
-  {
-    index: "01",
-    name: "Mineral Immersion",
-    duration: "90 min",
-    price: "₹5,800",
-    note: "Warm water, full-body exfoliation, and a slow mineral-oil massage.",
-  },
-  {
-    index: "02",
-    name: "Néroli Face Ritual",
-    duration: "75 min",
-    price: "₹4,600",
-    note: "Barrier-first skin work, cool glass massage, and neroli hydration.",
-  },
-  {
-    index: "03",
-    name: "Deep Current",
-    duration: "60 min",
-    price: "₹4,200",
-    note: "Targeted pressure, assisted stretch, and warmth for tired muscles.",
-  },
-  {
-    index: "04",
-    name: "Quiet Headspace",
-    duration: "45 min",
-    price: "₹3,200",
-    note: "Scalp, neck, and facial release designed for screen-heavy days.",
-  },
-];
+import SalonBooking from "../salon-booking";
+import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
 const dayRituals = [
   { number: "I", title: "Settle", copy: "Neroli tea, mineral steam, and time to arrive without rushing." },
@@ -69,11 +39,20 @@ function NeroliWordmark() {
 }
 
 export default function NeroliHouse() {
+  const catalog = useDaSalonCatalog();
   const homeRef = useRef<HTMLDivElement>(null);
   const guideRef = useRef<HTMLDivElement>(null);
   const [activeTreatment, setActiveTreatment] = useState(0);
   const [giftValue, setGiftValue] = useState("₹5,000");
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
+  const treatments = (catalog.data?.services ?? []).map((service, index) => ({
+    ...service,
+    index: String(index + 1).padStart(2, "0"),
+    durationLabel: `${service.duration} min`,
+    priceLabel: formatCatalogPrice(service.price, catalog.data?.currency),
+    note: serviceDescription(service),
+  }));
 
   useEffect(() => {
     const home = homeRef.current;
@@ -192,8 +171,8 @@ export default function NeroliHouse() {
     };
   }, []);
 
-  function openBooking(serviceIndex?: number) {
-    if (typeof serviceIndex === "number") setActiveTreatment(serviceIndex);
+  function openBooking(serviceId?: string) {
+    setBookingServiceId(serviceId || null);
     setBookingOpen(true);
   }
 
@@ -257,18 +236,19 @@ export default function NeroliHouse() {
               <span className="n6-anchor n6-anchor-treatment-image" data-guide data-scale=".82" data-shape="1" data-bloom=".12" data-rotate="-12" />
             </div>
             <div className="n6-treatment-list">
+              {!treatments.length && <p className="live-menu-state" role="status">{catalog.loading ? "Loading the live treatment menu…" : catalog.error || "No treatments are currently bookable."}</p>}
               {treatments.map((treatment, index) => (
                 <article className={activeTreatment === index ? "is-active" : ""} key={treatment.name}>
                   <button type="button" onClick={() => setActiveTreatment(index)} aria-expanded={activeTreatment === index}>
                     <span>{treatment.index}</span>
                     <strong>{treatment.name}</strong>
-                    <small>{treatment.duration}</small>
-                    <b>{treatment.price}</b>
+                    <small>{treatment.durationLabel}</small>
+                    <b>{treatment.priceLabel}</b>
                     <i aria-hidden="true" />
                   </button>
                   <div className="n6-treatment-note">
                     <p>{treatment.note}</p>
-                    <button type="button" onClick={() => openBooking(index)}>Reserve this ritual <span>↗</span></button>
+                    <button type="button" onClick={() => openBooking(treatment.id)}>Reserve this ritual <span>↗</span></button>
                   </div>
                 </article>
               ))}
@@ -377,7 +357,9 @@ export default function NeroliHouse() {
       {bookingOpen && (
         <SalonBooking
           brand="Néroli House"
-          services={treatments}
+          theme="neroli"
+          initialBootstrap={catalog.data}
+          initialServiceId={bookingServiceId}
           onClose={() => setBookingOpen(false)}
         />
       )}

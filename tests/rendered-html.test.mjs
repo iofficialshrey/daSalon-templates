@@ -57,7 +57,7 @@ test("features the final Oru Template 5 on the collection page", async () => {
   const collection = await readRoute("index.html");
 
   assert.match(collection, /href="\/brand-home-5"/);
-  assert.match(collection, /src="\/brand-home-5\/oru-hero.png"/);
+  assert.match(collection, /url=%2Fbrand-home-5%2Foru-hero\.png/);
   assert.match(collection, /Editorial urban spa · Live/);
   assert.doesNotMatch(collection, /brand-home-5-rework/);
 });

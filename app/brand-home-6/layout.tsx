@@ -4,7 +4,7 @@ import "./brand-home.css";
 export const metadata: Metadata = {
   title: "Néroli House | Water, Warmth, Return",
   description:
-    "A temporary scroll-led spa Brand Home with treatments, day rituals, membership, gifting, locations, and booking.",
+    "A scroll-led spa Brand Home with treatments, day rituals, membership, gifting, locations, and live booking.",
 };
 
 export default function BrandHomeSixLayout({

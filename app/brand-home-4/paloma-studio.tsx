@@ -2,21 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import SalonBooking, { type BookingService } from "../salon-booking";
-
-const services: BookingService[] = [
-  { name: "The Signature Cut", duration: "70 min", price: "₹3,200" },
-  { name: "Chromatic Colour", duration: "120 min", price: "₹7,800" },
-  { name: "Air-Dry Shape", duration: "55 min", price: "₹2,600" },
-  { name: "Editorial Finish", duration: "50 min", price: "₹2,400" },
-];
-
-const editions = [
-  { number: "01", title: "Cut / Form", note: "Movement before symmetry", description: "A dry and wet cutting dialogue that follows texture, proportion and the shape you make when you move.", price: "from ₹3,200" },
-  { number: "02", title: "Colour / Light", note: "Dimension without noise", description: "Custom tone, placement and finish designed around skin, natural light and a considered grow-out.", price: "from ₹7,800" },
-  { number: "03", title: "Care / Repair", note: "Structure, restored", description: "Scalp analysis and bond-led rituals that restore clarity, softness and strength without weighing hair down.", price: "from ₹3,600" },
-  { number: "04", title: "Style / Occasion", note: "A look with a point of view", description: "Editorial styling for evenings, weddings and shoots, developed with wardrobe and context in mind.", price: "from ₹2,400" },
-];
+import SalonBooking from "../salon-booking";
+import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
 const studios = [
   { city: "Mumbai", address: "Bandra West", code: "BOM / 01", hours: "Tue–Sun, 10–20" },
@@ -43,12 +30,28 @@ function PalomaMark() {
 }
 
 export default function PalomaStudio() {
+  const catalog = useDaSalonCatalog();
   const pageRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [activeService, setActiveService] = useState(0);
   const [gift, setGift] = useState("₹5,000");
   const [activeChapter, setActiveChapter] = useState("cover");
+  const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
+  const editions = (catalog.data?.services ?? []).map((service, index) => ({
+    id: service.id,
+    number: String(index + 1).padStart(2, "0"),
+    title: service.name,
+    note: `${service.duration} min${service.category ? ` · ${service.category}` : ""}`,
+    description: serviceDescription(service),
+    price: formatCatalogPrice(service.price, catalog.data?.currency),
+  }));
+  const activeEdition = editions[activeService] || editions[0];
+
+  function openBooking(serviceId?: string) {
+    setBookingServiceId(serviceId || null);
+    setBookingOpen(true);
+  }
 
   useEffect(() => {
     const page = pageRef.current;
@@ -104,7 +107,7 @@ export default function PalomaStudio() {
     <header className="p4-nav">
       <a href="#cover" aria-label="Paloma home"><PalomaMark /></a>
       <nav><a href="#editions">Services</a><a href="#circle">Circle</a><a href="#studios">Studios</a></nav>
-      <button onClick={() => setBookingOpen(true)}>Make an appointment <span>↗</span></button>
+      <button onClick={() => openBooking()}>Make an appointment <span>↗</span></button>
     </header>
 
     <aside className="p4-chapter-rail" aria-label="Paloma issue index">
@@ -133,7 +136,7 @@ export default function PalomaStudio() {
         <p className="p4-issue">Issue 04 <span>◆</span> 2026</p>
         <h1 id="p4-title"><span className="p4-cover-title-line">Form follows</span><strong className="p4-cover-title-line">feeling.</strong></h1>
         <p className="p4-cover-note">Cut, colour and care for people who would rather be recognised than repeated.</p>
-        <button className="p4-cover-cta" onClick={() => setBookingOpen(true)}><span>Book<br />the look</span><b>↗</b></button>
+        <button className="p4-cover-cta" onClick={() => openBooking()}><span>Book<br />the look</span><b>↗</b></button>
         <div className="p4-scroll-note"><span>Scroll the issue</span><i /></div>
       </section>
 
@@ -146,19 +149,19 @@ export default function PalomaStudio() {
       </section>
 
       <section id="editions" className="p4-editions" data-p4-reveal data-p4-chapter data-p4-number="02">
-        <header><span className="p4-kicker">Service editions / 002</span><h2>Choose your edit.</h2><p>Four ways into the Paloma practice.</p></header>
+        <header><span className="p4-kicker">Live service editions / 002</span><h2>Choose your edit.</h2><p>The current menu, synced directly with the venue.</p></header>
         <div className="p4-edition-layout">
           <div className="p4-edition-list" role="tablist">{editions.map((edition, index) => <button role="tab" aria-selected={activeService === index} onClick={() => setActiveService(index)} key={edition.title}><span>{edition.number}</span><strong>{edition.title}</strong><small>{edition.price}</small></button>)}</div>
-          <article className="p4-edition-detail" key={editions[activeService].number}><span>{editions[activeService].number} / 04</span><h3>{editions[activeService].note}</h3><p>{editions[activeService].description}</p><button onClick={() => setBookingOpen(true)}>Book this edition <b>→</b></button></article>
+          {activeEdition ? <article className="p4-edition-detail" key={activeEdition.number}><span>{activeEdition.number} / {String(editions.length).padStart(2, "0")}</span><h3>{activeEdition.note}</h3><p>{activeEdition.description}</p><button onClick={() => openBooking(activeEdition.id)}>Book this edition <b>→</b></button></article> : <article className="p4-edition-detail live-menu-state" role="status">{catalog.loading ? "Loading the live service menu…" : catalog.error || "No services are currently bookable."}</article>}
         </div>
       </section>
 
       <section id="packages" className="p4-packages" data-p4-reveal data-p4-chapter data-p4-number="03">
         <header><span className="p4-kicker">Seasonal sets / 003</span><h2>More than one good hair day.</h2></header>
         <div>
-          <article className="p4-package-blue"><small>New guest edit</small><span>01</span><h3>First<br />Impression</h3><p>Consultation + signature cut + air-dry lesson</p><strong>₹4,900</strong><button onClick={() => setBookingOpen(true)}>Select</button></article>
-          <article className="p4-package-image"><Image src="/brand-home-4/object-study.png" alt="Gold comb and salon objects arranged as an editorial still life" fill sizes="(max-width: 900px) 100vw, 45vw" /><div><small>Six month edit</small><span>02</span><h3>Colour<br />Continuity</h3><p>Two colour sessions + two gloss appointments + home care</p><strong>₹24,000</strong><button onClick={() => setBookingOpen(true)}>Select</button></div></article>
-          <article className="p4-package-line"><small>Occasion edit</small><span>03</span><h3>Event<br />Study</h3><p>Trial + event-day hair + touch-up kit</p><strong>₹8,800</strong><button onClick={() => setBookingOpen(true)}>Select</button></article>
+          <article className="p4-package-blue"><small>New guest edit</small><span>01</span><h3>First<br />Impression</h3><p>Consultation + signature cut + air-dry lesson</p><strong>₹4,900</strong><button onClick={() => openBooking()}>Select</button></article>
+          <article className="p4-package-image"><Image src="/brand-home-4/object-study.png" alt="Gold comb and salon objects arranged as an editorial still life" fill sizes="(max-width: 900px) 100vw, 45vw" /><div><small>Six month edit</small><span>02</span><h3>Colour<br />Continuity</h3><p>Two colour sessions + two gloss appointments + home care</p><strong>₹24,000</strong><button onClick={() => openBooking()}>Select</button></div></article>
+          <article className="p4-package-line"><small>Occasion edit</small><span>03</span><h3>Event<br />Study</h3><p>Trial + event-day hair + touch-up kit</p><strong>₹8,800</strong><button onClick={() => openBooking()}>Select</button></article>
         </div>
       </section>
 
@@ -173,7 +176,7 @@ export default function PalomaStudio() {
       </section>
 
       <section id="circle" className="p4-circle" data-p4-reveal data-p4-chapter data-p4-number="05">
-        <div className="p4-circle-intro"><span className="p4-kicker">Paloma Circle / 005</span><h2>Keep your<br />place in line.</h2><p>A yearly studio membership for guests who prefer continuity, priority and one shared record across every city.</p><button onClick={() => setBookingOpen(true)}>Join for ₹18,000 / year <span>↗</span></button></div>
+        <div className="p4-circle-intro"><span className="p4-kicker">Paloma Circle / 005</span><h2>Keep your<br />place in line.</h2><p>A yearly studio membership for guests who prefer continuity, priority and one shared record across every city.</p><button onClick={() => openBooking()}>Join for ₹18,000 / year <span>↗</span></button></div>
         <div className="p4-circle-ledger"><header><b>Your studio ledger</b><span>Member 0824</span></header><dl><div><dt>Early booking</dt><dd>10 days</dd></div><div><dt>Annual credit</dt><dd>₹15,000</dd></div><div><dt>Complimentary finish</dt><dd>02</dd></div><div><dt>Loyalty return</dt><dd>5%</dd></div></dl><footer><span>Credits follow you across studios.</span><b>P / C</b></footer></div>
       </section>
 
@@ -184,13 +187,13 @@ export default function PalomaStudio() {
 
       <section id="studios" className="p4-studios" data-p4-reveal data-p4-chapter data-p4-number="07">
         <header><span className="p4-kicker">Studio directory / 007</span><h2>Find your Paloma.</h2></header>
-        <div>{studios.map((studio) => <article key={studio.city}><small>{studio.code}</small><h3>{studio.city}</h3><p>{studio.address}</p><span>{studio.hours}</span><button onClick={() => setBookingOpen(true)}>Book this studio ↗</button></article>)}</div>
+        <div>{studios.map((studio) => <article key={studio.city}><small>{studio.code}</small><h3>{studio.city}</h3><p>{studio.address}</p><span>{studio.hours}</span><button onClick={() => openBooking()}>Book this studio ↗</button></article>)}</div>
       </section>
 
       <section id="note" className="p4-note" data-p4-reveal data-p4-chapter data-p4-number="08"><span className="p4-kicker">The studio / 008</span><p>Paloma is an independent collective of cutters, colourists and image-makers. We believe personal style should feel considered, not corrected.</p><aside><b>22</b><span>artists across<br />four studios</span></aside></section>
 
-      <section id="finale" className="p4-final" data-p4-reveal data-p4-chapter><PalomaMark /><h2>Ready for<br /><em className="p4-typewrite">your next shape?</em></h2><button onClick={() => setBookingOpen(true)}>Make an appointment <span>↗</span></button><footer><span>Instagram</span><span>Journal</span><span>Careers</span><small>Concept storefront for da Salon</small></footer></section>
+      <section id="finale" className="p4-final" data-p4-reveal data-p4-chapter><PalomaMark /><h2>Ready for<br /><em className="p4-typewrite">your next shape?</em></h2><button onClick={() => openBooking()}>Make an appointment <span>↗</span></button><footer><span>Instagram</span><span>Journal</span><span>Careers</span><small>Concept storefront for da Salon</small></footer></section>
     </main>
-    {bookingOpen && <SalonBooking brand="Paloma" services={services} onClose={() => setBookingOpen(false)} />}
+    {bookingOpen && <SalonBooking brand="Paloma" theme="paloma" initialBootstrap={catalog.data} initialServiceId={bookingServiceId} onClose={() => setBookingOpen(false)} />}
   </div>;
 }

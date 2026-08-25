@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { DASALON_LOGO } from "./brand-logos";
 
 function Brand() {
@@ -54,12 +55,11 @@ export default function Home() {
                   aria-label="Open the Maison Élan salon Brand Home"
                 >
                   <div className="brand-home-preview brand-home-preview-live">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src="/brand-home-1/location-bandra.jpg"
                       alt="Fictional Maison Élan salon atelier"
-                      width={1536}
-                      height={1024}
+                      fill
+                      sizes="(max-width: 760px) 100vw, 50vw"
                     />
                     <div className="brand-home-preview-identity">
                       <span>Private hair atelier</span>
@@ -82,12 +82,11 @@ export default function Home() {
                   aria-label="Open the Atelier salon Brand Home"
                 >
                   <div className="brand-home-preview brand-home-preview-live">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src="/brand-home-2/atelier-hero-higgsfield-clean.png"
                       alt="Atelier private beauty house with an elegant female model"
-                      width={2048}
-                      height={1152}
+                      fill
+                      sizes="(max-width: 760px) 100vw, 50vw"
                     />
                     <div className="brand-home-preview-identity">
                       <span>The private beauty house</span>
@@ -140,12 +139,11 @@ export default function Home() {
                   aria-label="Open the Paloma hair studio Brand Home"
                 >
                   <div className="brand-home-preview brand-home-preview-live">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src="/brand-home-4/hero.png"
                       alt="Paloma editorial hair studio portrait"
-                      width={1672}
-                      height={941}
+                      fill
+                      sizes="(max-width: 760px) 100vw, 50vw"
                     />
                     <div className="brand-home-preview-identity">
                       <span>Hair, form and colour</span>
@@ -168,12 +166,11 @@ export default function Home() {
                   aria-label="Open the Oru spa Brand Home"
                 >
                   <div className="brand-home-preview brand-home-preview-live brand-home-preview-oru">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src="/brand-home-5/oru-hero.png"
                       alt="The lavender-tiled thermal bath at Oru Spa"
-                      width={1718}
-                      height={915}
+                      fill
+                      sizes="(max-width: 760px) 100vw, 50vw"
                     />
                     <div className="brand-home-preview-identity">
                       <span>A slower rhythm</span>
@@ -196,12 +193,11 @@ export default function Home() {
                   aria-label="Open the Néroli House spa Brand Home"
                 >
                   <div className="brand-home-preview brand-home-preview-live brand-home-preview-neroli">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src="/brand-home-6/neroli-arrival.png"
                       alt="The luminous mineral-water interior of Néroli House"
-                      width={1536}
-                      height={1024}
+                      fill
+                      sizes="(max-width: 760px) 100vw, 50vw"
                     />
                     <div className="brand-home-preview-identity">
                       <span>Water, warmth, return</span>

@@ -1,14 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-
-type Service = {
-  name: string;
-  category: string;
-  duration: string;
-  price: string;
-  description: string;
-};
+import { useMemo, useRef, useState } from "react";
+import SalonBooking from "../salon-booking";
+import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
 type Venue = {
   name: string;
@@ -18,93 +12,6 @@ type Venue = {
   hours: string;
   image: string;
 };
-
-const services: Service[] = [
-  {
-    name: "Signature Cut",
-    category: "Cut & Style",
-    duration: "90 min",
-    price: "₹2,800",
-    description: "Consultation, precision cut and a tailored finish.",
-  },
-  {
-    name: "Transformation Cut",
-    category: "Cut & Style",
-    duration: "120 min",
-    price: "₹4,200",
-    description: "A considered shape change with styling education.",
-  },
-  {
-    name: "The Élan Blowout",
-    category: "Cut & Style",
-    duration: "50 min",
-    price: "₹1,650",
-    description: "Polished movement, gloss and an enduring finish.",
-  },
-  {
-    name: "Lived-in Colour",
-    category: "Colour",
-    duration: "180 min",
-    price: "₹7,800",
-    description: "Dimensional placement that grows out beautifully.",
-  },
-  {
-    name: "Gloss & Tone",
-    category: "Colour",
-    duration: "75 min",
-    price: "₹2,600",
-    description: "Refresh tone, restore shine and soften brassiness.",
-  },
-  {
-    name: "Dimensional Brunette",
-    category: "Colour",
-    duration: "150 min",
-    price: "₹6,400",
-    description: "Rich tonal ribbons with a soft, expensive finish.",
-  },
-  {
-    name: "Botanical Scalp Reset",
-    category: "Rituals",
-    duration: "75 min",
-    price: "₹2,900",
-    description: "Microscope consultation, exfoliation and warm infusion.",
-  },
-  {
-    name: "Silk Repair Ritual",
-    category: "Rituals",
-    duration: "90 min",
-    price: "₹3,400",
-    description: "Bond repair, steam therapy and a glass-hair finish.",
-  },
-  {
-    name: "Curl Ceremony",
-    category: "Rituals",
-    duration: "100 min",
-    price: "₹3,200",
-    description: "Hydration, curl-by-curl shaping and home ritual mapping.",
-  },
-  {
-    name: "Modern Bridal",
-    category: "Occasion",
-    duration: "Private ritual",
-    price: "From ₹12,500",
-    description: "Trial, wedding-day styling and a private atelier suite.",
-  },
-  {
-    name: "Editorial Styling",
-    category: "Occasion",
-    duration: "90 min",
-    price: "₹4,800",
-    description: "Camera-ready hair tailored to your wardrobe and mood.",
-  },
-  {
-    name: "Private Event",
-    category: "Occasion",
-    duration: "120 min",
-    price: "₹5,900",
-    description: "A complete finish with optional makeup pairing.",
-  },
-];
 
 const venues: Venue[] = [
   {
@@ -132,16 +39,6 @@ const venues: Venue[] = [
     image: "/brand-home-1/location-indiranagar.jpg",
   },
 ];
-
-const categories = ["Cut & Style", "Colour", "Rituals", "Occasion"];
-const bookingDates = [
-  { day: "Tue", date: "18", month: "Aug" },
-  { day: "Wed", date: "19", month: "Aug" },
-  { day: "Thu", date: "20", month: "Aug" },
-  { day: "Fri", date: "21", month: "Aug" },
-  { day: "Sat", date: "22", month: "Aug" },
-];
-const timeSlots = ["10:00 AM", "11:30 AM", "1:15 PM", "3:00 PM", "4:45 PM", "6:30 PM"];
 
 function Arrow({ direction = "right" }: { direction?: "right" | "down" | "up" }) {
   const transform = direction === "down" ? "rotate(90 12 12)" : direction === "up" ? "rotate(-90 12 12)" : undefined;
@@ -185,45 +82,28 @@ function SectionIntro({
 }
 
 export default function MaisonElan() {
+  const catalog = useDaSalonCatalog();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const [activeCategory, setActiveCategory] = useState("");
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [bookingStep, setBookingStep] = useState(0);
-  const [selectedService, setSelectedService] = useState(services[0].name);
-  const [selectedVenue, setSelectedVenue] = useState(venues[0].name);
-  const [selectedDate, setSelectedDate] = useState("Tue 18 Aug");
-  const [selectedTime, setSelectedTime] = useState("11:30 AM");
-  const [confirmed, setConfirmed] = useState(false);
+  const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useState("₹5,000");
   const [giftSent, setGiftSent] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const services = useMemo(() => catalog.data?.services ?? [], [catalog.data?.services]);
+  const categories = useMemo(
+    () => Array.from(new Set(services.map((service) => service.category || "Services"))),
+    [services],
+  );
+  const selectedCategory = categories.includes(activeCategory) ? activeCategory : categories[0];
 
   const visibleServices = useMemo(
-    () => services.filter((service) => service.category === activeCategory),
-    [activeCategory],
+    () => services.filter((service) => (service.category || "Services") === selectedCategory),
+    [selectedCategory, services],
   );
 
-  useEffect(() => {
-    if (!bookingOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setBookingOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [bookingOpen]);
-
-  function openBooking(service?: string, venue?: string) {
-    if (service) setSelectedService(service);
-    if (venue) setSelectedVenue(venue);
-    setBookingStep(service ? 1 : 0);
-    setConfirmed(false);
+  function openBooking(serviceId?: string) {
+    setBookingServiceId(serviceId || null);
     setBookingOpen(true);
     setMenuOpen(false);
   }
@@ -240,9 +120,6 @@ export default function MaisonElan() {
     heroRef.current?.style.setProperty("--hero-x", "0");
     heroRef.current?.style.setProperty("--hero-y", "0");
   }
-
-  const selectedServiceData = services.find((service) => service.name === selectedService) ?? services[0];
-  const selectedVenueData = venues.find((venue) => venue.name === selectedVenue) ?? venues[0];
 
   return (
     <div className="maison-elan" id="top">
@@ -364,9 +241,9 @@ export default function MaisonElan() {
             {categories.map((category) => (
               <button
                 key={category}
-                className={activeCategory === category ? "is-active" : ""}
+                className={selectedCategory === category ? "is-active" : ""}
                 role="tab"
-                aria-selected={activeCategory === category}
+                aria-selected={selectedCategory === category}
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
@@ -374,15 +251,16 @@ export default function MaisonElan() {
             ))}
           </div>
           <div className="me-service-list">
+            {!visibleServices.length && <p className="live-menu-state" role="status">{catalog.loading ? "Loading the live service menu…" : catalog.error || "No services are currently bookable."}</p>}
             {visibleServices.map((service, index) => (
               <article key={service.name}>
                 <span className="me-service-number">{String(index + 1).padStart(2, "0")}</span>
                 <div className="me-service-main">
                   <h3>{service.name}</h3>
-                  <p>{service.description}</p>
+                  <p>{serviceDescription(service)}</p>
                 </div>
-                <div className="me-service-price"><span>{service.duration}</span><strong>{service.price}</strong></div>
-                <button onClick={() => openBooking(service.name)} aria-label={`Book ${service.name}`}><Arrow /></button>
+                <div className="me-service-price"><span>{service.duration} min</span><strong>{formatCatalogPrice(service.price, catalog.data?.currency)}</strong></div>
+                <button onClick={() => openBooking(service.id)} aria-label={`Book ${service.name}`}><Arrow /></button>
               </article>
             ))}
           </div>
@@ -403,7 +281,7 @@ export default function MaisonElan() {
                 <h3>The New Season<br />Colour Ritual</h3>
                 <p>Consultation, dimensional colour, silk repair and signature finish.</p>
                 <div><strong>₹8,900</strong><s>₹11,200</s></div>
-                <button onClick={() => openBooking("Lived-in Colour")}>Reserve the edit <Arrow /></button>
+                <button onClick={() => openBooking()}>Reserve the edit <Arrow /></button>
               </div>
             </article>
             <div className="me-package-stack">
@@ -530,7 +408,7 @@ export default function MaisonElan() {
                   <h3>{venue.name}</h3>
                   <p>{venue.address}</p>
                   <small><i /> {venue.hours}</small>
-                  <button onClick={() => openBooking(undefined, venue.name)}>Book this Maison <Arrow /></button>
+                  <button onClick={() => openBooking()}>Book this Maison <Arrow /></button>
                 </div>
               </article>
             ))}
@@ -553,75 +431,7 @@ export default function MaisonElan() {
 
       <button className="me-mobile-book" onClick={() => openBooking()}>Book now <Arrow /></button>
 
-      {bookingOpen ? (
-        <div className="me-booking-layer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setBookingOpen(false); }}>
-          <section className="me-booking-panel" role="dialog" aria-modal="true" aria-labelledby="booking-title">
-            <header>
-              <div><span>Maison Élan</span><small>Private appointment</small></div>
-              <button ref={closeButtonRef} onClick={() => setBookingOpen(false)} aria-label="Close booking">×</button>
-            </header>
-            {!confirmed ? (
-              <>
-                <div className="me-booking-progress" aria-label={`Booking step ${bookingStep + 1} of 4`}>
-                  {["Service", "Maison", "Date & time", "Review"].map((step, index) => <span key={step} className={index <= bookingStep ? "is-active" : ""}>{index + 1}<small>{step}</small></span>)}
-                </div>
-                <div className="me-booking-body">
-                  {bookingStep === 0 ? (
-                    <div className="me-booking-step">
-                      <p className="me-index">Step 01</p><h2 id="booking-title">Choose your ritual.</h2>
-                      <div className="me-book-service-list">
-                        {services.slice(0, 9).map((service) => <button key={service.name} className={selectedService === service.name ? "is-selected" : ""} onClick={() => setSelectedService(service.name)}><span><strong>{service.name}</strong><small>{service.duration} · {service.category}</small></span><b>{service.price}</b><i /></button>)}
-                      </div>
-                    </div>
-                  ) : null}
-                  {bookingStep === 1 ? (
-                    <div className="me-booking-step">
-                      <p className="me-index">Step 02</p><h2 id="booking-title">Choose your Maison.</h2>
-                      <div className="me-book-venue-list">
-                        {venues.map((venue, index) => <button key={venue.name} className={selectedVenue === venue.name ? "is-selected" : ""} onClick={() => setSelectedVenue(venue.name)}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{venue.name}</strong><small>{venue.address}</small><em>{venue.hours}</em></div><i /></button>)}
-                      </div>
-                    </div>
-                  ) : null}
-                  {bookingStep === 2 ? (
-                    <div className="me-booking-step">
-                      <p className="me-index">Step 03</p><h2 id="booking-title">Select a time.</h2>
-                      <p className="me-step-copy">Availability at {selectedVenueData.name}</p>
-                      <div className="me-date-list">
-                        {bookingDates.map((date) => { const value = `${date.day} ${date.date} ${date.month}`; return <button key={value} className={selectedDate === value ? "is-selected" : ""} onClick={() => setSelectedDate(value)}><span>{date.day}</span><strong>{date.date}</strong><small>{date.month}</small></button>; })}
-                      </div>
-                      <div className="me-time-heading"><span>Available times</span><small>All times are local</small></div>
-                      <div className="me-time-list">{timeSlots.map((time) => <button key={time} className={selectedTime === time ? "is-selected" : ""} onClick={() => setSelectedTime(time)}>{time}</button>)}</div>
-                    </div>
-                  ) : null}
-                  {bookingStep === 3 ? (
-                    <div className="me-booking-step me-review-step">
-                      <p className="me-index">Step 04</p><h2 id="booking-title">Review your ritual.</h2>
-                      <div className="me-review-card"><div><span>Service</span><strong>{selectedServiceData.name}</strong><small>{selectedServiceData.duration} · {selectedServiceData.price}</small></div><button onClick={() => setBookingStep(0)}>Change</button></div>
-                      <div className="me-review-card"><div><span>Maison</span><strong>{selectedVenueData.name}</strong><small>{selectedVenueData.address}</small></div><button onClick={() => setBookingStep(1)}>Change</button></div>
-                      <div className="me-review-card"><div><span>Date & time</span><strong>{selectedDate} · {selectedTime}</strong><small>Please arrive five minutes before your appointment.</small></div><button onClick={() => setBookingStep(2)}>Change</button></div>
-                      <label className="me-note-field"><span>Anything we should know? <small>Optional</small></span><textarea placeholder="Tell your artist about your hair, preferences or accessibility needs…" /></label>
-                    </div>
-                  ) : null}
-                </div>
-                <footer className="me-booking-actions">
-                  <button className="me-back-button" onClick={() => bookingStep === 0 ? setBookingOpen(false) : setBookingStep((step) => step - 1)}>{bookingStep === 0 ? "Cancel" : "Back"}</button>
-                  <button className="me-next-button" onClick={() => bookingStep === 3 ? setConfirmed(true) : setBookingStep((step) => step + 1)}>{bookingStep === 3 ? "Confirm appointment" : "Continue"}<Arrow /></button>
-                </footer>
-              </>
-            ) : (
-              <div className="me-confirmed">
-                <div className="me-confirmed-mark">✓</div>
-                <p className="me-index">Appointment reserved</p>
-                <h2 id="booking-title">Your chair is waiting.</h2>
-                <p>{selectedDate} at {selectedTime}<br />{selectedVenueData.name}</p>
-                <div><span>{selectedServiceData.name}</span><strong>{selectedServiceData.price}</strong></div>
-                <small>A confirmation and calendar invitation would be sent to the guest.</small>
-                <button className="me-next-button" onClick={() => setBookingOpen(false)}>Done <Arrow /></button>
-              </div>
-            )}
-          </section>
-        </div>
-      ) : null}
+      {bookingOpen && <SalonBooking brand="Maison Élan" theme="maison" initialBootstrap={catalog.data} initialServiceId={bookingServiceId} onClose={() => setBookingOpen(false)} />}
     </div>
   );
 }

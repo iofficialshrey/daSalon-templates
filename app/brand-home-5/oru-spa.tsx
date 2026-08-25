@@ -1,14 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SalonBooking, { type BookingService } from "../salon-booking";
-
-const services: (BookingService & { index: string; note: string })[] = [
-  { index: "01", name: "Deep Exhale Massage", duration: "75 min", price: "₹4,900", note: "Long pressure, warm botanical oil, and breath-led pacing for a body that has been holding too much." },
-  { index: "02", name: "Oru Skin Reset", duration: "60 min", price: "₹4,200", note: "A barrier-first facial with gentle enzymes, cool sculpting tools, and concentrated hydration." },
-  { index: "03", name: "Headspace Ritual", duration: "45 min", price: "₹3,300", note: "Scalp, neck, jaw, and facial release for screen-heavy days and restless sleep." },
-  { index: "04", name: "Mineral Body Polish", duration: "60 min", price: "₹4,500", note: "Mineral exfoliation, a warm rinse, and eucalyptus body serum for smooth, rested skin." },
-];
+import SalonBooking from "../salon-booking";
+import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
 const journeys = [
   { index: "A", title: "The Deep Exhale", time: "120 min", price: "₹7,200", note: "Steam, full-body massage, and quiet pool time." },
@@ -35,10 +29,24 @@ function clamp(value: number) {
 }
 
 export default function OruSpa() {
+  const catalog = useDaSalonCatalog();
   const homeRef = useRef<HTMLDivElement>(null);
   const [activeService, setActiveService] = useState(0);
   const [giftValue, setGiftValue] = useState("₹5,000");
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
+  const services = (catalog.data?.services ?? []).map((service, index) => ({
+    ...service,
+    index: String(index + 1).padStart(2, "0"),
+    durationLabel: `${service.duration} min`,
+    priceLabel: formatCatalogPrice(service.price, catalog.data?.currency),
+    note: serviceDescription(service),
+  }));
+
+  function openBooking(serviceId?: string) {
+    setBookingServiceId(serviceId || null);
+    setBookingOpen(true);
+  }
 
   useEffect(() => {
     const home = homeRef.current;
@@ -88,7 +96,7 @@ export default function OruSpa() {
           <a href="#o2-house">Oru House</a>
           <a href="#o2-locations">Locations</a>
         </nav>
-        <button type="button" onClick={() => setBookingOpen(true)}>Book a ritual <span>↗</span></button>
+        <button type="button" onClick={() => openBooking()}>Book a ritual <span>↗</span></button>
       </header>
 
       <main>
@@ -101,7 +109,7 @@ export default function OruSpa() {
             <h1><span>The art of</span><strong>exhale.</strong></h1>
             <div>
               <p>Rest is not an escape. It is how you return with more of yourself.</p>
-              <button type="button" onClick={() => setBookingOpen(true)}><span>Begin at Oru</span><i>↘</i></button>
+              <button type="button" onClick={() => openBooking()}><span>Begin at Oru</span><i>↘</i></button>
             </div>
           </div>
           <span className="o2-hero-edition">Oru / 05</span>
@@ -133,18 +141,19 @@ export default function OruSpa() {
               <span>Every ritual begins with a short conversation.</span>
             </div>
             <div className="o2-treatment-list">
+              {!services.length && <p className="live-menu-state" role="status">{catalog.loading ? "Loading the live treatment menu…" : catalog.error || "No treatments are currently bookable."}</p>}
               {services.map((service, index) => (
                 <article className={activeService === index ? "is-active" : ""} key={service.name}>
                   <button type="button" onClick={() => setActiveService(index)} aria-expanded={activeService === index}>
                     <span>{service.index}</span>
                     <strong>{service.name}</strong>
-                    <small>{service.duration}</small>
-                    <b>{service.price}</b>
+                    <small>{service.durationLabel}</small>
+                    <b>{service.priceLabel}</b>
                     <i aria-hidden="true" />
                   </button>
                   <div className="o2-treatment-detail">
                     <p>{service.note}</p>
-                    <button type="button" onClick={() => setBookingOpen(true)}>Reserve this treatment <span>↗</span></button>
+                    <button type="button" onClick={() => openBooking(service.id)}>Reserve this treatment <span>↗</span></button>
                   </div>
                 </article>
               ))}
@@ -164,7 +173,7 @@ export default function OruSpa() {
                 <h3>{journey.title}</h3>
                 <p>{journey.note}</p>
                 <div><small>{journey.time}</small><strong>{journey.price}</strong></div>
-                <button type="button" onClick={() => setBookingOpen(true)}>Choose journey <i>↗</i></button>
+                <button type="button" onClick={() => openBooking()}>Choose journey <i>↗</i></button>
               </article>
             ))}
           </div>
@@ -184,7 +193,7 @@ export default function OruSpa() {
               <li><span>Guest treatments</span><strong>10% less</strong></li>
               <li><span>Monthly</span><strong>₹6,800</strong></li>
             </ul>
-            <button type="button" onClick={() => setBookingOpen(true)}>Join Oru House <span>↗</span></button>
+            <button type="button" onClick={() => openBooking()}>Join Oru House <span>↗</span></button>
           </div>
         </section>
 
@@ -228,7 +237,7 @@ export default function OruSpa() {
                 <h3>{location.city}</h3>
                 <p>{location.area}</p>
                 <small>Daily · {location.hours}</small>
-                <button type="button" onClick={() => setBookingOpen(true)}>Book this house <i>↗</i></button>
+                <button type="button" onClick={() => openBooking()}>Book this house <i>↗</i></button>
               </article>
             ))}
           </div>
@@ -237,7 +246,7 @@ export default function OruSpa() {
         <section className="o2-finale" data-o2-section aria-labelledby="o2-finale-title">
           <OruMark />
           <h2 id="o2-finale-title">You have time<br />to feel better.</h2>
-          <button type="button" onClick={() => setBookingOpen(true)}><span>Book a ritual</span><i>↗</i></button>
+          <button type="button" onClick={() => openBooking()}><span>Book a ritual</span><i>↗</i></button>
           <footer>
             <span>Oru Spa</span>
             <span>Mumbai · Bengaluru</span>
@@ -246,7 +255,7 @@ export default function OruSpa() {
         </section>
       </main>
 
-      {bookingOpen && <SalonBooking brand="Oru Spa" services={services} onClose={() => setBookingOpen(false)} />}
+      {bookingOpen && <SalonBooking brand="Oru Spa" theme="oru" initialBootstrap={catalog.data} initialServiceId={bookingServiceId} onClose={() => setBookingOpen(false)} />}
     </div>
   );
 }
