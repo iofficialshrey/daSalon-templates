@@ -91,6 +91,7 @@ export default function Atelier() {
   const [giftSent, setGiftSent] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const experienceRef = useRef<HTMLElement>(null);
+  const experienceVideoRef = useRef<HTMLVideoElement>(null);
   const services = useMemo(() => catalog.data?.services ?? [], [catalog.data?.services]);
   const categories = useMemo(
     () => Array.from(new Set(services.map((service) => service.category || "Services"))),
@@ -107,6 +108,7 @@ export default function Atelier() {
     const experience = experienceRef.current;
     if (!experience) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const experienceVideo = experienceVideoRef.current;
     let targetProgress = 0;
     let renderedProgress = 0;
     let animationFrame = 0;
@@ -124,6 +126,20 @@ export default function Atelier() {
       experience.style.setProperty("--at-progress", progress.toFixed(4));
       experience.style.setProperty("--at-door", doorProgress.toFixed(4));
       experience.style.setProperty("--at-story", storyProgress.toFixed(4));
+
+      if (
+        experienceVideo &&
+        !reducedMotion.matches &&
+        experienceVideo.readyState >= HTMLMediaElement.HAVE_METADATA &&
+        Number.isFinite(experienceVideo.duration)
+      ) {
+        const videoEnd = Math.max(experienceVideo.duration - 0.08, 0);
+        const videoTime = storyProgress * videoEnd;
+        if (!experienceVideo.seeking && Math.abs(experienceVideo.currentTime - videoTime) > 0.04) {
+          experienceVideo.currentTime = videoTime;
+        }
+      }
+
       experience.querySelectorAll<HTMLElement>(".at-chapter").forEach((chapter, index) => {
         const [start, end] = chapterRanges[index];
         const opacity = smoothstep(start - 0.055, start, progress) * (1 - smoothstep(end, end + 0.055, progress));
@@ -158,12 +174,24 @@ export default function Atelier() {
       }
     };
 
+    const revealVideo = () => {
+      experienceVideo?.classList.add("is-ready");
+      renderExperience(renderedProgress);
+    };
+
+    const settleVideo = () => renderExperience(renderedProgress);
+
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+    experienceVideo?.addEventListener("loadeddata", revealVideo);
+    experienceVideo?.addEventListener("seeked", settleVideo);
+    if (experienceVideo && experienceVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) revealVideo();
     update();
     return () => {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      experienceVideo?.removeEventListener("loadeddata", revealVideo);
+      experienceVideo?.removeEventListener("seeked", settleVideo);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
   }, []);
@@ -256,6 +284,17 @@ export default function Atelier() {
             <div className="at-scene">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="at-scene-image" src="/brand-home-2/atelier-entry-higgsfield.png" alt="A calm private salon interior beyond open timber doors" width={2048} height={1152} />
+              <video
+                className="at-scene-video"
+                ref={experienceVideoRef}
+                muted
+                playsInline
+                preload="auto"
+                poster="/brand-home-2/atelier-entry-higgsfield.png"
+                aria-hidden="true"
+              >
+                <source src="/brand-home-2/atelier-entry.mp4" type="video/mp4" />
+              </video>
               <div className="at-scene-vignette" aria-hidden="true" />
               <div className="at-portal at-portal-one" aria-hidden="true" />
               <div className="at-portal at-portal-two" aria-hidden="true" />

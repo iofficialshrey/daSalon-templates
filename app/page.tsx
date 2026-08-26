@@ -138,10 +138,10 @@ export default function Home() {
                   href="/brand-home-4"
                   aria-label="Open the Paloma hair studio Brand Home"
                 >
-                  <div className="brand-home-preview brand-home-preview-live">
+                  <div className="brand-home-preview brand-home-preview-live brand-home-preview-paloma">
                     <Image
-                      src="/brand-home-4/hero.png"
-                      alt="Paloma editorial hair studio portrait"
+                      src="/brand-home-4/hero-video-poster.jpg"
+                      alt="Paloma model presenting the new hairstyle transformation film"
                       fill
                       sizes="(max-width: 760px) 100vw, 50vw"
                     />

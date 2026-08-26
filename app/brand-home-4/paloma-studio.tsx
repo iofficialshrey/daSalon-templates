@@ -25,6 +25,12 @@ const chapters = [
   { id: "finale", number: "09", label: "Finale" },
 ];
 
+const heroTitleWords = ["Form", "follows", "feeling."];
+const heroTitleWordOffsets = heroTitleWords.map((_, wordIndex) =>
+  heroTitleWords.slice(0, wordIndex).reduce((total, word) => total + word.length, 0),
+);
+const heroTitleCharacterCount = heroTitleWords.reduce((total, word) => total + word.length, 0);
+
 function PalomaMark() {
   return <span className="p4-mark"><b>PALOMA</b><small>Hair + Form</small></span>;
 }
@@ -32,12 +38,12 @@ function PalomaMark() {
 export default function PalomaStudio() {
   const catalog = useDaSalonCatalog();
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLElement>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [activeService, setActiveService] = useState(0);
   const [gift, setGift] = useState("₹5,000");
   const [activeChapter, setActiveChapter] = useState("cover");
   const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
+  const [visibleHeroCharacters, setVisibleHeroCharacters] = useState(0);
   const editions = (catalog.data?.services ?? []).map((service, index) => ({
     id: service.id,
     number: String(index + 1).padStart(2, "0"),
@@ -54,9 +60,34 @@ export default function PalomaStudio() {
   }
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const reducedMotionTimer = window.setTimeout(
+        () => setVisibleHeroCharacters(heroTitleCharacterCount),
+        0,
+      );
+      return () => window.clearTimeout(reducedMotionTimer);
+    }
+
+    let characterTimer = 0;
+    const startTimer = window.setTimeout(() => {
+      let nextCharacter = 1;
+      setVisibleHeroCharacters(nextCharacter);
+      characterTimer = window.setInterval(() => {
+        nextCharacter += 1;
+        setVisibleHeroCharacters(Math.min(nextCharacter, heroTitleCharacterCount));
+        if (nextCharacter >= heroTitleCharacterCount) window.clearInterval(characterTimer);
+      }, 160);
+    }, 200);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (characterTimer) window.clearInterval(characterTimer);
+    };
+  }, []);
+
+  useEffect(() => {
     const page = pageRef.current;
-    const hero = heroRef.current;
-    if (!page || !hero) return;
+    if (!page) return;
     page.classList.add("p4-motion-ready");
 
     const revealObserver = new IntersectionObserver(
@@ -86,10 +117,7 @@ export default function PalomaStudio() {
     let frame = 0;
     const update = () => {
       frame = 0;
-      const distance = Math.max(0, -hero.getBoundingClientRect().top);
-      const progress = Math.min(1, distance / Math.max(hero.offsetHeight, 1));
       const scrollable = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-      hero.style.setProperty("--p4-scroll", progress.toFixed(4));
       page.style.setProperty("--p4-page-progress", Math.min(1, window.scrollY / scrollable).toFixed(4));
     };
     const requestUpdate = () => { if (!frame) frame = requestAnimationFrame(update); };
@@ -130,11 +158,40 @@ export default function PalomaStudio() {
     </aside>
 
     <main>
-      <section ref={heroRef} id="cover" className="p4-cover" aria-labelledby="p4-title" data-p4-chapter>
-        <div className="p4-cover-media"><Image src="/brand-home-4/hero.png" alt="Woman with sculptural flowing hair in a dark editorial portrait" fill priority sizes="(max-width: 640px) 100vw, 60vw" /></div>
+      <section id="cover" className="p4-cover" aria-labelledby="p4-title" data-p4-chapter>
+        <div className="p4-cover-media">
+          <video
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            poster="/brand-home-4/hero-video-poster.jpg"
+            aria-label="A Paloma model turns through a sequence of hairstyles"
+          >
+            <source src="/brand-home-4/hero-video.mp4" type="video/mp4" />
+          </video>
+        </div>
         <div className="p4-cover-grid" aria-hidden="true" />
         <p className="p4-issue">Issue 04 <span>◆</span> 2026</p>
-        <h1 id="p4-title"><span className="p4-cover-title-line">Form follows</span><strong className="p4-cover-title-line">feeling.</strong></h1>
+        <h1 id="p4-title" aria-label="Form follows feeling.">
+          <span className="p4-cover-title-sequence" aria-hidden="true">
+            {heroTitleWords.map((word, wordIndex) => (
+              <span className="p4-cover-title-word" key={word}>
+                {Array.from(word).map((character, characterIndex) => {
+                  const sequenceIndex = heroTitleWordOffsets[wordIndex] + characterIndex;
+                  return (
+                    <span
+                      className={`p4-cover-title-character${sequenceIndex < visibleHeroCharacters ? " is-visible" : ""}`}
+                      key={`${word}-${characterIndex}`}
+                    >
+                      {character}
+                    </span>
+                  );
+                })}
+              </span>
+            ))}
+          </span>
+        </h1>
         <p className="p4-cover-note">Cut, colour and care for people who would rather be recognised than repeated.</p>
         <button className="p4-cover-cta" onClick={() => openBooking()}><span>Book<br />the look</span><b>↗</b></button>
         <div className="p4-scroll-note"><span>Scroll the issue</span><i /></div>

@@ -58,14 +58,33 @@ test("features the final Oru Template 5 on the collection page", async () => {
 
   assert.match(collection, /href="\/brand-home-5"/);
   assert.match(collection, /url=%2Fbrand-home-5%2Foru-hero\.png/);
+  assert.match(collection, /url=%2Fbrand-home-4%2Fhero-video-poster\.jpg/);
   assert.match(collection, /Editorial urban spa · Live/);
   assert.doesNotMatch(collection, /brand-home-5-rework/);
+  assert.doesNotMatch(collection, /url=%2Fbrand-home-4%2Fhero\.png/);
 });
 
 test("ships the Serein House entrance film at its runtime URL", async () => {
   const video = await stat(new URL("../public/assets/spa-entrance.mp4", import.meta.url));
 
   assert.ok(video.size > 1_000_000, "Serein House entrance film is missing or unexpectedly empty");
+});
+
+test("ships Atelier's scroll-scrubbed entrance film", async () => {
+  const html = await readRoute("brand-home-2.html");
+  const video = await stat(new URL("../public/brand-home-2/atelier-entry.mp4", import.meta.url));
+
+  assert.match(html, /atelier-entry\.mp4/);
+  assert.ok(video.size > 1_000_000, "Atelier entrance film is missing or unexpectedly empty");
+});
+
+test("ships Paloma's simple hero film", async () => {
+  const html = await readRoute("brand-home-4.html");
+  const video = await stat(new URL("../public/brand-home-4/hero-video.mp4", import.meta.url));
+
+  assert.match(html, /hero-video\.mp4/);
+  assert.match(html, /Form follows feeling\./);
+  assert.ok(video.size > 1_000_000, "Paloma hero film is missing or unexpectedly empty");
 });
 
 test("ships Maison Élan with both cinematic scrub clips", async () => {

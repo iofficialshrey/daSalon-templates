@@ -148,6 +148,7 @@
 @media (prefers-reduced-motion: reduce) {
   .atelier-brand-home *, .atelier-brand-home *::before, .atelier-brand-home *::after { animation-duration: .01ms!important; animation-iteration-count: 1!important; scroll-behavior: auto!important; transition-duration: .01ms!important; }
   .me-hero-media video { display: none; }.me-hero-media { background: url('/brand-home-2/atelier-hero-higgsfield-clean.png') center/cover no-repeat; transform: scale(1.035); }
+  .at-scene-video { display: none; }
 }
 
 /* Minimal luxury palette and interaction normalization */
@@ -393,7 +394,8 @@
   position: relative;
 }
 
-.at-scene-image {
+.at-scene-image,
+.at-scene-video {
   filter: brightness(calc(.58 + (var(--at-story) * .34))) saturate(calc(.72 + (var(--at-story) * .28)));
   height: 114%;
   inset: -7%;
@@ -405,6 +407,17 @@
   width: 114%;
   will-change: filter, transform;
 }
+
+.at-scene-image { z-index: 0; }
+
+.at-scene-video {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .65s ease;
+  z-index: 1;
+}
+
+.at-scene-video.is-ready { opacity: 1; }
 
 .at-scene-vignette {
   background:
@@ -568,7 +581,7 @@
       linear-gradient(0deg,rgba(7,7,6,.8),transparent 58%);
   }
   .at-experience { height: 560svh; }
-  .at-scene-image { height: 108%; inset: -4%; width: 108%; }
+  .at-scene-image, .at-scene-video { height: 108%; inset: -4%; width: 108%; }
   .at-portal { inset: 8vh 8vw; }
   .at-portal-two { inset: 16vh 16vw; }
   .at-chapter { bottom: 14vh; left: 24px; width: calc(100% - 62px); }
