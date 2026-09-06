@@ -19,22 +19,25 @@ test("renders da Salon Brand Home", async () => {
   assert.match(html, /href="\/brand-home-4"/);
   assert.match(html, /href="\/brand-home-5"/);
   assert.match(html, /href="\/brand-home-6"/);
+  assert.match(html, /href="\/brand-home-7"/);
   assert.match(html, /Serein House/);
   assert.match(html, /Paloma/);
   assert.match(html, /Oru Spa/);
   assert.match(html, /Néroli House/);
+  assert.match(html, /STUDIO \/ 07/);
   assert.doesNotMatch(html, /Coming soon|Reserved Brand Home space 7/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
 });
 
 test("prerenders all standalone salon Brand Homes", async () => {
-  const [brandHomeOne, brandHomeTwo, brandHomeThree, brandHomeFour, brandHomeFive, brandHomeSix] = await Promise.all([
+  const [brandHomeOne, brandHomeTwo, brandHomeThree, brandHomeFour, brandHomeFive, brandHomeSix, brandHomeSeven] = await Promise.all([
     readRoute("brand-home-1.html"),
     readRoute("brand-home-2.html"),
     readRoute("brand-home-3.html"),
     readRoute("brand-home-4.html"),
     readRoute("brand-home-5.html"),
     readRoute("brand-home-6.html"),
+    readRoute("brand-home-7.html"),
   ]);
 
   assert.match(brandHomeOne, /<title>Maison Élan — Private Hair Atelier<\/title>/i);
@@ -51,6 +54,11 @@ test("prerenders all standalone salon Brand Homes", async () => {
   assert.match(brandHomeSix, /<title>Néroli House \| Water, Warmth, Return<\/title>/i);
   assert.match(brandHomeSix, /Come back/);
   assert.match(brandHomeSix, /Rituals shaped around how you arrive/);
+  assert.match(brandHomeSeven, /<title>STUDIO \/ 07 — Look Like You Mean It<\/title>/i);
+  assert.match(brandHomeSeven, /MAKE AN/);
+  assert.match(brandHomeSeven, /ENTRANCE/);
+  assert.match(brandHomeSeven, /THE SIGNATURE EDIT/);
+  assert.match(brandHomeSeven, /Book appointment/);
 });
 
 test("features the final Oru Template 5 on the collection page", async () => {
@@ -99,4 +107,15 @@ test("ships Maison Élan with both cinematic scrub clips", async () => {
   assert.match(html, /Arrive where care becomes ritual/);
   assert.ok(arrival.size > 1_000_000, "Maison Élan arrival clip is missing or unexpectedly empty");
   assert.ok(ritual.size > 1_000_000, "Maison Élan ritual clip is missing or unexpectedly empty");
+});
+
+test("ships STUDIO / 07 with the approved hero still", async () => {
+  const html = await readRoute("brand-home-7.html");
+  const hero = await stat(new URL("../public/brand-home-7/hero-desktop.jpg", import.meta.url));
+
+  assert.match(html, /LOOK LIKE/);
+  assert.match(html, /MAKE AN/);
+  assert.match(html, /THE INNER CIRCLE/);
+  assert.match(html, /url=%2Fbrand-home-7%2Fhero-desktop\.jpg/);
+  assert.ok(hero.size > 20_000, "STUDIO / 07 hero still is missing or unexpectedly empty");
 });
