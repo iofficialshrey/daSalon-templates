@@ -1156,6 +1156,68 @@ a {
   padding-inline: 20px;
 }
 
+/* 07 · STUDIO — black / ivory precision instrument. */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-studio {
+  background: rgb(9 9 9 / 78%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio {
+  --booking-paper: #111111;
+  --booking-ink: #f3f0e9;
+  --booking-scene: #1a1a1a;
+  --booking-scene-ink: #f3f0e9;
+  --booking-accent: #b8a28a;
+  --booking-accent-ink: #090909;
+  --booking-line: rgb(243 240 233 / 16%);
+  --booking-option: #181818;
+  --booking-selected: #b8a28a;
+  --booking-selected-ink: #090909;
+  --booking-summary: #1d1d1d;
+  --booking-display: var(--font-studio-display), "Arial Narrow", Arial, sans-serif;
+  --booking-display-weight: 700;
+  --booking-service-weight: 650;
+  --booking-tracking: -.04em;
+  --booking-button-radius: 0;
+  --booking-chip-radius: 0;
+  --booking-summary-radius: 0;
+  border: 1px solid rgb(243 240 233 / 16%);
+  border-radius: 0;
+  height: min(820px, calc(100dvh - 40px));
+  max-width: 1120px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-atmosphere {
+  background: linear-gradient(160deg, #252525, #0f0f0f);
+  border-radius: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-panel {
+  border-radius: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament {
+  inset: 18% 12%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament i {
+  border: 1px solid rgb(184 162 138 / 35%);
+  inset: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament i:nth-child(2) {
+  inset: 18px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament i:nth-child(3) {
+  inset: 36px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-next {
+  border-radius: 0;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
 @keyframes booking-experience-in {
   from { opacity: 0; transform: translateY(24px) scale(.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -1465,6 +1527,19 @@ h2 {
 
 .brand-home-preview-live.brand-home-preview-neroli::after {
   background: linear-gradient(180deg, rgb(238 243 240 / 4%) 24%, rgb(24 48 46 / 74%) 100%);
+}
+
+.brand-home-preview-studio {
+  background: #090909;
+}
+
+.brand-home-preview-studio img {
+  filter: contrast(1.05) saturate(0.92);
+  object-position: 72% center;
+}
+
+.brand-home-preview-live.brand-home-preview-studio::after {
+  background: linear-gradient(180deg, rgb(9 9 9 / 8%) 18%, rgb(9 9 9 / 78%) 100%);
 }
 
 .brand-home-card {

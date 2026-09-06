@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { BookingBootstrap, PublicService, TimeSlot } from "@/lib/dasalon/types";
+import StudioBookingReels, { StudioServiceReel } from "./salon-booking-studio-reels";
 
 export type BookingService = { name: string; duration: string; price: string };
-export type BookingTheme = "maison" | "atelier" | "serein" | "paloma" | "oru" | "neroli";
+export type BookingTheme = "maison" | "atelier" | "serein" | "paloma" | "oru" | "neroli" | "studio";
 
 type SalonBookingProps = {
   brand: string;
@@ -80,6 +81,13 @@ const bookingThemes: Record<BookingTheme, {
     timePrompt: "Choose when the water settles", nextService: "Follow the tide", nextDetails: "Complete the journey",
     confirm: "Reserve this ritual", success: "Stillness is reserved.",
   },
+  studio: {
+    eyebrow: "The booking instrument", title: "Make an entrance.", atmosphereTitle: "Look like\nyou mean it.",
+    atmosphereCopy: "Select the service, lock the hour, and leave your details. Presence starts on the calendar.",
+    steps: ["Edit", "Hour", "Guest"], servicePrompt: "Select your edit", datePrompt: "MAKE TIME.",
+    timePrompt: "Choose your day. Find your moment.", nextService: "Choose the hour", nextDetails: "Continue",
+    confirm: "Confirm appointment", success: "You're booked.",
+  },
 };
 
 async function readApi<T>(response: Response): Promise<T> {
@@ -145,6 +153,7 @@ export default function SalonBooking({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
+  const [reelsMoving, setReelsMoving] = useState(false);
   const attemptKey = useRef<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
@@ -237,10 +246,17 @@ export default function SalonBooking({
 
     void fetch(`/api/dasalon/time-slots?${query}`, { cache: "no-store", signal: controller.signal })
       .then(readApi<{ date: string; timeSlots: TimeSlot[] }>)
-      .then((data) => setSlots(data.timeSlots))
+      .then((data) => {
+        setSlots(data.timeSlots);
+        setTime((current) => {
+          if (data.timeSlots.some((slot) => slot.time === current)) return current;
+          return data.timeSlots[0]?.time || "";
+        });
+      })
       .catch((issue) => {
         if (issue instanceof Error && issue.name === "AbortError") return;
         setSlots([]);
+        setTime("");
         setError(issue instanceof Error ? issue.message : "Times could not be loaded.");
       })
       .finally(() => {
@@ -297,7 +313,61 @@ export default function SalonBooking({
 
           {step < 4 && <div className="salon-booker-progress" aria-label={`Step ${step} of 3`}>{themeCopy.steps.map((label, index) => <button type="button" key={label} className={index + 1 <= step ? "active" : ""} disabled={index + 1 > step} onClick={() => index + 1 < step && setStep(index + 1)}><i>{String(index + 1).padStart(2, "0")}</i><span>{label}</span></button>)}</div>}
 
-        {step === 1 && <section className="salon-booker-step">
+        {step === 1 && theme === "studio" && (
+          <section className="salon-booker-step studio-booker-step-reels">
+            <StudioServiceReel
+              services={(bootstrap?.services ?? []).map((item) => ({
+                id: item.id,
+                name: item.name,
+                duration: item.duration,
+                priceLabel: formatPrice(item.price, bootstrap?.currency || "INR"),
+                category: item.category,
+              }))}
+              serviceId={service?.id || null}
+              onServiceSettle={(nextId) => {
+                const next = bootstrap?.services.find((item) => item.id === nextId) || null;
+                setService(next);
+                setError("");
+              }}
+              onMovingChange={setReelsMoving}
+              loading={loadingCatalog}
+              error={!loadingCatalog ? error : undefined}
+              onRetry={() => void loadBootstrap(venueId || undefined)}
+              venueSelect={bootstrap && bootstrap.venues.length > 1 ? (
+                <label className="salon-booker-venue">
+                  <span>Location</span>
+                  <select
+                    value={venueId}
+                    onChange={(event) => {
+                      setLoadingCatalog(true);
+                      setError("");
+                      void loadBootstrap(event.target.value);
+                    }}
+                    disabled={loadingCatalog}
+                  >
+                    {bootstrap.venues.map((venue) => (
+                      <option value={venue.id} key={venue.id}>
+                        {venue.name}{venue.city ? ` · ${venue.city}` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+              onContinue={() => {
+                setError("");
+                setTime("");
+                setSlots([]);
+                setLoadingSlots(true);
+                setReelsMoving(false);
+                setStep(2);
+              }}
+              continueDisabled={!service || !bootstrap?.dates.length || loadingCatalog || reelsMoving}
+              continueLabel={themeCopy.nextService}
+            />
+          </section>
+        )}
+
+        {step === 1 && theme !== "studio" && <section className="salon-booker-step">
           {bootstrap && bootstrap.venues.length > 1 && <label className="salon-booker-venue"><span>Location</span><select value={venueId} onChange={(event) => { setLoadingCatalog(true); setError(""); void loadBootstrap(event.target.value); }} disabled={loadingCatalog}>{bootstrap.venues.map((venue) => <option value={venue.id} key={venue.id}>{venue.name}{venue.city ? ` · ${venue.city}` : ""}</option>)}</select></label>}
           <p>{themeCopy.servicePrompt}</p>
           {loadingCatalog && <div className="salon-booker-status" role="status">Loading live services…</div>}
@@ -306,7 +376,37 @@ export default function SalonBooking({
           <button className="salon-booker-next" type="button" disabled={!service || !bootstrap?.dates.length || loadingCatalog} onClick={() => { setError(""); setTime(""); setSlots([]); setLoadingSlots(true); setStep(2); }}>{themeCopy.nextService} <span>→</span></button>
         </section>}
 
-        {step === 2 && <section className="salon-booker-step">
+        {step === 2 && theme === "studio" && (
+          <section className="salon-booker-step studio-booker-step-reels">
+            <button className="salon-booker-back" type="button" onClick={() => { setError(""); setReelsMoving(false); setStep(1); }}>← Services</button>
+            <StudioBookingReels
+              dates={bootstrap?.dates ?? []}
+              date={date}
+              onDateSettle={(next) => {
+                if (next === date) return;
+                setError("");
+                setTime("");
+                setSlots([]);
+                setLoadingSlots(true);
+                setDate(next);
+              }}
+              times={slots.map((slot) => slot.time)}
+              time={time}
+              onTimeSettle={(next) => {
+                setError("");
+                setTime(next);
+              }}
+              loadingSlots={loadingSlots}
+              slotsError={error || undefined}
+              onMovingChange={setReelsMoving}
+              onContinue={() => { setError(""); setStep(3); }}
+              continueDisabled={!date || !time || loadingSlots || reelsMoving || slots.length === 0}
+              continueLabel={themeCopy.nextDetails}
+            />
+          </section>
+        )}
+
+        {step === 2 && theme !== "studio" && <section className="salon-booker-step">
           <button className="salon-booker-back" type="button" onClick={() => { setError(""); setStep(1); }}>← Services</button>
           <p>{themeCopy.datePrompt}</p>
           <div className="salon-booker-dates">{bootstrap?.dates.slice(0, 9).map((item) => <button type="button" key={item} className={date === item ? "selected" : ""} onClick={() => { setError(""); setTime(""); setSlots([]); setLoadingSlots(true); setDate(item); }}>{dateLabel(item)}</button>)}</div>

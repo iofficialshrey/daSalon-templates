@@ -213,6 +213,33 @@ export default function Home() {
                 </a>
               </article>
 
+              <article className="brand-home-card brand-home-card-live">
+                <a
+                  className="brand-home-link"
+                  href="/brand-home-7"
+                  aria-label="Open the STUDIO / 07 salon Brand Home"
+                >
+                  <div className="brand-home-preview brand-home-preview-live brand-home-preview-studio">
+                    <Image
+                      src="/brand-home-7/hero-desktop.jpg"
+                      alt="Cinematic editorial portrait for STUDIO / 07"
+                      fill
+                      sizes="(max-width: 760px) 100vw, 50vw"
+                    />
+                    <div className="brand-home-preview-identity">
+                      <span>Look like you mean it</span>
+                      <strong>STUDIO / 07</strong>
+                    </div>
+                    <span className="brand-home-open">Explore Brand Home <span aria-hidden="true">↗</span></span>
+                    <span className="brand-home-number">07</span>
+                  </div>
+                  <div className="brand-home-meta brand-home-meta-live">
+                    <span>STUDIO / 07</span>
+                    <span>Cinematic salon · Live</span>
+                  </div>
+                </a>
+              </article>
+
             </div>
           </div>
         </section>
