@@ -2,13 +2,183 @@
 
 import { useEffect, useRef, useState } from "react";
 import SalonBooking from "../salon-booking";
+import { BrandCommerce, defaultOffersForBrand } from "@/app/components/brand-commerce";
+import type {
+  BrandCommerceCopy,
+  GiftOffer,
+  MembershipOffer,
+  PackageOffer,
+} from "@/app/components/brand-commerce";
 import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
-const journeys = [
-  { index: "A", title: "The Deep Exhale", time: "120 min", price: "₹7,200", note: "Steam, full-body massage, and quiet pool time." },
-  { index: "B", title: "Skin and Stillness", time: "105 min", price: "₹6,400", note: "Mineral steam, Skin Reset, and cooling tea." },
-  { index: "C", title: "Sunday at Oru", time: "180 min", price: "₹9,800", note: "Pool, massage, seasonal lunch, and no clock." },
+const oruMemberships: MembershipOffer[] = [
+  {
+    id: "oru-house",
+    name: "Oru House",
+    validityLabel: "Valid for 6 months",
+    savePercent: 12,
+    description: "Recovery as part of your ordinary rhythm: credit for a monthly ritual and open access to the pool, steam, and resting room.",
+    details: [
+      "Credit for roughly one treatment each month",
+      "Pool, steam, and resting room on any day you visit",
+      "Guest treatments 10% less",
+      "One balance shared across Mumbai and Bengaluru",
+    ],
+    pay: 720,
+    credit: 820,
+    tone: "aubergine",
+  },
+  {
+    id: "oru-year-of-water",
+    name: "Year of Water",
+    validityLabel: "Valid for 12 months",
+    savePercent: 16,
+    description: "A full year of water, warmth, and touch, with the deepest credit and first sight of every seasonal journey.",
+    details: [
+      "The fullest wallet, for guests who return every few weeks",
+      "Priority booking windows ahead of general release",
+      "Seasonal journeys released to members first",
+      "Unused credit expires with the membership window",
+    ],
+    pay: 1450,
+    credit: 1720,
+    tone: "ink",
+  },
+  {
+    id: "oru-quiet-hour",
+    name: "The Quiet Hour",
+    validityLabel: "Valid for 3 months",
+    savePercent: 9,
+    description: "A lighter wallet for the short visits — steam, a massage on the way home, an hour with nothing in it.",
+    details: [
+      "Sized for 60 and 75 minute treatments",
+      "Steam and resting room included with every visit",
+      "A simple way to keep a balance ready between appointments",
+      "Redeemable at either house",
+    ],
+    pay: 240,
+    credit: 265,
+    tone: "vermilion",
+  },
 ];
+
+const oruPackages: PackageOffer[] = [
+  {
+    id: "oru-deep-exhale",
+    name: "The Deep Exhale",
+    savePercent: 10,
+    sessionsLabel: "1 visit · 120 min",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Mineral steam", "Full-body massage", "Quiet pool time"],
+    description: "Steam, full-body massage, and quiet pool time — the long version of putting everything down.",
+    details: [
+      "One 120 minute visit, booked whenever the window suits",
+      "Begins in the steam room and ends beside the pool",
+      "Therapist matched after a short conversation",
+      "Available at both houses",
+    ],
+    pay: 144,
+    worth: 160,
+    tone: "aubergine",
+  },
+  {
+    id: "oru-skin-and-stillness",
+    name: "Skin and Stillness",
+    savePercent: 12,
+    sessionsLabel: "1 visit · 105 min",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Mineral steam", "Skin Reset treatment", "Cooling tea and rest"],
+    description: "Mineral steam, our Skin Reset, and cooling tea in the resting room afterwards.",
+    details: [
+      "One 105 minute visit shaped around skin",
+      "Steam first, so the treatment settles deeper",
+      "Home-care notes written for you before you leave",
+      "Valid for ninety days from purchase",
+    ],
+    pay: 128,
+    worth: 145,
+    tone: "vermilion",
+  },
+  {
+    id: "oru-sunday",
+    name: "Sunday at Oru",
+    savePercent: 15,
+    sessionsLabel: "1 visit · 180 min",
+    validityLabel: "Valid for 120 days",
+    inclusions: ["Pool and steam circuit", "Full-body massage", "Seasonal lunch"],
+    description: "Pool, massage, seasonal lunch, and no clock anywhere in the building.",
+    details: [
+      "Half a day held open for one guest",
+      "Seasonal lunch served between water and treatment",
+      "Best taken on a Sunday, though any day is yours",
+      "Valid for one hundred and twenty days",
+    ],
+    pay: 196,
+    worth: 230,
+    tone: "ink",
+  },
+];
+
+const oruGifts: GiftOffer[] = [
+  {
+    id: "oru-a-little-room",
+    name: "A Little Room",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "A little room for themselves — enough for a treatment and the slow hour after it.",
+    details: [
+      "Redeemable against any treatment or journey",
+      "Send instantly or choose a wrapped card with a handwritten note",
+      "Valid for twelve months from purchase",
+      "Usable at either house",
+    ],
+    pay: 90,
+    value: 100,
+    tone: "aubergine",
+  },
+  {
+    id: "oru-afternoon-off",
+    name: "An Afternoon Off",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "Enough for a full journey — steam, treatment, pool, and nowhere else to be.",
+    details: [
+      "Covers a complete journey with room to spare",
+      "Arrives wrapped in house paper if you prefer",
+      "Valid for twelve months from purchase",
+      "The day and the therapist are theirs to choose",
+    ],
+    pay: 180,
+    value: 200,
+    tone: "vermilion",
+  },
+  {
+    id: "oru-open-card",
+    name: "The Open Card",
+    validityLabel: "No expiry",
+    savePercent: null,
+    description: "An open card that waits as long as they need it to.",
+    details: [
+      "Open value with no expiry date",
+      "Redeemable against treatments, journeys, or membership",
+      "Balance can be spent across more than one visit",
+      "Valid in Bandra West and Indiranagar",
+    ],
+    pay: 150,
+    value: 150,
+    tone: "ink",
+  },
+];
+
+const oruCommerceCopy: BrandCommerceCopy = {
+  ...defaultOffersForBrand("Oru", { eyebrowNumbers: ["03", "04", "05"] }).copy,
+  membershipsTitle: "Come for the treatment. Stay for the quiet.",
+  membershipsCopy: "Swipe through Oru memberships — wallet credit for treatments, open pool and steam days, and what you actually pay.",
+  packagesTitle: "Half a day can change the shape of a week.",
+  packagesCopy: "Every journey shows what it includes, how long the window lasts, what it is worth and what you pay.",
+  giftsTitle: "Give them somewhere to put everything down.",
+  giftsCopy: "Swipe through Oru cards — each one sized like something you would keep in your wallet.",
+};
 
 const locations = [
   { city: "Mumbai", area: "Bandra West", hours: "09:00 to 21:00" },
@@ -32,7 +202,6 @@ export default function OruSpa() {
   const catalog = useDaSalonCatalog();
   const homeRef = useRef<HTMLDivElement>(null);
   const [activeService, setActiveService] = useState(0);
-  const [giftValue, setGiftValue] = useState("₹5,000");
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
   const services = (catalog.data?.services ?? []).map((service, index) => ({
@@ -93,7 +262,7 @@ export default function OruSpa() {
         <a href="#o2-top" aria-label="Oru Spa home"><OruMark /></a>
         <nav aria-label="Primary navigation">
           <a href="#o2-treatments">Treatments</a>
-          <a href="#o2-house">Oru House</a>
+          <a href="#memberships">Oru House</a>
           <a href="#o2-locations">Locations</a>
         </nav>
         <button type="button" onClick={() => openBooking()}>Book a ritual <span>↗</span></button>
@@ -161,63 +330,15 @@ export default function OruSpa() {
           </div>
         </section>
 
-        <section className="o2-journeys" data-o2-section aria-labelledby="o2-journeys-title">
-          <header>
-            <div className="o2-section-label"><span>03</span><p>Stay a little longer</p></div>
-            <h2 id="o2-journeys-title">Half a day can change the shape of a week.</h2>
-          </header>
-          <div className="o2-journey-list">
-            {journeys.map((journey) => (
-              <article key={journey.title}>
-                <span>{journey.index}</span>
-                <h3>{journey.title}</h3>
-                <p>{journey.note}</p>
-                <div><small>{journey.time}</small><strong>{journey.price}</strong></div>
-                <button type="button" onClick={() => openBooking()}>Choose journey <i>↗</i></button>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="o2-house" id="o2-house" data-o2-section aria-labelledby="o2-house-title">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand-home-5/oru-house.png" alt="The lavender pool and recovery room at Oru House" />
-          <span className="o2-house-grade" aria-hidden="true" />
-          <div className="o2-house-copy">
-            <div className="o2-section-label"><span>04</span><p>Oru House</p></div>
-            <h2 id="o2-house-title">Come for the treatment. Stay for the quiet.</h2>
-            <p>Membership makes recovery part of your ordinary rhythm, with a monthly ritual and open access to the pool, steam, and resting room.</p>
-            <ul>
-              <li><span>Monthly treatment</span><strong>1 credit</strong></li>
-              <li><span>Pool and steam</span><strong>Any day</strong></li>
-              <li><span>Guest treatments</span><strong>10% less</strong></li>
-              <li><span>Monthly</span><strong>₹6,800</strong></li>
-            </ul>
-            <button type="button" onClick={() => openBooking()}>Join Oru House <span>↗</span></button>
-          </div>
-        </section>
-
-        <section className="o2-gift" data-o2-section aria-labelledby="o2-gift-title">
-          <div className="o2-gift-copy">
-            <div className="o2-section-label"><span>05</span><p>Oru, for someone else</p></div>
-            <h2 id="o2-gift-title">Give them somewhere to put everything down.</h2>
-            <p>Send instantly or choose a wrapped card with a handwritten note.</p>
-          </div>
-          <div className="o2-gift-builder">
-            <div className="o2-gift-card">
-              <OruMark />
-              <p>A little room<br />for yourself.</p>
-              <strong>{giftValue}</strong>
-              <span aria-hidden="true"><i /><b /></span>
-            </div>
-            <div className="o2-gift-values" aria-label="Choose gift card value">
-              {["₹3,500", "₹5,000", "₹7,500", "₹10,000"].map((value) => (
-                <button className={giftValue === value ? "is-selected" : ""} type="button" key={value} onClick={() => setGiftValue(value)}>{value}</button>
-              ))}
-            </div>
-            <button className="o2-gift-send" type="button">Send an Oru card <span>↗</span></button>
-          </div>
-        </section>
+        <BrandCommerce
+          theme="oru"
+          brandName="Oru"
+          brandMark="O"
+          memberships={oruMemberships}
+          packages={oruPackages}
+          gifts={oruGifts}
+          copy={oruCommerceCopy}
+        />
 
         <section className="o2-quote" data-o2-section aria-labelledby="o2-quote-title">
           <div className="o2-section-label"><span>06</span><p>After Oru</p></div>

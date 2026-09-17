@@ -2,7 +2,183 @@
 
 import { useEffect, useRef, useState } from "react";
 import SalonBooking from "../salon-booking";
+import { BrandCommerce, defaultOffersForBrand } from "@/app/components/brand-commerce";
+import type {
+  BrandCommerceCopy,
+  GiftOffer,
+  MembershipOffer,
+  PackageOffer,
+} from "@/app/components/brand-commerce";
 import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
+
+const neroliMemberships: MembershipOffer[] = [
+  {
+    id: "neroli-house",
+    name: "Néroli House",
+    validityLabel: "Valid for 6 months",
+    savePercent: 12,
+    description: "One treatment each month, open use of the mineral pool and steam rooms, and a quiet place waiting between visits.",
+    details: [
+      "Credit for one treatment each month",
+      "Unlimited mineral pool and steam room access",
+      "Guest rituals 12% less",
+      "One balance shared across Mumbai and Bengaluru",
+    ],
+    pay: 780,
+    credit: 890,
+    tone: "celadon",
+  },
+  {
+    id: "neroli-mineral-year",
+    name: "The Mineral Year",
+    validityLabel: "Valid for 12 months",
+    savePercent: 15,
+    description: "A year of water and warmth, with the fullest credit and the first invitations to seasonal rituals.",
+    details: [
+      "The fullest wallet, for guests who visit every few weeks",
+      "Priority booking windows ahead of general release",
+      "Seasonal rituals offered to members first",
+      "Unused credit expires with the membership window",
+    ],
+    pay: 1580,
+    credit: 1860,
+    tone: "sage",
+  },
+  {
+    id: "neroli-still-water",
+    name: "Still Water",
+    validityLabel: "Valid for 3 months",
+    savePercent: 9,
+    description: "A lighter balance for short visits — steam, a shorter treatment, and an hour by the pool.",
+    details: [
+      "Sized for 60 and 75 minute rituals",
+      "Mineral pool and steam access on every visit",
+      "A simple way to keep a balance ready between visits",
+      "Redeemable at either house",
+    ],
+    pay: 265,
+    credit: 290,
+    tone: "coral",
+  },
+];
+
+const neroliPackages: PackageOffer[] = [
+  {
+    id: "neroli-three-waters",
+    name: "The Three Waters",
+    savePercent: 15,
+    sessionsLabel: "3 visits included",
+    validityLabel: "Valid for 120 days",
+    inclusions: ["Mineral steam circuit", "Signature body ritual", "Pool and resting hour"],
+    description: "Three visits through the same sequence — settle, restore, return — spaced however your months allow.",
+    details: [
+      "Three complete visits, each shaped the same way",
+      "Space them across one hundred and twenty days",
+      "Mineral steam circuit before every treatment",
+      "Book each visit independently",
+    ],
+    pay: 340,
+    worth: 400,
+    tone: "celadon",
+  },
+  {
+    id: "neroli-skin-restored",
+    name: "Skin, Restored",
+    savePercent: 12,
+    sessionsLabel: "2 visits included",
+    validityLabel: "Valid for 6 months",
+    inclusions: ["Mineral facial ritual", "Repair mask and massage", "Home-care consult"],
+    description: "Two visits built around skin, with a home-care consult so the work holds between them.",
+    details: [
+      "Two visits focused on skin and its recovery",
+      "Repair mask and facial massage in both sessions",
+      "Home-care consult with notes written for you",
+      "Valid for six months from purchase",
+    ],
+    pay: 245,
+    worth: 280,
+    tone: "coral",
+  },
+  {
+    id: "neroli-slow-weekend",
+    name: "A Slow Weekend",
+    savePercent: 12,
+    sessionsLabel: "1 visit · half a day",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Néroli tea and mineral steam", "Full-body ritual", "Seasonal lunch by the pool"],
+    description: "Half a day held open: tea, steam, a full-body ritual, and lunch beside the water.",
+    details: [
+      "One long visit, roughly half a day",
+      "Seasonal lunch served between water and treatment",
+      "Slow re-entry to the city, at your own pace",
+      "Valid for ninety days from purchase",
+    ],
+    pay: 210,
+    worth: 240,
+    tone: "sage",
+  },
+];
+
+const neroliGifts: GiftOffer[] = [
+  {
+    id: "neroli-time-well-spent",
+    name: "For Time Well Spent",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "Enough for a ritual and the quiet hour that follows it.",
+    details: [
+      "Redeemable against any treatment or package",
+      "Send instantly or have it wrapped in mineral paper",
+      "Valid for twelve months from purchase",
+      "Usable at either house",
+    ],
+    pay: 90,
+    value: 100,
+    tone: "celadon",
+  },
+  {
+    id: "neroli-long-soak",
+    name: "The Long Soak",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "A fuller card, sized for the half-day rituals and the pool afterwards.",
+    details: [
+      "Covers a half-day ritual with room to spare",
+      "Arrives with a handwritten note if you prefer",
+      "Valid for twelve months from purchase",
+      "The day and the therapist are theirs to choose",
+    ],
+    pay: 180,
+    value: 200,
+    tone: "coral",
+  },
+  {
+    id: "neroli-open-card",
+    name: "Open Néroli",
+    validityLabel: "No expiry",
+    savePercent: null,
+    description: "An open card with no date on it, waiting for the week they need it.",
+    details: [
+      "Open value with no expiry date",
+      "Redeemable against treatments, packages, or membership",
+      "Balance can be spent across more than one visit",
+      "Valid in Bandra West and Indiranagar",
+    ],
+    pay: 150,
+    value: 150,
+    tone: "sage",
+  },
+];
+
+const neroliCommerceCopy: BrandCommerceCopy = {
+  ...defaultOffersForBrand("Néroli", { eyebrowNumbers: ["03", "04", "05"] }).copy,
+  membershipsTitle: "Make restoration part of your rhythm.",
+  membershipsCopy: "Swipe through Néroli memberships — treatment credit, mineral pool and steam access, and what you actually pay.",
+  packagesTitle: "Several visits, gathered into one price.",
+  packagesCopy: "Every package shows the visits included, how long they last, what they are worth and what you pay.",
+  giftsTitle: "A ritual, chosen now or later.",
+  giftsCopy: "Swipe through Néroli cards — send one instantly, or keep it until the right week arrives.",
+};
 
 const dayRituals = [
   { number: "I", title: "Settle", copy: "Neroli tea, mineral steam, and time to arrive without rushing." },
@@ -43,7 +219,6 @@ export default function NeroliHouse() {
   const homeRef = useRef<HTMLDivElement>(null);
   const guideRef = useRef<HTMLDivElement>(null);
   const [activeTreatment, setActiveTreatment] = useState(0);
-  const [giftValue, setGiftValue] = useState("₹5,000");
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
   const treatments = (catalog.data?.services ?? []).map((service, index) => ({
@@ -183,8 +358,9 @@ export default function NeroliHouse() {
         <a href="#top" aria-label="Néroli House home"><NeroliWordmark /></a>
         <nav aria-label="Primary navigation">
           <a href="#treatments">Treatments</a>
-          <a href="#house">The House</a>
-          <a href="#gifting">Gifting</a>
+          <a href="#memberships">Memberships</a>
+          <a href="#packages">Packages</a>
+          <a href="#gift-cards">Gifting</a>
         </nav>
         <button type="button" onClick={() => openBooking()}>
           Book a visit <span aria-hidden="true">↗</span>
@@ -216,7 +392,7 @@ export default function NeroliHouse() {
               <span>Begin your visit</span><i aria-hidden="true">↘</i>
             </button>
           </div>
-          <div className="n6-hero-index" aria-hidden="true"><span>01</span><i /><span>07</span></div>
+          <div className="n6-hero-index" aria-hidden="true"><span>01</span><i /><span>08</span></div>
           <span className="n6-anchor n6-anchor-hero" data-guide data-scale="1.18" data-shape="0" data-bloom="0" data-rotate="0" />
           <a className="n6-scroll-cue" href="#treatments"><span>Follow the water</span><i /></a>
         </section>
@@ -272,59 +448,25 @@ export default function NeroliHouse() {
           <span className="n6-anchor n6-anchor-day" data-guide data-scale=".47" data-shape=".72" data-bloom=".28" data-rotate="24" />
         </section>
 
-        <section className="n6-house" id="house" data-scroll-section aria-labelledby="n6-house-title">
-          <div className="n6-house-image">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand-home-6/neroli-house.png" alt="The Néroli House recovery lounge opening onto a reflecting pool" />
-            <div className="n6-house-stamp" aria-hidden="true"><span>NH</span><i>Est. 2026</i></div>
-          </div>
-          <div className="n6-house-copy">
-            <p><span>03</span> Néroli House</p>
-            <h2 id="n6-house-title">Make restoration part of your rhythm.</h2>
-            <p>One treatment each month, open use of the mineral pool and steam rooms, and a quiet place waiting between visits.</p>
-            <ul>
-              <li><span>Monthly treatment credit</span><strong>01</strong></li>
-              <li><span>Pool and steam access</span><strong>Unlimited</strong></li>
-              <li><span>Guest ritual saving</span><strong>12%</strong></li>
-              <li><span>Monthly</span><strong>₹7,400</strong></li>
-            </ul>
-            <button type="button" onClick={() => openBooking()}><span>Enter the House</span><i aria-hidden="true">↗</i></button>
-          </div>
-          <span className="n6-anchor n6-anchor-house" data-guide data-scale=".52" data-shape=".2" data-bloom="1" data-rotate="45" />
-        </section>
-
-        <section className="n6-gift" id="gifting" data-scroll-section aria-labelledby="n6-gift-title">
-          <div className="n6-gift-copy">
-            <p><span>04</span> Give time</p>
-            <h2 id="n6-gift-title">A ritual, chosen now or later.</h2>
-            <p>Send a Néroli card instantly or have it wrapped in mineral paper with a handwritten note.</p>
-          </div>
-          <div className="n6-gift-builder">
-            <div className="n6-gift-card" aria-label={`Néroli House gift card for ${giftValue}`}>
-              <NeroliWordmark />
-              <span>For time well spent</span>
-              <strong>{giftValue}</strong>
-              <i aria-hidden="true" />
-            </div>
-            <div className="n6-gift-values" aria-label="Choose gift card value">
-              {["₹3,500", "₹5,000", "₹7,500", "₹10,000"].map((value) => (
-                <button className={giftValue === value ? "is-selected" : ""} type="button" key={value} onClick={() => setGiftValue(value)}>{value}</button>
-              ))}
-            </div>
-            <button className="n6-send-gift" type="button">Send this ritual <span aria-hidden="true">↗</span></button>
-          </div>
-          <span className="n6-anchor n6-anchor-gift" data-guide data-scale=".7" data-shape=".5" data-bloom=".7" data-rotate="88" />
-        </section>
+        <BrandCommerce
+          theme="neroli"
+          brandName="Néroli"
+          brandMark="N"
+          memberships={neroliMemberships}
+          packages={neroliPackages}
+          gifts={neroliGifts}
+          copy={neroliCommerceCopy}
+        />
 
         <section className="n6-guest" data-scroll-section aria-labelledby="n6-guest-title">
-          <p><span>05</span> Guest note</p>
+          <p><span>06</span> Guest note</p>
           <blockquote id="n6-guest-title">“It feels considered from the first cup of tea to the moment you step outside.”</blockquote>
           <div><span>Aanya S.</span><span>House member since 2025</span></div>
         </section>
 
         <section className="n6-locations" data-scroll-section aria-labelledby="n6-locations-title">
           <header>
-            <p><span>06</span> Visit</p>
+            <p><span>07</span> Visit</p>
             <h2 id="n6-locations-title">Find your water.</h2>
           </header>
           <div className="n6-location-list">
@@ -342,7 +484,7 @@ export default function NeroliHouse() {
         </section>
 
         <section className="n6-finale" data-scroll-section aria-labelledby="n6-finale-title">
-          <p><span>07</span> Your time</p>
+          <p><span>08</span> Your time</p>
           <h2 id="n6-finale-title">Leave room<br />for yourself.</h2>
           <button type="button" onClick={() => openBooking()}><span>Book Néroli</span><i aria-hidden="true">↗</i></button>
           <span className="n6-anchor n6-anchor-finale" data-guide data-scale="1.05" data-shape="0" data-bloom="1" data-rotate="180" />

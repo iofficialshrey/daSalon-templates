@@ -3,6 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import SalonBooking from "../salon-booking";
+import { BrandCommerce } from "@/app/components/brand-commerce";
+import type {
+  BrandCommerceCopy,
+  GiftOffer,
+  MembershipOffer,
+  PackageOffer,
+} from "@/app/components/brand-commerce";
 import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
 const studios = [
@@ -16,14 +23,190 @@ const chapters = [
   { id: "cover", number: "00", label: "Cover" },
   { id: "view", number: "01", label: "Point of view" },
   { id: "editions", number: "02", label: "Services" },
-  { id: "packages", number: "03", label: "Seasonal sets" },
-  { id: "method", number: "04", label: "Method" },
-  { id: "circle", number: "05", label: "Circle" },
-  { id: "gifts", number: "06", label: "Gifts" },
+  { id: "memberships", number: "03", label: "Circle" },
+  { id: "packages", number: "04", label: "Seasonal sets" },
+  { id: "gift-cards", number: "05", label: "Gifts" },
+  { id: "method", number: "06", label: "Method" },
   { id: "studios", number: "07", label: "Studios" },
   { id: "note", number: "08", label: "Studio note" },
   { id: "finale", number: "09", label: "Finale" },
 ];
+
+const memberships: MembershipOffer[] = [
+  {
+    id: "paloma-circle",
+    name: "Paloma Circle",
+    validityLabel: "Valid for 12 months",
+    savePercent: 15,
+    description: "The yearly studio membership for guests who prefer continuity, priority and one shared record.",
+    details: [
+      "Ten-day early booking across every studio",
+      "Annual studio credit for cut, colour and care",
+      "Two complimentary finishes each year",
+      "One ledger shared across Mumbai, Delhi, Bengaluru and Goa",
+    ],
+    pay: 360,
+    credit: 420,
+    tone: "cobalt",
+  },
+  {
+    id: "paloma-studio-card",
+    name: "Studio Card",
+    validityLabel: "Valid for 6 months",
+    savePercent: 10,
+    description: "A half-year balance for the guests who keep one shape and refresh it often.",
+    details: [
+      "Studio credit for cuts, finishes and weekday colour",
+      "Balance follows you between the four studios",
+      "Rebook from the same record each visit",
+      "Unused credit closes with the window",
+    ],
+    pay: 180,
+    credit: 200,
+    tone: "ink",
+  },
+  {
+    id: "paloma-front-row",
+    name: "Front Row",
+    validityLabel: "Valid for 3 months",
+    savePercent: 8,
+    description: "A short season of credit, sized for blowouts, gloss and between-issue upkeep.",
+    details: [
+      "A lighter, shorter membership",
+      "Best for finishes, gloss and quick edits",
+      "Redeemable at any Paloma studio",
+      "An easy way to hold a balance",
+    ],
+    pay: 95,
+    credit: 105,
+    tone: "ivory",
+  },
+];
+
+const packages: PackageOffer[] = [
+  {
+    id: "paloma-first-impression",
+    name: "First Impression",
+    savePercent: 12,
+    sessionsLabel: "1 session included",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Full consultation", "Signature cut", "Air-dry lesson"],
+    description: "The new guest edit—read the material, find the line, then teach the finish.",
+    details: [
+      "Opens with a full consultation on texture and routine",
+      "Signature cut drawn for the person, not the season",
+      "Air-dry lesson so the shape repeats at home",
+      "Book with any available cutter within the window",
+    ],
+    pay: 98,
+    worth: 112,
+    tone: "cobalt",
+  },
+  {
+    id: "paloma-colour-continuity",
+    name: "Colour Continuity",
+    savePercent: 18,
+    sessionsLabel: "4 sessions included",
+    validityLabel: "Valid for 6 months",
+    inclusions: ["Two colour sessions", "Two gloss appointments", "Home care set"],
+    description: "The six month edit, written to keep colour reading the same way in every light.",
+    details: [
+      "Two full colour sessions with your colourist",
+      "Two gloss appointments spaced between them",
+      "Home care set matched to the formula",
+      "Sessions booked independently across six months",
+    ],
+    pay: 480,
+    worth: 585,
+    tone: "ink",
+  },
+  {
+    id: "paloma-event-study",
+    name: "Event Study",
+    savePercent: 10,
+    sessionsLabel: "2 sessions included",
+    validityLabel: "Valid for 120 days",
+    inclusions: ["Styling trial", "Event-day hair", "Touch-up kit"],
+    description: "The occasion edit—one trial, one event, nothing decided on the morning.",
+    details: [
+      "A styling trial held well before the date",
+      "Event-day hair with the agreed finish",
+      "Touch-up kit to carry with you",
+      "Both sessions inside a 120 day window",
+    ],
+    pay: 176,
+    worth: 196,
+    tone: "ivory",
+  },
+];
+
+const gifts: GiftOffer[] = [
+  {
+    id: "paloma-open-edition",
+    name: "Open Edition",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "For hair, form and whatever comes next—the recipient writes the rest.",
+    details: [
+      "Redeemable for cut, colour or care",
+      "Valid for twelve months from purchase",
+      "Accepted at every Paloma studio",
+      "Personalised by you at checkout",
+    ],
+    pay: 90,
+    value: 100,
+    tone: "cobalt",
+  },
+  {
+    id: "paloma-full-issue",
+    name: "Full Issue",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "The larger gift—enough for a full change rather than a trim.",
+    details: [
+      "Sized for colour work or a complete restyle",
+      "Valid for twelve months from purchase",
+      "Can be split across more than one visit",
+      "Accepted at every Paloma studio",
+    ],
+    pay: 180,
+    value: 200,
+    tone: "ink",
+  },
+  {
+    id: "paloma-short-note",
+    name: "Short Note",
+    validityLabel: "No expiry",
+    savePercent: null,
+    description: "A small, open card with no date attached to it.",
+    details: [
+      "Open value with no expiry",
+      "The recipient chooses when to book",
+      "Pairs well with a first appointment",
+      "Delivered instantly",
+    ],
+    pay: 60,
+    value: 60,
+    tone: "ivory",
+  },
+];
+
+const commerceCopy: BrandCommerceCopy = {
+  membershipsEyebrow: "Paloma Circle / 003",
+  membershipsTitle: "Keep your place in line.",
+  membershipsCopy:
+    "A studio membership for guests who prefer continuity, priority and one shared record across every city. Swipe the cards to read credit, validity and price.",
+  packagesEyebrow: "Seasonal sets / 004",
+  packagesTitle: "More than one good hair day.",
+  packagesCopy:
+    "Edits written as a series rather than a single appointment—sessions included, how long they run and what they are worth.",
+  giftsEyebrow: "Gift edition / 005",
+  giftsTitle: "Give them the change.",
+  giftsCopy:
+    "Delivered instantly, personalised by you and valid at every Paloma studio. Swipe the cards to choose the edition.",
+  membershipSwipeHint: "Swipe to browse the Circle",
+  giftSwipeHint: "Swipe to browse gift editions",
+};
 
 const heroTitleWords = ["Form", "follows", "feeling."];
 const heroTitleWordOffsets = heroTitleWords.map((_, wordIndex) =>
@@ -40,7 +223,6 @@ export default function PalomaStudio() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [activeService, setActiveService] = useState(0);
-  const [gift, setGift] = useState("₹5,000");
   const [activeChapter, setActiveChapter] = useState("cover");
   const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
   const [visibleHeroCharacters, setVisibleHeroCharacters] = useState(0);
@@ -111,7 +293,8 @@ export default function PalomaStudio() {
       },
       { rootMargin: "-38% 0px -52%", threshold: 0 },
     );
-    const chapterElements = page.querySelectorAll<HTMLElement>("[data-p4-chapter]");
+    // BrandCommerce owns its own markup, so its sections join the rail by id.
+    const chapterElements = page.querySelectorAll<HTMLElement>("[data-p4-chapter], .bc-root > section[id]");
     chapterElements.forEach((element) => chapterObserver.observe(element));
 
     let frame = 0;
@@ -134,7 +317,7 @@ export default function PalomaStudio() {
   return <div ref={pageRef} className="paloma-brand-home">
     <header className="p4-nav">
       <a href="#cover" aria-label="Paloma home"><PalomaMark /></a>
-      <nav><a href="#editions">Services</a><a href="#circle">Circle</a><a href="#studios">Studios</a></nav>
+      <nav><a href="#editions">Services</a><a href="#memberships">Circle</a><a href="#packages">Sets</a><a href="#gift-cards">Gifts</a><a href="#studios">Studios</a></nav>
       <button onClick={() => openBooking()}>Make an appointment <span>↗</span></button>
     </header>
 
@@ -213,33 +396,24 @@ export default function PalomaStudio() {
         </div>
       </section>
 
-      <section id="packages" className="p4-packages" data-p4-reveal data-p4-chapter data-p4-number="03">
-        <header><span className="p4-kicker">Seasonal sets / 003</span><h2>More than one good hair day.</h2></header>
-        <div>
-          <article className="p4-package-blue"><small>New guest edit</small><span>01</span><h3>First<br />Impression</h3><p>Consultation + signature cut + air-dry lesson</p><strong>₹4,900</strong><button onClick={() => openBooking()}>Select</button></article>
-          <article className="p4-package-image"><Image src="/brand-home-4/object-study.png" alt="Gold comb and salon objects arranged as an editorial still life" fill sizes="(max-width: 900px) 100vw, 45vw" /><div><small>Six month edit</small><span>02</span><h3>Colour<br />Continuity</h3><p>Two colour sessions + two gloss appointments + home care</p><strong>₹24,000</strong><button onClick={() => openBooking()}>Select</button></div></article>
-          <article className="p4-package-line"><small>Occasion edit</small><span>03</span><h3>Event<br />Study</h3><p>Trial + event-day hair + touch-up kit</p><strong>₹8,800</strong><button onClick={() => openBooking()}>Select</button></article>
-        </div>
-      </section>
+      <BrandCommerce
+        theme="paloma"
+        brandName="Paloma"
+        brandMark="P"
+        memberships={memberships}
+        packages={packages}
+        gifts={gifts}
+        copy={commerceCopy}
+      />
 
-      <section id="method" className="p4-method" data-p4-reveal data-p4-chapter data-p4-number="04">
+      <section id="method" className="p4-method" data-p4-reveal data-p4-chapter data-p4-number="06">
         <div className="p4-method-image"><Image src="/brand-home-4/object-study.png" alt="Paloma tools and treatment objects" fill sizes="(max-width: 900px) 100vw, 58vw" /><span>Object study No. 09</span></div>
-        <div className="p4-method-copy"><span className="p4-kicker">Our method / 004</span><h2>Look.<br />Listen.<br /><i>Then cut.</i></h2><ol><li><b>01</b><span><strong>Read the material</strong>Texture, history, routine and condition.</span></li><li><b>02</b><span><strong>Find the line</strong>A shape drawn for the person, not the season.</span></li><li><b>03</b><span><strong>Teach the finish</strong>Simple movements you can repeat at home.</span></li></ol></div>
+        <div className="p4-method-copy"><span className="p4-kicker">Our method / 006</span><h2>Look.<br />Listen.<br /><i>Then cut.</i></h2><ol><li><b>01</b><span><strong>Read the material</strong>Texture, history, routine and condition.</span></li><li><b>02</b><span><strong>Find the line</strong>A shape drawn for the person, not the season.</span></li><li><b>03</b><span><strong>Teach the finish</strong>Simple movements you can repeat at home.</span></li></ol></div>
       </section>
 
       <section className="p4-interlude" aria-label="Paloma studio principles" data-p4-reveal>
         <div aria-hidden="true"><span>SHAPE WITH INTENTION</span><b>◆</b><span>COLOUR WITH MEMORY</span><b>◆</b><span>STYLE THAT MOVES</span><b>◆</b><span>SHAPE WITH INTENTION</span><b>◆</b></div>
         <div aria-hidden="true"><span>LOOK</span><b>◆</b><span>LISTEN</span><b>◆</b><span>THEN CUT</span><b>◆</b><span>LOOK</span><b>◆</b><span>LISTEN</span><b>◆</b><span>THEN CUT</span><b>◆</b></div>
-      </section>
-
-      <section id="circle" className="p4-circle" data-p4-reveal data-p4-chapter data-p4-number="05">
-        <div className="p4-circle-intro"><span className="p4-kicker">Paloma Circle / 005</span><h2>Keep your<br />place in line.</h2><p>A yearly studio membership for guests who prefer continuity, priority and one shared record across every city.</p><button onClick={() => openBooking()}>Join for ₹18,000 / year <span>↗</span></button></div>
-        <div className="p4-circle-ledger"><header><b>Your studio ledger</b><span>Member 0824</span></header><dl><div><dt>Early booking</dt><dd>10 days</dd></div><div><dt>Annual credit</dt><dd>₹15,000</dd></div><div><dt>Complimentary finish</dt><dd>02</dd></div><div><dt>Loyalty return</dt><dd>5%</dd></div></dl><footer><span>Credits follow you across studios.</span><b>P / C</b></footer></div>
-      </section>
-
-      <section id="gifts" className="p4-gifts" data-p4-reveal data-p4-chapter data-p4-number="06">
-        <div className="p4-gift-card"><span>PALOMA</span><p>This card holds</p><strong className="p4-gift-value" key={gift}>{gift}</strong><small>For hair, form and whatever comes next.</small></div>
-        <div className="p4-gift-copy"><span className="p4-kicker">Gift edition / 006</span><h2>Give them<br />the change.</h2><p>Delivered instantly, personalised by you and valid at every Paloma studio for twelve months.</p><div>{["₹3,000", "₹5,000", "₹10,000", "Custom"].map((value) => <button key={value} className={gift === value ? "active" : ""} onClick={() => setGift(value)}>{value}</button>)}</div><button className="p4-gift-send">Create gift card <span>→</span></button></div>
       </section>
 
       <section id="studios" className="p4-studios" data-p4-reveal data-p4-chapter data-p4-number="07">

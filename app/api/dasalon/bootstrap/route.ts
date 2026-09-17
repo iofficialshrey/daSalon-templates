@@ -16,8 +16,8 @@ export async function GET(request: Request) {
     const venues = asArray<PartnerVenue>(me.venues, ["venues"]);
     const result: BookingBootstrap = {
       brand: me.businessName || me.name || me.brandName || "Salon",
-      currency: me.currency || me.country?.currencyCode || venue.country?.currencyCode || "INR",
-      phoneCode: me.country?.phoneCode || venue.country?.phoneCode || "+91",
+      currency: "SGD",
+      phoneCode: me.country?.phoneCode || venue.country?.phoneCode || "+65",
       venues: venues.map((item) => ({
         id: item.id,
         name: item.name,

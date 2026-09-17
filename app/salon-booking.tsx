@@ -1,11 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { BookingBootstrap, PublicService, TimeSlot } from "@/lib/dasalon/types";
+import {
+  buildAppointmentIcs,
+  emptyBookingDraft,
+  type StudioBookingDraft,
+} from "./brand-home-7/booking-draft";
 import StudioBookingReels, { StudioServiceReel } from "./salon-booking-studio-reels";
 
 export type BookingService = { name: string; duration: string; price: string };
 export type BookingTheme = "maison" | "atelier" | "serein" | "paloma" | "oru" | "neroli" | "studio";
+
+export type StudioServiceMediaProp = {
+  kind: "photo" | "type";
+  src?: string;
+  label: string;
+  alt?: string;
+};
 
 type SalonBookingProps = {
   brand: string;
@@ -13,6 +26,15 @@ type SalonBookingProps = {
   services?: BookingService[];
   initialBootstrap?: BookingBootstrap | null;
   initialServiceId?: string | null;
+  /** Studio theme: preselect a live venue and reload its catalog. */
+  initialVenueId?: string | null;
+  /** Studio theme: restore in-session draft (guest fields + appointment choices). */
+  initialDraft?: Partial<StudioBookingDraft> | null;
+  /** Studio theme: service image / type panel for the compact summary. */
+  serviceMedia?: StudioServiceMediaProp | null;
+  /** Studio theme: verified directions URL only. */
+  directionsUrl?: string | null;
+  onDraftChange?: (draft: StudioBookingDraft) => void;
   onClose: () => void;
 };
 
@@ -48,7 +70,7 @@ const bookingThemes: Record<BookingTheme, {
   },
   atelier: {
     eyebrow: "Enter the atelier", title: "Begin your visit.", atmosphereTitle: "Cross the\nthreshold.",
-    atmosphereCopy: "Your appointment unfolds in three considered movements: service, time and arrival notes.",
+    atmosphereCopy: "Your appointment unfolds in three considered movements: service, time and your details.",
     steps: ["Compose", "Place", "Arrive"], servicePrompt: "Compose your appointment", datePrompt: "Place it in the calendar",
     timePrompt: "Select your entrance", nextService: "Open the calendar", nextDetails: "Complete the portrait",
     confirm: "Enter the atelier", success: "Your visit is composed.",
@@ -114,15 +136,12 @@ function timeLabel(value: string) {
   });
 }
 
-function formatPrice(amount: number, currency: string) {
+/** Always display booking prices in Singapore dollars (S$). */
+function formatPrice(amount: number, _currency = "SGD") {
   try {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 0,
-    }).format(amount);
+    return `S$${new Intl.NumberFormat("en-SG", { maximumFractionDigits: 0 }).format(amount)}`;
   } catch {
-    return `₹${amount.toFixed(0)}`;
+    return `S$${Number(amount).toFixed(0)}`;
   }
 }
 
@@ -132,28 +151,37 @@ export default function SalonBooking({
   services: visualServices = [],
   initialBootstrap = null,
   initialServiceId = null,
+  initialVenueId = null,
+  initialDraft = null,
+  serviceMedia = null,
+  directionsUrl = null,
+  onDraftChange,
   onClose,
 }: SalonBookingProps) {
   const themeCopy = bookingThemes[theme];
-  const [step, setStep] = useState(1);
+  const draftSeed = initialDraft || emptyBookingDraft();
+  const preferredServiceId = initialServiceId || draftSeed.serviceId || null;
+  const preferredVenueId = initialVenueId || draftSeed.venueId || initialBootstrap?.selectedVenueId || "";
+  const [step, setStep] = useState(theme === "studio" ? Math.min(3, Math.max(1, draftSeed.step || 1)) : 1);
   const [bootstrap, setBootstrap] = useState<BookingBootstrap | null>(initialBootstrap);
-  const [venueId, setVenueId] = useState(initialBootstrap?.selectedVenueId || "");
+  const [venueId, setVenueId] = useState(preferredVenueId || initialBootstrap?.selectedVenueId || "");
   const [service, setService] = useState<PublicService | null>(
-    initialBootstrap?.services.find((item) => item.id === initialServiceId) || initialBootstrap?.services[0] || null,
+    initialBootstrap?.services.find((item) => item.id === preferredServiceId) || null,
   );
-  const [date, setDate] = useState(initialBootstrap?.dates[0] || "");
-  const [time, setTime] = useState("");
+  const [date, setDate] = useState(draftSeed.date || initialBootstrap?.dates[0] || "");
+  const [time, setTime] = useState(draftSeed.time || "");
   const [slots, setSlots] = useState<TimeSlot[]>([]);
-  const [firstName, setFirstName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [note, setNote] = useState("");
-  const [loadingCatalog, setLoadingCatalog] = useState(!initialBootstrap);
+  const [firstName, setFirstName] = useState(draftSeed.firstName || "");
+  const [phone, setPhone] = useState(draftSeed.phone || "");
+  const needsVenueReload = Boolean(preferredVenueId && initialBootstrap && preferredVenueId !== initialBootstrap.selectedVenueId);
+  const [loadingCatalog, setLoadingCatalog] = useState(!initialBootstrap || needsVenueReload);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [availabilityNotice, setAvailabilityNotice] = useState("");
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
   const [reelsMoving, setReelsMoving] = useState(false);
+  const restoredTimeRef = useRef(draftSeed.time || "");
   const attemptKey = useRef<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
@@ -163,23 +191,47 @@ export default function SalonBooking({
       : null,
   );
 
-  async function loadBootstrap(nextVenueId?: string) {
+  function emitDraft(partial?: Partial<StudioBookingDraft>) {
+    if (theme !== "studio" || !onDraftChange) return;
+    onDraftChange({
+      serviceId: service?.id || null,
+      venueId: venueId || null,
+      date: date || null,
+      time: time || null,
+      firstName,
+      phone,
+      email: "",
+      note: "",
+      step: (step <= 3 ? step : 3) as 1 | 2 | 3,
+      updatedAt: Date.now(),
+      ...partial,
+    });
+  }
+
+  async function loadBootstrap(nextVenueId?: string, preserveServiceId?: string | null) {
     try {
       const query = nextVenueId ? `?venueId=${encodeURIComponent(nextVenueId)}` : "";
       const data = await readApi<BookingBootstrap>(await fetch(`/api/dasalon/bootstrap${query}`, { cache: "no-store" }));
+      const keepId = preserveServiceId || preferredServiceId;
       const preferredName = service?.name || visualServices[0]?.name;
-      const nextService = data.services.find((item) => item.id === initialServiceId)
+      const nextService = data.services.find((item) => item.id === keepId)
         || data.services.find((item) => item.name.toLowerCase() === preferredName?.toLowerCase())
+        || (theme === "studio" ? null : data.services[0])
         || data.services[0]
         || null;
+      const restoredDate = draftSeed.date && data.dates.includes(draftSeed.date) ? draftSeed.date : data.dates[0] || "";
+      if (draftSeed.date && !data.dates.includes(draftSeed.date)) {
+        setAvailabilityNotice("Your saved date is no longer available. Choose a new day.");
+      }
       setBootstrap(data);
       setVenueId(data.selectedVenueId);
       setService(nextService);
-      setDate(data.dates[0] || "");
-      setTime("");
+      setDate(restoredDate);
+      if (!(draftSeed.time && restoredDate === draftSeed.date)) setTime("");
       setSlots([]);
       if (data.services.length === 0) setError("No online services are available at this venue.");
       else if (data.dates.length === 0) setError("This venue has no bookable dates right now.");
+      else setError("");
     } catch (issue) {
       setError(issue instanceof Error ? issue.message : "Booking is temporarily unavailable.");
     } finally {
@@ -190,9 +242,21 @@ export default function SalonBooking({
   // The modal mounts on open; venue changes call the loader explicitly.
   /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
   useEffect(() => {
-    if (!initialBootstrap) void loadBootstrap();
+    if (!initialBootstrap || needsVenueReload) {
+      void loadBootstrap(preferredVenueId || undefined, preferredServiceId);
+      return;
+    }
+    if (preferredServiceId && !service) {
+      const matched = initialBootstrap.services.find((item) => item.id === preferredServiceId) || null;
+      setService(matched);
+    }
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+
+  useEffect(() => {
+    emitDraft();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme, service?.id, venueId, date, time, firstName, phone, step]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -250,8 +314,17 @@ export default function SalonBooking({
         setSlots(data.timeSlots);
         setTime((current) => {
           if (data.timeSlots.some((slot) => slot.time === current)) return current;
+          const restored = restoredTimeRef.current;
+          if (restored && data.timeSlots.some((slot) => slot.time === restored)) {
+            restoredTimeRef.current = "";
+            return restored;
+          }
+          if (current && !data.timeSlots.some((slot) => slot.time === current)) {
+            setAvailabilityNotice("Your saved time is no longer open. Pick another hour.");
+          }
           return data.timeSlots[0]?.time || "";
         });
+        setError("");
       })
       .catch((issue) => {
         if (issue instanceof Error && issue.name === "AbortError") return;
@@ -282,12 +355,14 @@ export default function SalonBooking({
           serviceId: service.id,
           date,
           startTime: time,
-          client: { name: firstName, phone, email },
-          note,
+          client: { name: firstName, phone },
         }),
       }));
       setConfirmation(data);
       setStep(4);
+      if (theme === "studio" && onDraftChange) {
+        onDraftChange(emptyBookingDraft());
+      }
     } catch (issue) {
       setError(issue instanceof Error ? issue.message : "The booking could not be confirmed.");
     } finally {
@@ -303,7 +378,9 @@ export default function SalonBooking({
           <small>{themeCopy.eyebrow}</small>
           <h2>{themeCopy.atmosphereTitle.split("\n").map((line) => <span key={line}>{line}</span>)}</h2>
           <p>{themeCopy.atmosphereCopy}</p>
-          <div className="salon-booker-atmosphere-mark"><span>{String(Math.min(step, 3)).padStart(2, "0")}</span><i />03</div>
+          {theme !== "studio" && (
+            <div className="salon-booker-atmosphere-mark"><span>{String(Math.min(step, 3)).padStart(2, "0")}</span><i />03</div>
+          )}
         </div>
         <div className="salon-booker-panel" ref={panelRef}>
           <header className="salon-booker-head">
@@ -311,16 +388,58 @@ export default function SalonBooking({
             <button type="button" onClick={onClose} aria-label="Close booking"><span>Close</span>×</button>
           </header>
 
-          {step < 4 && <div className="salon-booker-progress" aria-label={`Step ${step} of 3`}>{themeCopy.steps.map((label, index) => <button type="button" key={label} className={index + 1 <= step ? "active" : ""} disabled={index + 1 > step} onClick={() => index + 1 < step && setStep(index + 1)}><i>{String(index + 1).padStart(2, "0")}</i><span>{label}</span></button>)}</div>}
+          {step < 4 && (
+            <div className="salon-booker-progress" aria-label={`Step ${step} of 3`}>
+              {themeCopy.steps.map((label, index) => (
+                <button
+                  type="button"
+                  key={label}
+                  className={index + 1 <= step ? "active" : ""}
+                  disabled={index + 1 > step}
+                  onClick={() => index + 1 < step && setStep(index + 1)}
+                >
+                  {theme !== "studio" && <i>{String(index + 1).padStart(2, "0")}</i>}
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
         {step === 1 && theme === "studio" && (
           <section className="salon-booker-step studio-booker-step-reels">
+            {service && (
+              <div className={`studio-booker-summary-card${serviceMedia ? " has-media" : ""}`} aria-live="polite">
+                {serviceMedia?.kind === "photo" && serviceMedia.src ? (
+                  <div className="studio-booker-summary-media">
+                    <Image src={serviceMedia.src} alt={serviceMedia.alt || ""} fill sizes="120px" />
+                  </div>
+                ) : serviceMedia?.kind === "type" ? (
+                  <div className="studio-booker-summary-type" aria-hidden="true">
+                    <span>{serviceMedia.label}</span>
+                  </div>
+                ) : null}
+                <div className="studio-booker-summary-copy">
+                  <p className="s7-mono">Selected edit</p>
+                  <strong>{service.name}</strong>
+                  <span>
+                    {bootstrap?.venues.find((item) => item.id === venueId)?.name || brand}
+                    {" · "}
+                    {service.duration} min
+                    {" · "}
+                    {formatPrice(service.price, bootstrap?.currency || "SGD")}
+                  </span>
+                </div>
+              </div>
+            )}
+            {availabilityNotice && (
+              <div className="salon-booker-status" role="status">{availabilityNotice}</div>
+            )}
             <StudioServiceReel
               services={(bootstrap?.services ?? []).map((item) => ({
                 id: item.id,
                 name: item.name,
                 duration: item.duration,
-                priceLabel: formatPrice(item.price, bootstrap?.currency || "INR"),
+                priceLabel: formatPrice(item.price, bootstrap?.currency || "SGD"),
                 category: item.category,
               }))}
               serviceId={service?.id || null}
@@ -328,11 +447,12 @@ export default function SalonBooking({
                 const next = bootstrap?.services.find((item) => item.id === nextId) || null;
                 setService(next);
                 setError("");
+                setAvailabilityNotice("");
               }}
               onMovingChange={setReelsMoving}
               loading={loadingCatalog}
               error={!loadingCatalog ? error : undefined}
-              onRetry={() => void loadBootstrap(venueId || undefined)}
+              onRetry={() => void loadBootstrap(venueId || undefined, service?.id)}
               venueSelect={bootstrap && bootstrap.venues.length > 1 ? (
                 <label className="salon-booker-venue">
                   <span>Location</span>
@@ -341,7 +461,8 @@ export default function SalonBooking({
                     onChange={(event) => {
                       setLoadingCatalog(true);
                       setError("");
-                      void loadBootstrap(event.target.value);
+                      setAvailabilityNotice("");
+                      void loadBootstrap(event.target.value, service?.id);
                     }}
                     disabled={loadingCatalog}
                   >
@@ -355,6 +476,7 @@ export default function SalonBooking({
               ) : null}
               onContinue={() => {
                 setError("");
+                setAvailabilityNotice("");
                 setTime("");
                 setSlots([]);
                 setLoadingSlots(true);
@@ -422,14 +544,82 @@ export default function SalonBooking({
           <button className="salon-booker-back" type="button" onClick={() => { setError(""); setStep(2); }}>← Date and time</button>
           <label><span>Full name</span><input required minLength={2} maxLength={100} autoComplete="name" value={firstName} onChange={(event) => setFirstName(event.target.value)} /></label>
           <label><span>Mobile number</span><input required minLength={5} maxLength={32} inputMode="tel" autoComplete="tel" placeholder={bootstrap?.phoneCode ? `${bootstrap.phoneCode} …` : undefined} value={phone} onChange={(event) => setPhone(event.target.value)} /></label>
-          <label><span>Email address · optional</span><input type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
-          <label><span>Appointment note · optional</span><input maxLength={1000} value={note} onChange={(event) => setNote(event.target.value)} /></label>
           <div className="salon-booker-summary"><span>{service?.name}<small>{brand}</small></span><strong>{date ? dateLabel(date) : ""}<br />{time ? timeLabel(time) : ""}</strong></div>
           {error && <div className="salon-booker-status salon-booker-error" role="alert">{error}</div>}
           <button className="salon-booker-next" type="submit" disabled={submitting}>{submitting ? "Confirming…" : themeCopy.confirm} <span>→</span></button>
         </form>}
 
-          {step === 4 && service && confirmation && <section className="salon-booker-confirmation"><span>{brand.charAt(0)}</span><p>Thank you{firstName ? `, ${firstName}` : ""}.</p><h3>{service.name}</h3><strong>{dateLabel(confirmation.date)} at {timeLabel(confirmation.startTime)}</strong><small>Your appointment is confirmed in da Salon{confirmation.appointmentId ? ` with reference ${confirmation.appointmentId}` : ""}. Payment is due at the venue.</small><button type="button" onClick={onClose}>Return to {brand}</button></section>}
+          {step === 4 && service && confirmation && (
+            <section className={`salon-booker-confirmation${theme === "studio" ? " studio-confirmation-card" : ""}`}>
+              {theme !== "studio" && <span>{brand.charAt(0)}</span>}
+              {theme === "studio" && (
+                <p className="studio-confirmation-eyebrow">Appointment confirmed</p>
+              )}
+              <p>Thank you{firstName ? `, ${firstName}` : ""}.</p>
+              <h3>{service.name}</h3>
+              <strong>{dateLabel(confirmation.date)} at {timeLabel(confirmation.startTime)}</strong>
+              {theme === "studio" && (
+                <ul className="studio-confirmation-meta">
+                  <li>
+                    <span>Venue</span>
+                    <b>{bootstrap?.venues.find((item) => item.id === venueId)?.name || brand}</b>
+                  </li>
+                  <li>
+                    <span>Reference</span>
+                    <b>{confirmation.appointmentId || confirmation.id || "Pending reference"}</b>
+                  </li>
+                  <li>
+                    <span>Payment</span>
+                    <b>Due at the venue · {formatPrice(service.price, bootstrap?.currency || "SGD")}</b>
+                  </li>
+                </ul>
+              )}
+              <small>
+                Your appointment is confirmed in da Salon
+                {confirmation.appointmentId ? ` with reference ${confirmation.appointmentId}` : ""}.
+                Payment is due at the venue.
+              </small>
+              {theme === "studio" && (
+                <div className="studio-confirmation-actions">
+                  {bootstrap?.venues.find((item) => item.id === venueId)?.timezone ? (
+                    <button
+                      type="button"
+                      className="salon-booker-next studio-confirmation-secondary"
+                      onClick={() => {
+                        const venue = bootstrap?.venues.find((item) => item.id === venueId);
+                        if (!venue?.timezone) return;
+                        const ics = buildAppointmentIcs({
+                          title: `${service.name} · ${brand}`,
+                          description: `Appointment at ${venue.name}. Reference ${confirmation.appointmentId || confirmation.id || "n/a"}.`,
+                          location: [venue.name, venue.city].filter(Boolean).join(", "),
+                          date: confirmation.date,
+                          startTime: confirmation.startTime,
+                          durationMinutes: service.duration,
+                          timezone: venue.timezone,
+                          uid: `${confirmation.appointmentId || confirmation.id || crypto.randomUUID()}@studio07`,
+                        });
+                        const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+                        const url = URL.createObjectURL(blob);
+                        const anchor = document.createElement("a");
+                        anchor.href = url;
+                        anchor.download = "studio-07-appointment.ics";
+                        anchor.click();
+                        URL.revokeObjectURL(url);
+                      }}
+                    >
+                      Add to calendar
+                    </button>
+                  ) : null}
+                  {directionsUrl ? (
+                    <a className="salon-booker-next studio-confirmation-secondary" href={directionsUrl} target="_blank" rel="noreferrer">
+                      Directions
+                    </a>
+                  ) : null}
+                </div>
+              )}
+              <button type="button" onClick={onClose}>Return to {brand}</button>
+            </section>
+          )}
         </div>
       </aside>
     </div>

@@ -113,9 +113,12 @@ test("ships STUDIO / 07 with the approved hero still", async () => {
   const html = await readRoute("brand-home-7.html");
   const hero = await stat(new URL("../public/brand-home-7/hero-desktop.jpg", import.meta.url));
 
-  assert.match(html, /LOOK LIKE/);
+  assert.match(html, /YOU KNOW THAT FEELING/);
   assert.match(html, /MAKE AN/);
-  assert.match(html, /THE INNER CIRCLE/);
+  assert.match(html, /Your next look starts with you/);
+  assert.match(html, /THE INNER[\s\S]*CIRCLE/);
+  assert.match(html, /THE PEOPLE BEHIND THE LOOK/);
+  assert.match(html, /Find your look/);
   assert.match(html, /url=%2Fbrand-home-7%2Fhero-desktop\.jpg/);
   assert.ok(hero.size > 20_000, "STUDIO / 07 hero still is missing or unexpectedly empty");
 });
