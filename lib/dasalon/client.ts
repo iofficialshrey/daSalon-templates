@@ -76,15 +76,12 @@ export function useDaSalonCatalog() {
   return { ...state, refresh: () => loadDefaultCatalog(true) };
 }
 
-export function formatCatalogPrice(amount: number, currency = "INR") {
+/** Always display catalog prices in Singapore dollars (S$). */
+export function formatCatalogPrice(amount: number, _currency = "SGD") {
   try {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 0,
-    }).format(amount);
+    return `S$${new Intl.NumberFormat("en-SG", { maximumFractionDigits: 0 }).format(amount)}`;
   } catch {
-    return `₹${amount.toFixed(0)}`;
+    return `S$${Number(amount).toFixed(0)}`;
   }
 }
 

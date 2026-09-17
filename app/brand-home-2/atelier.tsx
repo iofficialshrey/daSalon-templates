@@ -2,6 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import SalonBooking from "../salon-booking";
+import { BrandCommerce } from "@/app/components/brand-commerce";
+import type {
+  BrandCommerceCopy,
+  GiftOffer,
+  MembershipOffer,
+  PackageOffer,
+} from "@/app/components/brand-commerce";
 import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
 type Venue = {
@@ -39,6 +46,182 @@ const venues: Venue[] = [
     image: "/brand-home-2/location-indiranagar.jpg",
   },
 ];
+
+const memberships: MembershipOffer[] = [
+  {
+    id: "atelier-circle",
+    name: "The Atelier Circle",
+    validityLabel: "Valid for 12 months",
+    savePercent: 15,
+    description: "The house membership—priority hours, fuller credit and privileges that travel with you.",
+    details: [
+      "Priority weekend reservations ahead of general release",
+      "Wallet credit for colour, cut and care rituals",
+      "Preferred artist requests when the diary allows",
+      "One member record shared across every Atelier studio",
+    ],
+    pay: 320,
+    credit: 380,
+    tone: "espresso",
+  },
+  {
+    id: "atelier-house-member",
+    name: "House Member",
+    validityLabel: "Valid for 6 months",
+    savePercent: 10,
+    description: "Studio credit for cuts, finishes and weekday colour across every Atelier address.",
+    details: [
+      "Wallet credit usable at Bandra, Lodhi and Indiranagar",
+      "Suited to cuts, finishes and weekday colour",
+      "Balance follows you between cities",
+      "Unused credit closes with the membership window",
+    ],
+    pay: 180,
+    credit: 200,
+    tone: "champagne",
+  },
+  {
+    id: "atelier-everyday",
+    name: "Everyday Atelier",
+    validityLabel: "Valid for 3 months",
+    savePercent: 8,
+    description: "A lighter wallet for guests who return often for blowouts and gloss.",
+    details: [
+      "A shorter membership for frequent returns",
+      "Best for signature blowouts, gloss and quick finishes",
+      "Redeemable at any Atelier studio",
+      "Keeps a balance ready between appointments",
+    ],
+    pay: 95,
+    credit: 105,
+    tone: "rose",
+  },
+];
+
+const packages: PackageOffer[] = [
+  {
+    id: "atelier-new-season",
+    name: "New Season Colour Ritual",
+    savePercent: 20,
+    sessionsLabel: "1 session included",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Dimensional colour", "Silk repair treatment", "Signature finish"],
+    description: "The limited atelier edit—consultation, dimensional colour and a finish taught for real life.",
+    details: [
+      "Begins with a full colour consultation",
+      "Dimensional colour with silk repair treatment",
+      "Signature finish, taught so it repeats at home",
+      "Book any available colourist within the window",
+    ],
+    pay: 178,
+    worth: 224,
+    tone: "espresso",
+  },
+  {
+    id: "atelier-sunday-reset",
+    name: "The Sunday Reset",
+    savePercent: 15,
+    sessionsLabel: "1 session included",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Scalp ritual", "Restorative treatment", "Signature finish"],
+    description: "A complete unhurried reset, composed as a single quiet visit.",
+    details: [
+      "One reset visit in a single appointment",
+      "Scalp ritual, restorative treatment and finish",
+      "Held in a quiet room with unhurried timing",
+      "Designed for the end of a long week",
+    ],
+    pay: 88,
+    worth: 104,
+    tone: "champagne",
+  },
+  {
+    id: "atelier-polished-three",
+    name: "The Polished Three",
+    savePercent: 12,
+    sessionsLabel: "3 sessions included",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Signature blowout", "Signature blowout", "Signature blowout"],
+    description: "Three signature blowouts to keep the shape sharp between full appointments.",
+    details: [
+      "Three signature blowout sessions",
+      "Space the visits across 90 days",
+      "Each session booked independently",
+      "Keeps polish between cuts and colour",
+    ],
+    pay: 85,
+    worth: 97,
+    tone: "rose",
+  },
+];
+
+const gifts: GiftOffer[] = [
+  {
+    id: "atelier-invitation",
+    name: "The Invitation",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "A considered invitation to pause—colour, cut or a quiet reset, their choice.",
+    details: [
+      "Redeemable for colour, cut or a quiet reset",
+      "Valid for twelve months from purchase",
+      "Accepted at every Atelier studio",
+      "Delivered as a private card, not a receipt",
+    ],
+    pay: 90,
+    value: 100,
+    tone: "champagne",
+  },
+  {
+    id: "atelier-open-card",
+    name: "The Open Card",
+    validityLabel: "No expiry",
+    savePercent: null,
+    description: "An open card that waits for them, with no date attached.",
+    details: [
+      "Open value with no expiry date",
+      "The recipient chooses when to visit",
+      "Valid across Mumbai, Delhi and Bengaluru",
+      "Ideal when the gift should wait",
+    ],
+    pay: 150,
+    value: 150,
+    tone: "espresso",
+  },
+  {
+    id: "atelier-quiet-reset",
+    name: "The Quiet Reset",
+    validityLabel: "Valid for 1 year",
+    savePercent: 8,
+    description: "A softer gift, weighted towards treatment-led rituals and finishes.",
+    details: [
+      "Suited to treatments, scalp rituals and finishes",
+      "Valid for twelve months from purchase",
+      "Redeemable at any Atelier studio",
+      "A quieter gift for restorative care",
+    ],
+    pay: 120,
+    value: 130,
+    tone: "rose",
+  },
+];
+
+const commerceCopy: BrandCommerceCopy = {
+  membershipsEyebrow: "03 / Membership",
+  membershipsTitle: "Belong to the inner circle.",
+  membershipsCopy:
+    "Wallet credit and priority hours that follow you to every Atelier studio. Swipe through the memberships to see validity, credit and what you actually pay.",
+  packagesEyebrow: "04 / Offers & packages",
+  packagesTitle: "A little more of what you love.",
+  packagesCopy:
+    "Seasonal privileges and carefully paired rituals, available across every studio—what is included, how long it lasts and what it is worth.",
+  giftsEyebrow: "05 / Gift cards",
+  giftsTitle: "Give them time in the chair.",
+  giftsCopy:
+    "A beautifully delivered invitation to pause, reset and leave feeling entirely themselves.",
+  membershipSwipeHint: "Swipe to browse Atelier memberships",
+  giftSwipeHint: "Swipe to browse Atelier gift cards",
+};
 
 function Arrow({ direction = "right" }: { direction?: "right" | "down" | "up" }) {
   const transform = direction === "down" ? "rotate(90 12 12)" : direction === "up" ? "rotate(-90 12 12)" : undefined;
@@ -87,8 +270,6 @@ export default function Atelier() {
   const [activeCategory, setActiveCategory] = useState("");
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
-  const [giftAmount, setGiftAmount] = useState("₹5,000");
-  const [giftSent, setGiftSent] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const experienceRef = useRef<HTMLElement>(null);
   const experienceVideoRef = useRef<HTMLVideoElement>(null);
@@ -225,7 +406,8 @@ export default function Atelier() {
         <nav className={menuOpen ? "is-open" : ""} aria-label="Main navigation">
           <a href="#experience" onClick={() => setMenuOpen(false)}>The experience</a>
           <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="#circle" onClick={() => setMenuOpen(false)}>The circle</a>
+          <a href="#memberships" onClick={() => setMenuOpen(false)}>The circle</a>
+          <a href="#gift-cards" onClick={() => setMenuOpen(false)}>Gift cards</a>
           <a href="#locations" onClick={() => setMenuOpen(false)}>Locations</a>
         </nav>
         <div className="me-header-actions">
@@ -395,103 +577,15 @@ export default function Atelier() {
           </div>
         </section>
 
-        <section className="me-collections" id="collections">
-          <SectionIntro
-            eyebrow="03 / Offers & packages"
-            title="A little more of what you love."
-            copy="Seasonal privileges and carefully paired rituals, available across every studio."
-            light
-          />
-          <div className="me-offer-grid">
-            <article className="me-feature-offer">
-              <div className="me-offer-art" aria-hidden="true"><span /><i>É</i><b>20</b></div>
-              <div className="me-offer-copy">
-                <span>Limited atelier edit</span>
-                <h3>The New Season<br />Colour Ritual</h3>
-                <p>Consultation, dimensional colour, silk repair and signature finish.</p>
-                <div><strong>₹8,900</strong><s>₹11,200</s></div>
-                <button onClick={() => openBooking()}>Reserve the edit <Arrow /></button>
-              </div>
-            </article>
-            <div className="me-package-stack">
-              {[
-                ["The Sunday Reset", "Scalp ritual · treatment · finish", "₹4,400", "Save 15%"],
-                ["The Polished Three", "Three signature blowouts", "₹4,250", "Valid 90 days"],
-                ["Colour Keeping", "Gloss · repair · home ritual consult", "₹5,100", "Most loved"],
-              ].map(([title, copy, price, note], index) => (
-                <article key={title}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <div><h3>{title}</h3><p>{copy}</p></div>
-                  <div><small>{note}</small><strong>{price}</strong></div>
-                  <button onClick={() => openBooking()} aria-label={`View ${title}`}><Arrow /></button>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="me-circle" id="circle">
-          <div className="me-circle-card">
-            <div className="me-membership-visual">
-              <span>Atelier</span>
-              <Mark />
-              <div><small>Private member</small><strong>The Atelier Circle</strong></div>
-              <b>MEMBER · 0087</b>
-            </div>
-            <div className="me-membership-copy">
-              <p className="me-index">04 / Membership</p>
-              <h2>Belong to<br /><em>the inner circle.</em></h2>
-              <p>Priority appointments, monthly rituals and thoughtful privileges that follow you to every studio.</p>
-              <ul>
-                <li><span>01</span> One signature blowout every month</li>
-                <li><span>02</span> 15% on colour and care rituals</li>
-                <li><span>03</span> Priority weekend reservations</li>
-                <li><span>04</span> Complimentary birthday treatment</li>
-              </ul>
-              <div className="me-membership-price"><strong>₹2,900</strong><span>/ month</span></div>
-              <button className="me-button me-button-dark" onClick={() => openBooking()}>Join the circle <Arrow /></button>
-            </div>
-          </div>
-          <div className="me-loyalty-card">
-            <div>
-              <span className="me-index">Atelier points</span>
-              <h3>Care that remembers you.</h3>
-              <p>Earn one point for every ₹100 spent, with thoughtful rewards along the way.</p>
-            </div>
-            <div className="me-loyalty-progress">
-              <div className="me-points"><strong>740</strong><span>points</span></div>
-              <div className="me-progress-track"><i /><span style={{ left: "74%" }}>You</span></div>
-              <div className="me-progress-labels"><span>0</span><span>1,000 · Complimentary ritual</span></div>
-            </div>
-            <div className="me-rewards">
-              <article><span>250</span><p>Express treatment</p><b>Unlocked</b></article>
-              <article><span>500</span><p>Signature finish</p><b>Unlocked</b></article>
-              <article><span>1K</span><p>Scalp ritual</p><b>Next</b></article>
-            </div>
-          </div>
-        </section>
-
-        <section className="me-gift" id="gift-cards">
-          <div className="me-gift-copy">
-            <p className="me-index">05 / Gift cards</p>
-            <h2>Give them time<br /><em>in the chair.</em></h2>
-            <p>A beautifully delivered invitation to pause, reset and leave feeling entirely themselves.</p>
-            <div className="me-gift-amounts" aria-label="Select gift card amount">
-              {["₹2,500", "₹5,000", "₹7,500", "₹10,000"].map((amount) => (
-                <button key={amount} className={giftAmount === amount ? "is-active" : ""} onClick={() => { setGiftAmount(amount); setGiftSent(false); }}>{amount}</button>
-              ))}
-            </div>
-            <button className="me-button me-button-dark" onClick={() => setGiftSent(true)}>
-              {giftSent ? "Gift card prepared" : `Send ${giftAmount} gift card`} <Arrow />
-            </button>
-            {giftSent ? <p className="me-gift-success" role="status">A preview is ready. Recipient details would be collected at checkout.</p> : null}
-          </div>
-          <div className="me-gift-visual" aria-hidden="true">
-            <div className="me-gift-shadow" />
-            <div className="me-gift-card-front"><span>Atelier</span><Mark /><strong>For time well spent.</strong><small>Private gift · {giftAmount}</small></div>
-            <div className="me-gift-card-back"><i /><span>ATELIER</span></div>
-          </div>
-        </section>
+        <BrandCommerce
+          theme="atelier"
+          brandName="Atelier"
+          brandMark="A"
+          memberships={memberships}
+          packages={packages}
+          gifts={gifts}
+          copy={commerceCopy}
+        />
 
         <section className="me-about" id="about">
           <div className="me-about-panel">
@@ -554,7 +648,7 @@ export default function Atelier() {
 
       <footer className="me-footer">
         <div className="me-footer-brand"><a className="me-logo" href="#top"><Mark /><span>Atelier<small>Private hair atelier</small></span></a><p>Precision, intuition and unhurried care.</p></div>
-        <div className="me-footer-links"><div><span>Explore</span><a href="#services">Services</a><a href="#circle">Membership</a><a href="#gift-cards">Gift cards</a></div><div><span>Visit</span><a href="#locations">Locations</a><a href="#about">Our story</a><button onClick={() => openBooking()}>Book now</button></div></div>
+        <div className="me-footer-links"><div><span>Explore</span><a href="#services">Services</a><a href="#memberships">Membership</a><a href="#packages">Packages</a><a href="#gift-cards">Gift cards</a></div><div><span>Visit</span><a href="#locations">Locations</a><a href="#about">Our story</a><button onClick={() => openBooking()}>Book now</button></div></div>
         <div className="me-footer-bottom"><span>© 2026 Atelier</span><span>Custom salon experience by da Salon</span><a href="#top">Back to top <Arrow direction="up" /></a></div>
       </footer>
 

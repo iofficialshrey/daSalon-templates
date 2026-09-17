@@ -5,7 +5,7 @@ import "./scroll-lab.css";
 export const metadata: Metadata = {
   title: "Maison Élan — Private Hair Atelier",
   description:
-    "A scroll-driven private hair atelier with cinematic arrival, services, memberships, loyalty, gift cards and online booking.",
+    "A scroll-driven private hair atelier with cinematic arrival, services, memberships, packages, gift cards and online booking.",
 };
 
 export default function BrandHomeOneLayout({

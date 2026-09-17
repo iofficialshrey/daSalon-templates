@@ -1218,6 +1218,127 @@ a {
   text-transform: uppercase;
 }
 
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-card {
+  align-items: stretch;
+  border: 1px solid rgb(243 240 233 / 16%);
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: 72px 1fr;
+  margin-bottom: 1rem;
+  min-height: 72px;
+  overflow: hidden;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-card:not(.has-media) {
+  grid-template-columns: 1fr;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-media,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-type {
+  min-height: 72px;
+  position: relative;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-media img {
+  object-fit: cover;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-type {
+  align-items: end;
+  background: linear-gradient(145deg, #222, #0d0d0d);
+  display: grid;
+  padding: 0.55rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-type span {
+  font-family: var(--booking-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.7rem 0.85rem 0.7rem 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy .s7-mono,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy p {
+  color: rgb(243 240 233 / 55%);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy strong {
+  font-size: 1rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy span {
+  color: rgb(243 240 233 / 68%);
+  font-size: 0.78rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-card {
+  align-items: start;
+  text-align: left;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-eyebrow {
+  color: rgb(184 162 138 / 90%);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-meta {
+  display: grid;
+  gap: 0.55rem;
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  width: 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-meta li {
+  border-top: 1px solid rgb(243 240 233 / 14%);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-top: 0.55rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-meta span {
+  color: rgb(243 240 233 / 55%);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0.85rem 0 1rem;
+  width: 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-confirmation-secondary {
+  background: transparent;
+  border: 1px solid rgb(243 240 233 / 22%);
+  color: var(--booking-ink);
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-card {
+    transition: none;
+  }
+}
+
 @keyframes booking-experience-in {
   from { opacity: 0; transform: translateY(24px) scale(.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }

@@ -1,14 +1,72 @@
+/*
+ * Serein House shell: the embedded Brand Home holds its own full-viewport scroll,
+ * then the host page continues into the shared commerce catalogue below it.
+ */
 .serein-embed-shell {
   background: #20312c;
-  inset: 0;
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  overflow: hidden;
-  position: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* The embed keeps a viewport-sized frame so its internal scroll story still plays. */
+.serein-embed-stage {
+  height: 100vh;
+  min-height: 100vh;
+  position: relative;
+  width: 100%;
 }
 
 .serein-embed-frame {
   border: 0;
   display: block;
   height: 100%;
+  min-height: 100vh;
   width: 100%;
+}
+
+.serein-embed-continue {
+  background: rgb(32 49 44 / 82%);
+  border: 1px solid rgb(241 238 229 / 38%);
+  border-radius: 999px;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  color: #f1eee5;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.72rem;
+  gap: 0.5rem;
+  left: 50%;
+  letter-spacing: 0.14em;
+  min-height: 44px;
+  padding: 0.7rem 1.25rem;
+  position: absolute;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  transition: background 200ms ease, transform 200ms ease;
+  z-index: 2;
+}
+
+.serein-embed-continue:hover {
+  background: rgb(32 49 44 / 95%);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.serein-embed-continue:focus-visible {
+  outline: 2px solid #c98369;
+  outline-offset: 3px;
+}
+
+.serein-embed-commerce {
+  background: #f1eee5;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .serein-embed-continue {
+    transition: none;
+  }
 }

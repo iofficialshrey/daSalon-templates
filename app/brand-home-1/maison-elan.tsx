@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SalonBooking from "../salon-booking";
 import { formatCatalogPrice, serviceDescription, useDaSalonCatalog } from "@/lib/dasalon/client";
 
@@ -12,6 +12,192 @@ type Venue = {
   hours: string;
   image: string;
 };
+
+type OfferKind = "membership" | "package" | "gift";
+
+type OfferDetail = {
+  kind: OfferKind;
+  id: string;
+  name: string;
+  tone: string;
+  badge: string | null;
+  validityLabel: string;
+  description: string;
+  details: string[];
+  pay: number;
+  secondaryLabel: string;
+  secondaryValue: number;
+  sessionsLabel?: string;
+  inclusions?: readonly string[];
+};
+
+const memberships = [
+  {
+    id: "elan-atelier",
+    name: "Élan Atelier",
+    validityLabel: "Valid for 6 months",
+    savePercent: 10,
+    description: "Studio credit for cuts, finishes and weekday colour across every Maison.",
+    details: [
+      "Wallet credit usable at every Maison Élan studio",
+      "Ideal for cuts, finishes and weekday colour",
+      "Balance follows you across cities",
+      "Unused credit expires with the membership window",
+    ],
+    pay: 180,
+    credit: 200,
+    tone: "espresso",
+  },
+  {
+    id: "private-circle",
+    name: "Private Circle",
+    validityLabel: "Valid for 12 months",
+    savePercent: 15,
+    description: "Priority booking windows plus fuller credit for colour and care rituals.",
+    details: [
+      "Priority booking windows ahead of general release",
+      "Higher wallet credit for colour and care rituals",
+      "Preferred stylist requests when available",
+      "One shared member record across every Maison",
+    ],
+    pay: 320,
+    credit: 380,
+    tone: "champagne",
+  },
+  {
+    id: "maison-house",
+    name: "Maison House",
+    validityLabel: "Valid for 3 months",
+    savePercent: 8,
+    description: "A lighter wallet for guests who return often for blowouts and gloss.",
+    details: [
+      "A lighter wallet for frequent return visits",
+      "Best for blowouts, gloss and quick finishes",
+      "Redeemable at any participating Maison",
+      "Simple way to keep a balance ready between appointments",
+    ],
+    pay: 95,
+    credit: 105,
+    tone: "rose",
+  },
+] as const;
+
+const packages = [
+  {
+    id: "sunday-reset",
+    name: "Sunday Reset",
+    savePercent: 12,
+    sessionsLabel: "1 session included",
+    validityLabel: "Valid for 90 days",
+    inclusions: ["Scalp ritual", "Treatment", "Signature finish"],
+    description: "A complete weekend reset in a single visit.",
+    details: [
+      "One complete reset visit in a single appointment",
+      "Includes scalp ritual, treatment and signature finish",
+      "Book any available artist within the validity window",
+      "Designed as a weekend recovery ritual",
+    ],
+    pay: 88,
+    worth: 100,
+    tone: "champagne",
+  },
+  {
+    id: "polished-three",
+    name: "Polished Three",
+    savePercent: 14,
+    sessionsLabel: "3 sessions included",
+    validityLabel: "Valid for 120 days",
+    inclusions: ["Blowout session 1", "Blowout session 2", "Blowout session 3"],
+    description: "Keep the cut sharp between full appointments.",
+    details: [
+      "Three signature blowout sessions",
+      "Space visits across 120 days",
+      "Keep shape and polish between full appointments",
+      "Sessions can be booked independently",
+    ],
+    pay: 120,
+    worth: 140,
+    tone: "espresso",
+  },
+  {
+    id: "colour-keeping",
+    name: "Colour Keeping",
+    savePercent: 11,
+    sessionsLabel: "2 sessions included",
+    validityLabel: "Valid for 6 months",
+    inclusions: ["Gloss service", "Repair treatment", "Home-ritual consult"],
+    description: "Maintain luminous colour with guided at-home care.",
+    details: [
+      "Two visits focused on colour longevity",
+      "Gloss service and repair treatment included",
+      "Home-ritual consult for between-visit care",
+      "Valid for six months from purchase",
+    ],
+    pay: 155,
+    worth: 175,
+    tone: "rose",
+  },
+] as const;
+
+const giftCards = [
+  {
+    id: "new-season",
+    name: "New Season",
+    validityLabel: "Valid for 1 year",
+    savePercent: 10,
+    description: "A new-season invitation for colour, cut or a quiet reset.",
+    details: [
+      "Redeemable for colour, cut or a quiet reset",
+      "Valid for twelve months from purchase",
+      "Can be used at any Maison Élan studio",
+      "A considered gift for a new season",
+    ],
+    pay: 90,
+    value: 100,
+    tone: "ember",
+  },
+  {
+    id: "private-gift",
+    name: "Private Gift",
+    validityLabel: "No expiry",
+    savePercent: null,
+    description: "An open Maison gift, ready whenever they choose to visit.",
+    details: [
+      "Open value with no expiry date",
+      "Recipient chooses when and how to redeem",
+      "Valid across every Maison Élan studio",
+      "Ideal when you want the gift to wait for them",
+    ],
+    pay: 150,
+    value: 150,
+    tone: "ink",
+  },
+  {
+    id: "wellness-wrapped",
+    name: "Wellness Wrapped",
+    validityLabel: "Valid for 1 year",
+    savePercent: 8,
+    description: "A softer gift for treatment-led rituals and finishes.",
+    details: [
+      "Suited to treatment-led rituals and finishes",
+      "Valid for twelve months from purchase",
+      "Redeemable at any participating Maison",
+      "A quieter gift for restorative care",
+    ],
+    pay: 120,
+    value: 130,
+    tone: "garden",
+  },
+] as const;
+
+function formatSgd(amount: number) {
+  return `S$${new Intl.NumberFormat("en-SG", { maximumFractionDigits: 0 }).format(amount)}`;
+}
+
+function discountBadge(savePercent: number | null | undefined) {
+  if (savePercent == null || savePercent <= 0) return null;
+  return `${savePercent}% off`;
+}
 
 const venues: Venue[] = [
   {
@@ -81,14 +267,344 @@ function SectionIntro({
   );
 }
 
+function CommerceIntro({
+  eyebrow,
+  title,
+  copy,
+}: {
+  eyebrow: string;
+  title: string;
+  copy: string;
+}) {
+  return (
+    <header className="me-commerce-intro">
+      <span>{eyebrow}</span>
+      <h2>{title}</h2>
+      <p>{copy}</p>
+    </header>
+  );
+}
+
+function offerKindLabel(kind: OfferKind) {
+  if (kind === "membership") return "Membership";
+  if (kind === "package") return "Package";
+  return "Gift card";
+}
+
+function PlasticCardDeck({
+  items,
+  kindLabel,
+  valueLabel,
+  getValue,
+  faceClassFor,
+  ariaLabel,
+  swipeHint,
+  onViewDetails,
+}: {
+  items: readonly {
+    id: string;
+    name: string;
+    tone: string;
+    validityLabel: string;
+    savePercent: number | null;
+  }[];
+  kindLabel: string;
+  valueLabel: string;
+  getValue: (item: { id: string }) => number;
+  faceClassFor: (tone: string) => string;
+  ariaLabel: string;
+  swipeHint: string;
+  onViewDetails: (item: (typeof items)[number], badge: string | null) => void;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  function getCards() {
+    const track = trackRef.current;
+    if (!track) return [] as HTMLElement[];
+    return [...track.querySelectorAll<HTMLElement>("[data-plastic-slide]")];
+  }
+
+  function nearestIndex() {
+    const track = trackRef.current;
+    if (!track) return 0;
+    const cards = getCards();
+    if (!cards.length) return 0;
+    const trackRect = track.getBoundingClientRect();
+    const mid = trackRect.left + trackRect.width / 2;
+    let nearest = 0;
+    let best = Number.POSITIVE_INFINITY;
+    cards.forEach((card, index) => {
+      const rect = card.getBoundingClientRect();
+      const center = rect.left + rect.width / 2;
+      const distance = Math.abs(center - mid);
+      if (distance < best) {
+        best = distance;
+        nearest = index;
+      }
+    });
+    return nearest;
+  }
+
+  function scrollToIndex(index: number, behavior: ScrollBehavior = "smooth") {
+    const track = trackRef.current;
+    if (!track) return;
+    const next = Math.max(0, Math.min(items.length - 1, index));
+    const card = getCards()[next];
+    if (!card) return;
+    setActiveIndex(next);
+    const trackRect = track.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const delta =
+      cardRect.left + cardRect.width / 2 - (trackRect.left + trackRect.width / 2);
+    track.scrollBy({ left: delta, behavior });
+  }
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const boot = requestAnimationFrame(() => {
+      scrollToIndex(0, "auto");
+    });
+
+    let frame = 0;
+    function syncIndex() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        setActiveIndex(nearestIndex());
+      });
+    }
+
+    function recenterActive() {
+      scrollToIndex(nearestIndex(), "auto");
+    }
+
+    track.addEventListener("scroll", syncIndex, { passive: true });
+    window.addEventListener("resize", recenterActive);
+
+    return () => {
+      cancelAnimationFrame(boot);
+      cancelAnimationFrame(frame);
+      track.removeEventListener("scroll", syncIndex);
+      window.removeEventListener("resize", recenterActive);
+    };
+    // Mount/length only — carousel centering helpers close over latest DOM.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length]);
+
+  return (
+    <div className="me-card-deck">
+      <div
+        className="me-card-track"
+        ref={trackRef}
+        tabIndex={0}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={ariaLabel}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            scrollToIndex(Math.min(items.length - 1, activeIndex + 1));
+          }
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            scrollToIndex(Math.max(0, activeIndex - 1));
+          }
+        }}
+      >
+        {items.map((item, index) => {
+          const badge = discountBadge(item.savePercent);
+          const value = getValue(item);
+          return (
+            <article
+              key={item.id}
+              data-plastic-slide
+              className={`me-plastic-card ${faceClassFor(item.tone)}${activeIndex === index ? " is-active" : ""}`}
+              aria-label={`${item.name}, ${formatSgd(value)} ${valueLabel.toLowerCase()}`}
+              aria-current={activeIndex === index ? "true" : undefined}
+            >
+              <div className="me-plastic-shine" aria-hidden="true" />
+              <div className="me-plastic-top">
+                <span className="me-plastic-brand">Maison Élan</span>
+                {badge ? <span className="me-plastic-badge">{badge}</span> : null}
+              </div>
+              <div className="me-plastic-mid">
+                <p className="me-plastic-kind">{kindLabel}</p>
+                <h3>{item.name}</h3>
+                <p className="me-plastic-validity">{item.validityLabel}</p>
+              </div>
+              <div className="me-plastic-bottom">
+                <div>
+                  <span>{valueLabel}</span>
+                  <strong>{formatSgd(value)}</strong>
+                </div>
+                <button
+                  type="button"
+                  className="me-plastic-action"
+                  onClick={() => onViewDetails(item, badge)}
+                >
+                  View details
+                </button>
+              </div>
+              <span className="me-plastic-mark" aria-hidden="true">É</span>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="me-card-deck-controls">
+        <button
+          type="button"
+          className="me-card-nav"
+          aria-label={`Previous ${kindLabel.toLowerCase()}`}
+          disabled={activeIndex === 0}
+          onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
+        >
+          <Arrow direction="right" />
+        </button>
+        <div className="me-card-dots" role="tablist" aria-label={`${ariaLabel} slides`}>
+          {items.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={activeIndex === index}
+              aria-label={`Show ${item.name}`}
+              className={activeIndex === index ? "is-active" : ""}
+              onClick={() => scrollToIndex(index)}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          className="me-card-nav me-card-nav-next"
+          aria-label={`Next ${kindLabel.toLowerCase()}`}
+          disabled={activeIndex === items.length - 1}
+          onClick={() => scrollToIndex(Math.min(items.length - 1, activeIndex + 1))}
+        >
+          <Arrow />
+        </button>
+      </div>
+      <p className="me-card-swipe-hint">{swipeHint}</p>
+    </div>
+  );
+}
+
+function OfferDetailsModal({
+  offer,
+  onClose,
+}: {
+  offer: OfferDetail;
+  onClose: () => void;
+}) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const faceClass = offer.kind === "gift"
+    ? `me-gift-face-${offer.tone}`
+    : `me-offer-face-${offer.tone}`;
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="me-offer-modal" role="presentation" onClick={onClose}>
+      <div
+        className="me-offer-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="me-offer-dialog-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header className={`me-offer-dialog-hero ${faceClass}`}>
+          <div className="me-offer-dialog-hero-top">
+            <span className="me-offer-dialog-kind">{offerKindLabel(offer.kind)}</span>
+            <button
+              ref={closeRef}
+              type="button"
+              className="me-offer-dialog-close"
+              aria-label="Close details"
+              onClick={onClose}
+            >
+              ×
+            </button>
+          </div>
+          {offer.badge ? <span className="me-offer-badge">{offer.badge}</span> : null}
+          <h2 id="me-offer-dialog-title">{offer.name}</h2>
+        </header>
+
+        <div className="me-offer-dialog-body">
+          <p className="me-offer-validity">
+            {offer.sessionsLabel ? (
+              <>
+                {offer.sessionsLabel}
+                <span aria-hidden="true"> · </span>
+              </>
+            ) : null}
+            {offer.validityLabel}
+          </p>
+          <p className="me-commerce-desc">{offer.description}</p>
+
+          {offer.inclusions && offer.inclusions.length > 0 ? (
+            <div className="me-offer-dialog-block">
+              <h3>Included</h3>
+              <ul className="me-offer-inclusions">
+                {offer.inclusions.map((entry) => (
+                  <li key={entry}>{entry}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          <div className="me-offer-dialog-block">
+            <h3>Details</h3>
+            <ul className="me-offer-dialog-details">
+              {offer.details.map((entry) => (
+                <li key={entry}>{entry}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="me-offer-finance">
+            <div>
+              <span>You pay</span>
+              <strong className="is-pay">{formatSgd(offer.pay)}</strong>
+            </div>
+            <div>
+              <span>{offer.secondaryLabel}</span>
+              <strong>{formatSgd(offer.secondaryValue)}</strong>
+            </div>
+          </div>
+
+          <button type="button" className="me-offer-buy" disabled aria-disabled="true">
+            Buy now
+          </button>
+          <p className="me-offer-dialog-note">Purchase is not available in this preview.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MaisonElan() {
   const catalog = useDaSalonCatalog();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("");
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingServiceId, setBookingServiceId] = useState<string | null>(null);
-  const [giftAmount, setGiftAmount] = useState("₹5,000");
-  const [giftSent, setGiftSent] = useState(false);
+  const [activeOffer, setActiveOffer] = useState<OfferDetail | null>(null);
   const heroRef = useRef<HTMLElement>(null);
   const services = useMemo(() => catalog.data?.services ?? [], [catalog.data?.services]);
   const categories = useMemo(
@@ -131,7 +647,7 @@ export default function MaisonElan() {
         <nav className={menuOpen ? "is-open" : ""} aria-label="Main navigation">
           <a href="#ritual" onClick={() => setMenuOpen(false)}>The ritual</a>
           <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="#circle" onClick={() => setMenuOpen(false)}>The circle</a>
+          <a href="#memberships" onClick={() => setMenuOpen(false)}>Memberships</a>
           <a href="#locations" onClick={() => setMenuOpen(false)}>Locations</a>
         </nav>
         <div className="me-header-actions">
@@ -266,101 +782,144 @@ export default function MaisonElan() {
           </div>
         </section>
 
-        <section className="me-collections" id="collections">
-          <SectionIntro
-            eyebrow="03 / Offers & packages"
-            title="A little more of what you love."
-            copy="Seasonal privileges and carefully paired rituals, available across every Maison."
-            light
+        <section className="me-commerce me-card-section" id="memberships">
+          <CommerceIntro
+            eyebrow="03 / Memberships"
+            title="Belong with a balance that follows you."
+            copy="Swipe through Maison memberships—wallet credit, validity and what you actually pay."
           />
-          <div className="me-offer-grid">
-            <article className="me-feature-offer">
-              <div className="me-offer-art" aria-hidden="true"><span /><i>É</i><b>20</b></div>
-              <div className="me-offer-copy">
-                <span>Limited atelier edit</span>
-                <h3>The New Season<br />Colour Ritual</h3>
-                <p>Consultation, dimensional colour, silk repair and signature finish.</p>
-                <div><strong>₹8,900</strong><s>₹11,200</s></div>
-                <button onClick={() => openBooking()}>Reserve the edit <Arrow /></button>
-              </div>
-            </article>
-            <div className="me-package-stack">
-              {[
-                ["The Sunday Reset", "Scalp ritual · treatment · finish", "₹4,400", "Save 15%"],
-                ["The Polished Three", "Three signature blowouts", "₹4,250", "Valid 90 days"],
-                ["Colour Keeping", "Gloss · repair · home ritual consult", "₹5,100", "Most loved"],
-              ].map(([title, copy, price, note], index) => (
-                <article key={title}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <div><h3>{title}</h3><p>{copy}</p></div>
-                  <div><small>{note}</small><strong>{price}</strong></div>
-                  <button onClick={() => openBooking()} aria-label={`View ${title}`}><Arrow /></button>
-                </article>
-              ))}
+          <div className="me-commerce-shell">
+            <PlasticCardDeck
+              items={memberships}
+              kindLabel="Membership"
+              valueLabel="Wallet credit"
+              getValue={(item) => memberships.find((entry) => entry.id === item.id)?.credit ?? 0}
+              faceClassFor={(tone) => `me-offer-face-${tone}`}
+              ariaLabel="Memberships"
+              swipeHint="Swipe to browse memberships"
+              onViewDetails={(item, badge) => {
+                const membership = memberships.find((entry) => entry.id === item.id);
+                if (!membership) return;
+                setActiveOffer({
+                  kind: "membership",
+                  id: membership.id,
+                  name: membership.name,
+                  tone: membership.tone,
+                  badge,
+                  validityLabel: membership.validityLabel,
+                  description: membership.description,
+                  details: [...membership.details],
+                  pay: membership.pay,
+                  secondaryLabel: "Wallet credit",
+                  secondaryValue: membership.credit,
+                });
+              }}
+            />
+          </div>
+        </section>
+
+        <section className="me-commerce me-commerce-alt" id="packages">
+          <CommerceIntro
+            eyebrow="04 / Packages"
+            title="Bundled rituals, priced with intention."
+            copy="See the sessions included, how long they last, what they are worth and what you pay."
+          />
+          <div className="me-commerce-shell">
+            <div className="me-commerce-rail">
+              {packages.map((item) => {
+                const badge = discountBadge(item.savePercent);
+                return (
+                  <article key={item.id} className="me-offer-card">
+                    <header className={`me-offer-header me-offer-face-${item.tone}`}>
+                      {badge ? <span className="me-offer-badge">{badge}</span> : null}
+                      <h3>{item.name}</h3>
+                    </header>
+                    <div className="me-offer-body">
+                      <p className="me-offer-validity">
+                        {item.sessionsLabel}
+                        <span aria-hidden="true"> · </span>
+                        {item.validityLabel}
+                      </p>
+                      <ul className="me-offer-inclusions">
+                        {item.inclusions.map((entry) => (
+                          <li key={entry}>{entry}</li>
+                        ))}
+                      </ul>
+                      <p className="me-commerce-desc">{item.description}</p>
+                      <div className="me-offer-foot">
+                        <div className="me-offer-finance">
+                          <div>
+                            <span>You pay</span>
+                            <strong className="is-pay">{formatSgd(item.pay)}</strong>
+                          </div>
+                          <div>
+                            <span>Worth</span>
+                            <strong>{formatSgd(item.worth)}</strong>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="me-offer-buy"
+                          onClick={() => setActiveOffer({
+                            kind: "package",
+                            id: item.id,
+                            name: item.name,
+                            tone: item.tone,
+                            badge,
+                            validityLabel: item.validityLabel,
+                            description: item.description,
+                            details: [...item.details],
+                            pay: item.pay,
+                            secondaryLabel: "Worth",
+                            secondaryValue: item.worth,
+                            sessionsLabel: item.sessionsLabel,
+                            inclusions: item.inclusions,
+                          })}
+                        >
+                          View details
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        <section className="me-circle" id="circle">
-          <div className="me-circle-card">
-            <div className="me-membership-visual">
-              <span>Maison Élan</span>
-              <Mark />
-              <div><small>Private member</small><strong>The Élan Circle</strong></div>
-              <b>MEMBER · 0087</b>
-            </div>
-            <div className="me-membership-copy">
-              <p className="me-index">04 / Membership</p>
-              <h2>Belong to<br /><em>the inner circle.</em></h2>
-              <p>Priority appointments, monthly rituals and thoughtful privileges that follow you to every Maison.</p>
-              <ul>
-                <li><span>01</span> One signature blowout every month</li>
-                <li><span>02</span> 15% on colour and care rituals</li>
-                <li><span>03</span> Priority weekend reservations</li>
-                <li><span>04</span> Complimentary birthday treatment</li>
-              </ul>
-              <div className="me-membership-price"><strong>₹2,900</strong><span>/ month</span></div>
-              <button className="me-button me-button-dark" onClick={() => openBooking()}>Join the circle <Arrow /></button>
-            </div>
-          </div>
-          <div className="me-loyalty-card">
-            <div>
-              <span className="me-index">Maison points</span>
-              <h3>Care that remembers you.</h3>
-              <p>Earn one point for every ₹100 spent, with thoughtful rewards along the way.</p>
-            </div>
-            <div className="me-loyalty-progress">
-              <div className="me-points"><strong>740</strong><span>points</span></div>
-              <div className="me-progress-track"><i /><span style={{ left: "74%" }}>You</span></div>
-              <div className="me-progress-labels"><span>0</span><span>1,000 · Complimentary ritual</span></div>
-            </div>
-            <div className="me-rewards">
-              <article><span>250</span><p>Express treatment</p><b>Unlocked</b></article>
-              <article><span>500</span><p>Signature finish</p><b>Unlocked</b></article>
-              <article><span>1K</span><p>Scalp ritual</p><b>Next</b></article>
-            </div>
-          </div>
-        </section>
-
-        <section className="me-gift" id="gift-cards">
-          <div className="me-gift-copy">
-            <p className="me-index">05 / Gift cards</p>
-            <h2>Give them time<br /><em>in the chair.</em></h2>
-            <p>A beautifully delivered invitation to pause, reset and leave feeling entirely themselves.</p>
-            <div className="me-gift-amounts" aria-label="Select gift card amount">
-              {["₹2,500", "₹5,000", "₹7,500", "₹10,000"].map((amount) => (
-                <button key={amount} className={giftAmount === amount ? "is-active" : ""} onClick={() => { setGiftAmount(amount); setGiftSent(false); }}>{amount}</button>
-              ))}
-            </div>
-            <button className="me-button me-button-dark" onClick={() => setGiftSent(true)}>
-              {giftSent ? "Gift card prepared" : `Send ${giftAmount} gift card`} <Arrow />
-            </button>
-            {giftSent ? <p className="me-gift-success" role="status">A preview is ready. Recipient details would be collected at checkout.</p> : null}
-          </div>
-          <div className="me-gift-visual" aria-hidden="true">
-            <div className="me-gift-shadow" />
-            <div className="me-gift-card-front"><span>Maison Élan</span><Mark /><strong>For time well spent.</strong><small>Private gift · {giftAmount}</small></div>
-            <div className="me-gift-card-back"><i /><span>MAISON ÉLAN</span></div>
+        <section className="me-commerce me-card-section" id="gift-cards">
+          <CommerceIntro
+            eyebrow="05 / Gift cards"
+            title="Give them time in the chair."
+            copy="Swipe through Maison gift cards—each one sized like a card you would keep in your wallet."
+          />
+          <div className="me-commerce-shell">
+            <PlasticCardDeck
+              items={giftCards}
+              kindLabel="Gift card"
+              valueLabel="Gift value"
+              getValue={(item) => giftCards.find((entry) => entry.id === item.id)?.value ?? 0}
+              faceClassFor={(tone) => `me-gift-face-${tone}`}
+              ariaLabel="Gift cards"
+              swipeHint="Swipe to browse gift cards"
+              onViewDetails={(item, badge) => {
+                const gift = giftCards.find((entry) => entry.id === item.id);
+                if (!gift) return;
+                setActiveOffer({
+                  kind: "gift",
+                  id: gift.id,
+                  name: gift.name,
+                  tone: gift.tone,
+                  badge,
+                  validityLabel: gift.validityLabel,
+                  description: gift.description,
+                  details: [...gift.details],
+                  pay: gift.pay,
+                  secondaryLabel: "Gift value",
+                  secondaryValue: gift.value,
+                });
+              }}
+            />
           </div>
         </section>
 
@@ -425,11 +984,15 @@ export default function MaisonElan() {
 
       <footer className="me-footer">
         <div className="me-footer-brand"><a className="me-logo" href="#top"><Mark /><span>Maison Élan<small>Private hair atelier</small></span></a><p>Precision, intuition and unhurried care.</p></div>
-        <div className="me-footer-links"><div><span>Explore</span><a href="#services">Services</a><a href="#circle">Membership</a><a href="#gift-cards">Gift cards</a></div><div><span>Visit</span><a href="#locations">Locations</a><a href="#about">Our story</a><button onClick={() => openBooking()}>Book now</button></div></div>
+        <div className="me-footer-links"><div><span>Explore</span><a href="#services">Services</a><a href="#memberships">Memberships</a><a href="#packages">Packages</a><a href="#gift-cards">Gift cards</a></div><div><span>Visit</span><a href="#locations">Locations</a><a href="#about">Our story</a><button onClick={() => openBooking()}>Book now</button></div></div>
         <div className="me-footer-bottom"><span>© 2026 Maison Élan</span><span>Custom salon experience by da Salon</span><a href="#top">Back to top <Arrow direction="up" /></a></div>
       </footer>
 
       <button className="me-mobile-book" onClick={() => openBooking()}>Book now <Arrow /></button>
+
+      {activeOffer ? (
+        <OfferDetailsModal offer={activeOffer} onClose={() => setActiveOffer(null)} />
+      ) : null}
 
       {bookingOpen && <SalonBooking brand="Maison Élan" theme="maison" initialBootstrap={catalog.data} initialServiceId={bookingServiceId} onClose={() => setBookingOpen(false)} />}
     </div>
