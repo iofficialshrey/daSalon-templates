@@ -286,7 +286,8 @@
   color: var(--bc-ink);
   font-size: 28px;
 }
-.bc-offer-buy {
+/* Scoped to .bc-root so the `.bc-root button { color: inherit }` reset cannot win. */
+.bc-root .bc-offer-buy {
   background: var(--bc-ink);
   border: 0;
   border-radius: 10px;

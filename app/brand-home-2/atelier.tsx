@@ -141,7 +141,7 @@ const packages: PackageOffer[] = [
     savePercent: 12,
     sessionsLabel: "3 sessions included",
     validityLabel: "Valid for 90 days",
-    inclusions: ["Signature blowout", "Signature blowout", "Signature blowout"],
+    inclusions: ["First signature blowout", "Second signature blowout", "Third signature blowout"],
     description: "Three signature blowouts to keep the shape sharp between full appointments.",
     details: [
       "Three signature blowout sessions",
