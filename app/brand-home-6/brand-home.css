@@ -262,7 +262,8 @@ html:has(.n6-home) { background: var(--n6-ground); scroll-behavior: smooth; }
 .n6-home .salon-booker-dates button + button, .n6-home .salon-booker-times button + button { border-left: 0; }
 .n6-home .salon-booker-dates button.selected, .n6-home .salon-booker-times button.selected { background: var(--n6-celadon); }
 .n6-home .salon-booker-step label { display: grid; gap: 7px; margin-top: 18px; }
-.n6-home .salon-booker-step input { background: transparent; border: 0; border-bottom: 1px solid; border-radius: 0; min-height: 45px; outline: none; }
+.n6-home .salon-booker-step input,
+.n6-home .salon-booker-phone-row select { background: transparent; border: 0; border-bottom: 1px solid; border-radius: 0; min-height: 45px; outline: none; }
 .n6-home .salon-booker-summary { background: var(--n6-mist); display: flex; justify-content: space-between; margin-top: 25px; padding: 18px; }
 .n6-home .salon-booker-summary strong { font-size: 10px; text-align: right; }
 .n6-home .salon-booker-confirmation { padding-top: 70px; text-align: center; }

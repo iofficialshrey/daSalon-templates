@@ -322,6 +322,27 @@ a {
   width: 100%;
 }
 
+.salon-booker-phone-row {
+  align-items: end;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(7.5rem, auto) minmax(0, 1fr);
+}
+
+.salon-booker-phone-row select {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  min-height: 45px;
+  outline: none;
+  padding: 0 2px;
+  width: 100%;
+}
+
 .salon-booker-summary span small {
   display: block;
   font-size: 0.68em;
@@ -697,7 +718,8 @@ a {
 }
 
 .salon-booking-overlay.booking-experience-overlay .salon-booker-step input,
-.salon-booking-overlay.booking-experience-overlay .salon-booker-venue select {
+.salon-booking-overlay.booking-experience-overlay .salon-booker-venue select,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-phone-row select {
   background: var(--booking-field, transparent);
   border: 0;
   border-bottom: 1px solid var(--booking-line);
@@ -711,8 +733,16 @@ a {
 }
 
 .salon-booking-overlay.booking-experience-overlay .salon-booker-step input:focus,
-.salon-booking-overlay.booking-experience-overlay .salon-booker-venue select:focus {
+.salon-booking-overlay.booking-experience-overlay .salon-booker-venue select:focus,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-phone-row select:focus {
   border-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-phone-row {
+  align-items: end;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(7.5rem, auto) minmax(0, 1fr);
 }
 
 .salon-booking-overlay.booking-experience-overlay .salon-booker-summary {
