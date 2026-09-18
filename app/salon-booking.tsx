@@ -47,6 +47,34 @@ type Confirmation = {
   startTime: string;
 };
 
+const PHONE_COUNTRY_CODES = [
+  { code: "+65", region: "SG", label: "Singapore (+65)" },
+  { code: "+91", region: "IN", label: "India (+91)" },
+] as const;
+
+type PhoneCountryCode = (typeof PHONE_COUNTRY_CODES)[number]["code"];
+
+function splitStoredPhone(raw: string, fallbackCode: PhoneCountryCode): {
+  code: PhoneCountryCode;
+  local: string;
+} {
+  const compact = raw.replace(/[\s()-]/g, "");
+  for (const item of PHONE_COUNTRY_CODES) {
+    const bare = item.code.slice(1);
+    if (compact.startsWith(item.code)) {
+      return { code: item.code, local: compact.slice(item.code.length).replace(/\D/g, "") };
+    }
+    if (compact.startsWith(bare) && compact.length > bare.length) {
+      return { code: item.code, local: compact.slice(bare.length).replace(/\D/g, "") };
+    }
+  }
+  return { code: fallbackCode, local: compact.replace(/\D/g, "") };
+}
+
+function fullPhoneNumber(code: PhoneCountryCode, local: string) {
+  return `${code}${local.replace(/\D/g, "")}`;
+}
+
 const bookingThemes: Record<BookingTheme, {
   eyebrow: string;
   title: string;
@@ -172,7 +200,9 @@ export default function SalonBooking({
   const [time, setTime] = useState(draftSeed.time || "");
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [firstName, setFirstName] = useState(draftSeed.firstName || "");
-  const [phone, setPhone] = useState(draftSeed.phone || "");
+  const initialPhoneParts = splitStoredPhone(draftSeed.phone || "", "+65");
+  const [phoneCode, setPhoneCode] = useState<PhoneCountryCode>(initialPhoneParts.code);
+  const [phone, setPhone] = useState(initialPhoneParts.local);
   const needsVenueReload = Boolean(preferredVenueId && initialBootstrap && preferredVenueId !== initialBootstrap.selectedVenueId);
   const [loadingCatalog, setLoadingCatalog] = useState(!initialBootstrap || needsVenueReload);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -199,7 +229,7 @@ export default function SalonBooking({
       date: date || null,
       time: time || null,
       firstName,
-      phone,
+      phone: phone ? fullPhoneNumber(phoneCode, phone) : "",
       email: "",
       note: "",
       step: (step <= 3 ? step : 3) as 1 | 2 | 3,
@@ -256,7 +286,7 @@ export default function SalonBooking({
   useEffect(() => {
     emitDraft();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme, service?.id, venueId, date, time, firstName, phone, step]);
+  }, [theme, service?.id, venueId, date, time, firstName, phone, phoneCode, step]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -355,7 +385,7 @@ export default function SalonBooking({
           serviceId: service.id,
           date,
           startTime: time,
-          client: { name: firstName, phone },
+          client: { name: firstName, phone: fullPhoneNumber(phoneCode, phone) },
         }),
       }));
       setConfirmation(data);
@@ -543,7 +573,32 @@ export default function SalonBooking({
         {step === 3 && <form className="salon-booker-step" onSubmit={confirm}>
           <button className="salon-booker-back" type="button" onClick={() => { setError(""); setStep(2); }}>← Date and time</button>
           <label><span>Full name</span><input required minLength={2} maxLength={100} autoComplete="name" value={firstName} onChange={(event) => setFirstName(event.target.value)} /></label>
-          <label><span>Mobile number</span><input required minLength={5} maxLength={32} inputMode="tel" autoComplete="tel" placeholder={bootstrap?.phoneCode ? `${bootstrap.phoneCode} …` : undefined} value={phone} onChange={(event) => setPhone(event.target.value)} /></label>
+          <label className="salon-booker-phone">
+            <span>Mobile number</span>
+            <div className="salon-booker-phone-row">
+              <select
+                aria-label="Country code"
+                value={phoneCode}
+                onChange={(event) => setPhoneCode(event.target.value as PhoneCountryCode)}
+              >
+                {PHONE_COUNTRY_CODES.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.region} {item.code}
+                  </option>
+                ))}
+              </select>
+              <input
+                required
+                minLength={5}
+                maxLength={15}
+                inputMode="tel"
+                autoComplete="tel-national"
+                placeholder="Mobile number"
+                value={phone}
+                onChange={(event) => setPhone(event.target.value.replace(/[^\d\s]/g, ""))}
+              />
+            </div>
+          </label>
           <div className="salon-booker-summary"><span>{service?.name}<small>{brand}</small></span><strong>{date ? dateLabel(date) : ""}<br />{time ? timeLabel(time) : ""}</strong></div>
           {error && <div className="salon-booker-status salon-booker-error" role="alert">{error}</div>}
           <button className="salon-booker-next" type="submit" disabled={submitting}>{submitting ? "Confirming…" : themeCopy.confirm} <span>→</span></button>
