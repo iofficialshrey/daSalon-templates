@@ -205,7 +205,8 @@ html:has(.o2-home) { background: var(--o2-porcelain); scroll-behavior: smooth; }
 .o2-home .salon-booker-dates button + button, .o2-home .salon-booker-times button + button { border-left: 0; }
 .o2-home .salon-booker-dates button.selected, .o2-home .salon-booker-times button.selected { background: var(--o2-lavender); }
 .o2-home .salon-booker-step label { display: grid; gap: 7px; margin-top: 18px; }
-.o2-home .salon-booker-step input { background: transparent; border: 0; border-bottom: 1px solid; border-radius: 0; min-height: 45px; outline: none; }
+.o2-home .salon-booker-step input,
+.o2-home .salon-booker-phone-row select { background: transparent; border: 0; border-bottom: 1px solid; border-radius: 0; min-height: 45px; outline: none; }
 .o2-home .salon-booker-summary { background: var(--o2-lavender); display: flex; justify-content: space-between; margin-top: 25px; padding: 18px; }
 .o2-home .salon-booker-summary strong { font-size: 9px; text-align: right; }
 .o2-home .salon-booker-confirmation { padding-top: 70px; text-align: center; }
