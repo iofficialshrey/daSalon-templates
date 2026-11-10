@@ -1,0 +1,28 @@
+.foot {
+  align-items: center;
+  border-top: 1px solid var(--tone-line);
+  display: flex;
+  gap: 16px;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  margin-top: 48px;
+  min-height: 44px;
+  position: relative;
+  z-index: 1;
+}
+
+.folio {
+  color: var(--tone-muted);
+  display: none;
+  margin-right: auto;
+}
+
+.next {
+  color: var(--tone-text);
+}
+
+@media (min-width: 760px) {
+  .folio {
+    display: block;
+  }
+}

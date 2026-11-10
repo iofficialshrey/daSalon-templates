@@ -1,0 +1,515 @@
+/*
+ * The house sheet: right drawer (600px, or 86vw on tablet), full screen on phones.
+ * .sheet is passed to the Layer panel; the panel already owns the header, the
+ * scrolling body and the sticky footer.
+ */
+
+.sheet {
+  --sheet-pad: 20px;
+}
+
+@media (min-width: 760px) {
+  .sheet {
+    --sheet-pad: 32px;
+  }
+}
+
+/* Header: the hidden title leaves one item, so let it span the bar (label left, Share and Close right). */
+.sheet > header > div:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.topLabel {
+  margin-right: auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Hero ---------- */
+
+.heroFrame {
+  aspect-ratio: 4 / 3;
+  background: var(--mx-limestone-200);
+  overflow: hidden;
+  position: relative;
+}
+
+.heroImg {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  width: 100%;
+}
+
+.chip {
+  background: var(--mx-scrim);
+  border-radius: var(--mx-r-xs);
+  bottom: 12px;
+  color: var(--mx-ivory-on-dark);
+  font-size: 12px;
+  font-weight: 500;
+  left: 12px;
+  letter-spacing: .02em;
+  line-height: 1;
+  padding: 6px 8px;
+  position: absolute;
+}
+
+@media (min-width: 760px) {
+  .hero {
+    padding: 24px var(--sheet-pad) 0;
+  }
+
+  .heroFrame {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--mx-r-arch);
+    isolation: isolate;
+  }
+
+  .chip {
+    bottom: 16px;
+    left: 16px;
+  }
+}
+
+/* ---------- Title block ---------- */
+
+.titleBlock {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding: var(--sheet-pad) var(--sheet-pad) 0;
+}
+
+.title {
+  font-family: var(--mx-display);
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.05;
+  outline: none;
+}
+
+.blurb {
+  font-size: 17px;
+  line-height: 1.6;
+  margin-top: 4px;
+  max-width: 48ch;
+}
+
+@media (min-width: 760px) {
+  .title {
+    font-size: 44px;
+  }
+}
+
+.skeletonLine {
+  height: 14px;
+  margin-block: 3px;
+  width: 120px;
+}
+
+/* ---------- Facts ---------- */
+
+.factsBlock {
+  padding: 32px var(--sheet-pad) 0;
+}
+
+.facts {
+  border-bottom: 1px solid var(--mx-line);
+  display: grid;
+}
+
+.fact {
+  align-content: start;
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 6px;
+  padding: 14px 0;
+}
+
+.factValue {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.factText {
+  display: block;
+}
+
+@media (min-width: 760px) {
+  .facts {
+    column-gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tiny {
+  color: var(--mx-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+/* Sentence-case text action with an arrow and the growing underline (ui.textBtn). */
+.inlineAction {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--mx-text);
+  font-size: 15px;
+  font-weight: 500;
+  gap: 6px;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+}
+
+.inlineAction svg {
+  flex: none;
+  height: 16px;
+  transition: transform var(--mx-ui) var(--mx-ease);
+  width: 16px;
+}
+
+.sister {
+  border-top: 1px solid var(--mx-line);
+  margin-top: 20px;
+  padding-top: 14px;
+}
+
+.sisterLabel {
+  color: var(--mx-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* ---------- Blocks ---------- */
+
+.block {
+  padding: 48px var(--sheet-pad) 0;
+}
+
+.blockHead {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.blockTitle {
+  font-family: var(--mx-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.tag {
+  align-items: center;
+  border: 1px solid var(--mx-line-strong);
+  border-radius: var(--mx-r-xs);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  line-height: 1;
+  min-height: 32px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+/* ---------- The menu here ---------- */
+
+.groups {
+  display: grid;
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.group {
+  min-width: 0;
+}
+
+.rows {
+  border-bottom: 1px solid var(--mx-line);
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.rowItem {
+  border-top: 1px solid var(--mx-line);
+}
+
+.row {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-inline: -12px;
+  min-height: 64px;
+  padding: 12px;
+  text-align: left;
+  transition: background-color var(--mx-fast) var(--mx-ease);
+  width: calc(100% + 24px);
+}
+
+.rowText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowName {
+  font-family: var(--mx-display);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.rowMeta {
+  color: var(--mx-muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.rowCue {
+  align-items: center;
+  color: var(--mx-bronze-600);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 8px;
+  letter-spacing: .14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rowCue svg {
+  height: 16px;
+  transition: transform var(--mx-ui) var(--mx-ease);
+  width: 16px;
+}
+
+.more {
+  margin-top: 12px;
+}
+
+.state {
+  background: var(--mx-paper);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--mx-r-xs);
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  margin-top: 24px;
+  padding: 20px;
+}
+
+.stateText {
+  color: var(--mx-muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+.state .stateText {
+  margin-top: 0;
+}
+
+.skeletonRows {
+  margin-top: 24px;
+}
+
+.skeletonRow {
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 10px;
+  min-height: 64px;
+  padding: 14px 0;
+}
+
+.skeletonName {
+  height: 18px;
+  width: 40%;
+}
+
+.skeletonMeta {
+  height: 12px;
+  width: 25%;
+}
+
+/* ---------- Offers at this house ---------- */
+
+.offers {
+  border-bottom: 1px solid var(--mx-line);
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+.offer {
+  align-items: center;
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 64px minmax(0, 1fr) 20px;
+  isolation: isolate;
+  min-height: 64px;
+  padding: 12px 0;
+  position: relative;
+}
+
+/* Hover tint bleeds 12px past the hairlines, like the menu rows. */
+.offer::before {
+  content: "";
+  inset: 0 -12px;
+  position: absolute;
+  transition: background-color var(--mx-fast) var(--mx-ease);
+  z-index: -1;
+}
+
+.offerText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.offerBtn {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  font-family: var(--mx-display);
+  font-size: 22px;
+  font-weight: 500;
+  justify-self: start;
+  line-height: 1.15;
+  padding: 0;
+  text-align: left;
+}
+
+/* The whole row opens the offer; the name is the one focusable control. */
+.offerBtn::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.offerValue {
+  color: var(--mx-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.chevron {
+  color: var(--mx-muted);
+  transition: transform var(--mx-ui) var(--mx-ease);
+}
+
+.footnote {
+  color: var(--mx-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 40px var(--sheet-pad) 48px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover,
+  .offer:hover::before {
+    background: var(--mx-ivory-100);
+  }
+
+  .row:hover .rowCue svg,
+  .offer:hover .chevron,
+  .inlineAction:hover svg {
+    transform: translateX(4px);
+  }
+
+  .inlineAction:hover {
+    color: var(--mx-bronze-600);
+  }
+}
+
+/* ---------- Sticky footer ---------- */
+
+.sheet .footBook {
+  flex: 1 1 auto;
+  line-height: 1.25;
+  min-width: 0;
+  text-align: center;
+  white-space: normal;
+}
+
+.sheet .footDirections {
+  display: none;
+}
+
+@media (min-width: 760px) {
+  .sheet .footDirections {
+    display: inline-flex;
+    flex: none;
+  }
+}
+
+/* ---------- "Link copied" toast (bottom centre, above the footer) ---------- */
+
+.toast {
+  align-items: center;
+  background: var(--mx-walnut-900);
+  border-radius: var(--mx-r-xs);
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  color: var(--mx-ivory-on-dark);
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  inset-inline: 0;
+  margin-inline: auto;
+  min-height: 48px;
+  padding: 0 20px;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity var(--mx-ui) linear;
+  white-space: nowrap;
+  width: max-content;
+  z-index: 2;
+}
+
+.toast:empty {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .offer::before,
+  .chevron,
+  .rowCue svg,
+  .inlineAction svg,
+  .toast {
+    transition: none;
+  }
+}

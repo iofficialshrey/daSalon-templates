@@ -1,0 +1,121 @@
+/*
+ * The orb fills the box its caller gives it (width and position come from the
+ * caller's class; it stays square). Ambient motion runs once, 4.8s, on view,
+ * through `scale` / `translate` only, so callers may centre it with `transform`.
+ */
+
+.orb {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: block;
+  pointer-events: none;
+  position: relative;
+}
+
+/* ---------- Breath and still: three 1px sage-deep rings at 35% and a pool glow ---------- */
+
+.breath,
+.still {
+  border: 1px solid rgb(93 113 101 / 35%);
+}
+
+.breath::before,
+.breath::after,
+.still::before,
+.still::after,
+.core {
+  border-radius: 50%;
+  content: "";
+  position: absolute;
+}
+
+.breath::before,
+.still::before {
+  border: 1px solid rgb(93 113 101 / 35%);
+  inset: 10%;
+}
+
+.breath::after,
+.still::after {
+  border: 1px solid rgb(93 113 101 / 35%);
+  inset: 24%;
+}
+
+.core {
+  background: radial-gradient(circle, rgb(220 229 223 / 90%) 0, rgb(185 211 209 / 40%) 70%, rgb(185 211 209 / 0) 100%);
+  box-shadow: var(--sr-shadow-orb);
+  inset: 39%;
+}
+
+.still {
+  opacity: 0.85;
+}
+
+/* ---------- Drift: a radial pool and sage glow disc ---------- */
+
+.drift {
+  background: radial-gradient(circle, rgb(185 211 209 / 75%) 0, rgb(168 184 170 / 25%) 52%, rgb(168 184 170 / 0) 72%);
+}
+
+/* ---------- Motion: once, on view, only under no-preference ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .breath {
+    opacity: 0.72;
+  }
+
+  .breath[data-play] {
+    animation: orb-exhale var(--sr-exhale) var(--sr-ease-breath) both;
+  }
+
+  .drift {
+    scale: 0.97;
+    translate: -2% 1%;
+  }
+
+  .drift[data-play] {
+    animation: orb-drift var(--sr-exhale) var(--sr-ease-breath) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breath {
+    opacity: 0.85;
+  }
+}
+
+/* `scale` and `translate`, not `transform`, so a caller's transform (e.g. centring) composes with the motion. */
+@keyframes orb-exhale {
+  0% {
+    opacity: 0.72;
+    scale: 1;
+  }
+
+  50% {
+    opacity: 1;
+    scale: 1.04;
+  }
+
+  100% {
+    opacity: 0.85;
+    scale: 1;
+  }
+}
+
+@keyframes orb-drift {
+  from {
+    scale: 0.97;
+    translate: -2% 1%;
+  }
+
+  to {
+    scale: 1.02;
+    translate: 2% -1%;
+  }
+}
+
+@media (forced-colors: active) {
+  .orb {
+    display: none;
+  }
+}

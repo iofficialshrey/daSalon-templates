@@ -47,6 +47,17 @@ DASALON_API_BASE_URL=https://your-partner-api-host/partner-api/api/v1
 DASALON_PARTNER_API_KEY=pk_live_...
 ```
 
+Without the partner key, local development can still show the live menu and
+availability by reading them from a deployed Brand Home:
+
+```bash
+DASALON_DEV_PROXY_URL=https://da-salon-templates.vercel.app npm run dev
+```
+
+Only the read-only `bootstrap` and `time-slots` routes are proxied, and only in
+development; booking submission stays local and reports that the service is not
+configured, so local work never creates real appointments.
+
 Add the same variables to the deployment environment. Do not expose the key as
 a `NEXT_PUBLIC_` variable. The browser talks only to the allowlisted Next.js
 routes under `/api/dasalon`; those server routes add the private partner key,

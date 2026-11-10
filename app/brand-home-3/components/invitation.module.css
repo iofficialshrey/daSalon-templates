@@ -1,0 +1,62 @@
+/*
+ * 10 · The invitation (spec §4.10), tone paper-soft. A centred stack; the
+ * drift orb (clamp(320px, 50vw, 720px)) sits behind the h2 and drifts once on
+ * view. The h2 is display-l on phones and display-xl from 760.
+ */
+
+.section {
+  /* The orb's soft edge never spills into the gift cards above or the footer below. */
+  overflow: clip;
+  text-align: center;
+}
+
+.stack {
+  display: grid;
+  isolation: isolate;
+  justify-items: center;
+}
+
+.titleWrap {
+  margin-top: 16px;
+  position: relative;
+}
+
+.titleWrap > .orb {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(320px, 50vw, 720px);
+  z-index: -1;
+}
+
+/* Capped at 10.5vw, so the two lines hold from 760 until display-xl's full 112px fits (about 1067). */
+@media (min-width: 760px) {
+  h2.title {
+    font-size: min(var(--sr-fs-display-xl), 10.5vw);
+    letter-spacing: -0.05em;
+    line-height: 0.86;
+  }
+}
+
+.book {
+  margin-top: var(--sr-stack);
+}
+
+/* "Or book at" and three text buttons, wrapping as one centred line. */
+.others {
+  align-items: center;
+  column-gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.status {
+  margin-top: 16px;
+}
+
+.address {
+  margin-top: 4px;
+}

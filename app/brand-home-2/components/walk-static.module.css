@@ -1,0 +1,72 @@
+/*
+ * The static threshold (reduced motion, Save-Data, 2G, low memory): a noir
+ * spread. The closed doors as a band, the head, then four 3:4 stills, each with its line.
+ */
+
+.walk {
+  padding-bottom: var(--at-section);
+  position: relative;
+  scroll-margin-top: 0;
+}
+
+.body {
+  padding-top: 72px;
+}
+
+.stills {
+  display: grid;
+  gap: 48px;
+}
+
+.still {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+.picture {
+  background: var(--at-noir-2);
+  display: block;
+}
+
+.picture img {
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* The film's captions are sized for a full screen; here they sit under a still. */
+.line h3,
+.line h2 {
+  font-size: clamp(28px, 2.6vw, 36px);
+}
+
+.line p {
+  font-size: 17px;
+  margin-top: 10px;
+}
+
+@media (min-width: 760px) {
+  .stills {
+    align-items: start;
+    gap: 56px 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .still:nth-child(even) {
+    margin-top: 56px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .stills {
+    gap: 28px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .still:nth-child(1) { margin-top: 0; }
+  .still:nth-child(2) { margin-top: 72px; }
+  .still:nth-child(3) { margin-top: 24px; }
+  .still:nth-child(4) { margin-top: 96px; }
+}

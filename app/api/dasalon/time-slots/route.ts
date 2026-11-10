@@ -1,11 +1,12 @@
 import {
   apiErrorResponse,
-  asArray,
+  cachedDaSalonRequest,
   daSalonRequest,
   normalizeServices,
+  normalizeSlots,
   ownedVenue,
 } from "@/lib/dasalon/server";
-import type { PartnerMe, TimeSlot } from "@/lib/dasalon/types";
+import type { PartnerMe } from "@/lib/dasalon/types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,9 +23,9 @@ export async function GET(request: Request) {
       return Response.json({ success: false, message: "Venue, date, and service are required." }, { status: 400 });
     }
 
-    const me = await daSalonRequest<PartnerMe>("/me");
+    const me = await cachedDaSalonRequest<PartnerMe>("/me");
     const venue = ownedVenue(me, venueId);
-    const servicesPayload = await daSalonRequest<unknown>(
+    const servicesPayload = await cachedDaSalonRequest<unknown>(
       `/venues/${encodeURIComponent(venue.id)}/services`,
     );
     const allowedServices = new Set(normalizeServices(servicesPayload).map((service) => service.id));
@@ -36,18 +37,8 @@ export async function GET(request: Request) {
     const payload = await daSalonRequest<unknown>(
       `/venues/${encodeURIComponent(venue.id)}/time-slots?${query}`,
     );
-    const slots = asArray<Record<string, unknown>>(payload, ["timeSlots", "slots"])
-      .map((slot): TimeSlot | null => {
-        const rawTime = slot.time ?? slot.startTime;
-        if (typeof rawTime !== "string" || slot.hasAvailableStaff === false || slot.available === false) return null;
-        return {
-          time: rawTime.slice(0, 5),
-          staffIds: Array.isArray(slot.staffIds) ? slot.staffIds.filter((id): id is string => typeof id === "string") : [],
-        };
-      })
-      .filter((slot): slot is TimeSlot => Boolean(slot));
 
-    return Response.json({ success: true, data: { date, timeSlots: slots } });
+    return Response.json({ success: true, data: { date, timeSlots: normalizeSlots(payload) } });
   } catch (error) {
     return apiErrorResponse(error);
   }

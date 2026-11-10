@@ -1,0 +1,500 @@
+/*
+ * The service menu. Home: the head, a sticky switcher of the four ateliers
+ * (native radios styled as quiet tabs), the atelier's line, then the menu in
+ * two columns. Atelier pages: a small head and the menu.
+ */
+
+.section {
+  position: relative;
+}
+
+.section .head {
+  margin-bottom: 48px;
+}
+
+.smallHead {
+  margin-bottom: 40px;
+}
+
+/* ---------- The switcher ---------- */
+
+.sentinel {
+  height: 1px;
+}
+
+.bar {
+  background: var(--at-stone);
+  position: sticky;
+  top: var(--at-header);
+  transition: box-shadow var(--at-ui) var(--at-ease);
+  z-index: 20;
+}
+
+.bar[data-stuck] {
+  box-shadow: 0 1px 0 var(--at-line);
+}
+
+.switcher {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.legend {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.cells {
+  border-bottom: 1px solid var(--at-line);
+  display: flex;
+  gap: 28px;
+  margin-inline: calc(var(--at-gutter) * -1);
+  overflow-x: auto;
+  padding-inline: var(--at-gutter);
+  scrollbar-width: none;
+}
+
+.cells::-webkit-scrollbar {
+  display: none;
+}
+
+.cell {
+  align-content: center;
+  cursor: pointer;
+  display: grid;
+  flex: none;
+  gap: 4px;
+  min-height: 64px;
+  padding: 14px 0 16px;
+  position: relative;
+}
+
+.radio {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.cell:has(.radio:focus-visible) {
+  outline: 2px solid var(--at-bronze);
+  outline-offset: 2px;
+}
+
+.cellLabel {
+  color: var(--at-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: color var(--at-ui) var(--at-ease);
+}
+
+.cellName {
+  color: var(--at-muted);
+  font-family: var(--at-serif);
+  font-size: 19px;
+  line-height: 1.2;
+  transition: color var(--at-ui) var(--at-ease);
+  white-space: nowrap;
+}
+
+.cellOn .cellLabel {
+  color: var(--at-bronze);
+}
+
+.cellOn .cellName {
+  color: var(--at-ink);
+}
+
+/* The chosen atelier: a line drawn under it. */
+.cell::after {
+  background: var(--at-ink);
+  bottom: -1px;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 500ms var(--at-ease);
+}
+
+.cellOn::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) {
+  .cell:hover .cellName {
+    color: var(--at-ink);
+  }
+}
+
+/* ---------- The atelier's line ---------- */
+
+.atelierLine {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 36px 0 24px;
+}
+
+.atelierName {
+  font-family: var(--at-serif);
+  font-size: clamp(24px, 2.2vw, 30px);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.atelierDot {
+  color: var(--at-muted);
+}
+
+.atelierAddress {
+  color: var(--at-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lineLink {
+  margin-left: auto;
+}
+
+.viewLink {
+  color: var(--at-ink);
+}
+
+/* ---------- The menu ---------- */
+
+.grid {
+  column-gap: clamp(48px, 6vw, 112px);
+  transition: min-height var(--at-ui) var(--at-ease);
+}
+
+.group {
+  break-inside: avoid;
+  display: block;
+  margin-bottom: 44px;
+}
+
+.lineCard {
+  align-items: baseline;
+  border-bottom: 1px solid var(--at-line-strong);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 12px;
+}
+
+.lineTitle {
+  font-family: var(--at-serif);
+  font-size: clamp(22px, 1.9vw, 26px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.lineCard :global(p) {
+  color: var(--at-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rows {
+  display: block;
+}
+
+.tagItem {
+  border-bottom: 1px solid var(--at-line);
+}
+
+/* One service: the whole row books it. */
+.tag {
+  color: inherit;
+  display: block;
+  padding: 18px 0 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.face {
+  column-gap: 24px;
+  display: grid;
+  grid-template-areas:
+    "name meta"
+    "desc meta";
+  grid-template-columns: minmax(0, 1fr) auto;
+  row-gap: 4px;
+}
+
+.tagName {
+  font-family: var(--at-serif);
+  font-size: 19px;
+  grid-area: name;
+  line-height: 1.3;
+}
+
+.tagDescription {
+  color: var(--at-muted);
+  display: -webkit-box;
+  font-size: 13px;
+  grid-area: desc;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: 1.5;
+  max-width: 52ch;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.tagMeta {
+  align-items: flex-end;
+  display: grid;
+  gap: 2px;
+  grid-area: meta;
+  justify-items: end;
+  text-align: right;
+}
+
+.duration {
+  color: var(--at-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.priceBlock {
+  align-items: baseline;
+  display: flex;
+  gap: 6px;
+}
+
+.price {
+  font-family: var(--at-serif);
+  font-size: 19px;
+  font-variant-numeric: lining-nums;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.tax {
+  color: var(--at-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* "Book →" waits at the end of the row and comes forward on hover or focus. */
+.bookCue {
+  align-items: center;
+  color: var(--at-bronze);
+  display: none;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 6px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .face {
+    grid-template-areas:
+      "name meta"
+      "desc meta"
+      "cue  meta";
+  }
+
+  .bookCue {
+    display: inline-flex;
+    grid-area: cue;
+    margin-top: 6px;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity var(--at-ui) var(--at-ease), transform var(--at-ui) var(--at-ease);
+  }
+
+  .tag:hover .bookCue,
+  .tag:focus-visible .bookCue {
+    opacity: 1;
+    transform: none;
+  }
+
+  .tag:hover .tagName {
+    color: var(--at-bronze);
+  }
+}
+
+.tagName {
+  transition: color var(--at-ui) var(--at-ease);
+}
+
+.section .grid :is(a, button),
+.withSwitcher .grid :is(a, button) {
+  /* Focus lands below the sticky header and switcher. */
+  scroll-margin-top: calc(var(--at-header) + 96px);
+}
+
+/* ---------- Placeholders ---------- */
+
+.skeleton {
+  animation: collection-pulse 1.2s ease-in-out infinite alternate;
+  background: color-mix(in srgb, var(--at-ink) 8%, transparent);
+  display: block;
+}
+
+.skeletonTag {
+  align-items: center;
+  border-bottom: 1px solid var(--at-line);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 72px;
+  padding: 22px 0;
+}
+
+.lineCard .skeleton {
+  height: 22px;
+}
+
+.skeletonTitle {
+  width: 40%;
+}
+
+.skeletonCount {
+  height: 12px !important;
+  width: 120px;
+}
+
+.skeletonNo {
+  display: none;
+}
+
+.skeletonName {
+  height: 18px;
+  width: 60%;
+}
+
+.skeletonPrice {
+  height: 18px;
+  width: 72px;
+}
+
+.skeletonAtelier {
+  height: 28px;
+  width: 320px;
+}
+
+@keyframes collection-pulse {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+/* ---------- States ---------- */
+
+/* States span both menu columns. */
+.state {
+  border: 1px solid var(--at-line);
+  break-inside: avoid;
+  column-span: all;
+  display: grid;
+  gap: 20px;
+  padding: 32px;
+}
+
+.stateText {
+  align-items: center;
+  display: flex;
+  font-family: var(--at-serif);
+  font-size: 20px;
+  gap: 10px;
+  line-height: 1.4;
+}
+
+.stateIcon {
+  color: var(--at-bronze);
+  flex: none;
+}
+
+.stateActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+/* ---------- Foot ---------- */
+
+.foot {
+  align-items: center;
+  border-top: 1px solid var(--at-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-top: 16px;
+  padding-top: 28px;
+}
+
+.footNote {
+  color: var(--at-muted);
+  flex: 1 1 320px;
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+.footBook {
+  flex: none;
+}
+
+.footLink {
+  display: none;
+}
+
+/* ---------- Wide screens: two columns ---------- */
+
+@media (min-width: 1100px) {
+  .grid {
+    columns: 2;
+  }
+
+  .group {
+    margin-bottom: 56px;
+  }
+
+  .cells {
+    gap: 40px;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+
+  .cell::after,
+  .bookCue,
+  .tagName {
+    transition: none;
+  }
+}

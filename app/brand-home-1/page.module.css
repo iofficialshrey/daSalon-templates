@@ -1,0 +1,198 @@
+/*
+ * Maison Élan — design tokens, page base and the shared section head.
+ * Every value in the template reads from these tokens.
+ */
+
+.page {
+  /* Walnut, taken from the film's doors and night interior. */
+  --mx-walnut-950: #120c08;
+  --mx-walnut-900: #1c130d;
+  --mx-walnut-800: #2b1d13;
+  /* Text and accents on light. */
+  --mx-ink: #1d1712;
+  --mx-muted: #655749;
+  --mx-bronze-700: #5f4124;
+  --mx-bronze-600: #7a5530;
+  /* Accents on dark only. */
+  --mx-brass-400: #b8915f;
+  --mx-glow-300: #e2b57f;
+  --mx-ivory-on-dark: #f3ebdd;
+  --mx-muted-on-dark: #bfaf9a;
+  /* Light surfaces, from the limestone reception. */
+  --mx-ivory-50: #f7f2ea;
+  --mx-ivory-100: #efe7db;
+  --mx-paper: #fbf8f3;
+  --mx-limestone-200: #e3d8c7;
+  --mx-olive-600: #56603f;
+  --mx-error: #9b3b2e;
+  --mx-line: rgb(29 23 18 / 14%);
+  --mx-line-strong: rgb(29 23 18 / 32%);
+  /* Form boundaries need 3:1 against the page (WCAG 1.4.11). */
+  --mx-line-input: rgb(29 23 18 / 55%);
+  --mx-line-dark: rgb(243 235 221 / 16%);
+  --mx-scrim: rgb(18 12 8 / 60%);
+
+  --mx-display: var(--mx-font-display), "Cormorant Garamond", Georgia, serif;
+  --mx-display-italic: var(--mx-font-display-italic), var(--mx-display);
+  --mx-text: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+
+  --mx-max: 1280px;
+  --mx-max-wide: 1440px;
+  --mx-gutter: 20px;
+  --mx-header: 60px;
+  --mx-anchor: calc(var(--mx-header) + 16px);
+  --mx-section: 96px;
+  --mx-head-gap: 48px;
+
+  --mx-r-xs: 2px;
+  --mx-r-sm: 6px;
+  --mx-r-card: 12px;
+  --mx-r-arch: 50% 50% 2px 2px / 22% 22% 2px 2px;
+
+  --mx-ease: cubic-bezier(.16, 1, .3, 1);
+  --mx-fast: 160ms;
+  --mx-ui: 240ms;
+  --mx-sheet: 360ms;
+
+  -webkit-font-smoothing: antialiased;
+  background: var(--mx-ivory-50);
+  color: var(--mx-ink);
+  font-family: var(--mx-text);
+  font-size: 16px;
+  font-synthesis: none;
+  line-height: 1.65;
+  min-height: 100vh;
+  /* Clip (not hidden) keeps sticky children working and leaves <html> free for scroll locks. */
+  overflow-x: clip;
+  position: relative;
+  text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 760px) {
+  .page {
+    --mx-gutter: 32px;
+    --mx-header: 68px;
+    --mx-anchor: calc(var(--mx-header) + 24px);
+    --mx-section: 128px;
+    --mx-head-gap: 64px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .page {
+    --mx-gutter: clamp(40px, 5vw, 80px);
+    --mx-header: 76px;
+    --mx-anchor: calc(var(--mx-header) + 32px);
+    --mx-section: clamp(128px, 11vw, 176px);
+    --mx-head-gap: 80px;
+  }
+}
+
+/* This route scrolls instantly so anchor jumps never scrub through the film. */
+:global(html):has(.page) {
+  scroll-behavior: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Tokens live on .page, so the body needs the literal ivory. */
+:global(body):has(.page) {
+  background: #f7f2ea;
+}
+
+/* Keyboard focus never settles under the fixed header (or, on phones, the Book bar). */
+.page :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-bottom: 16px;
+  scroll-margin-top: calc(var(--mx-header) + 16px);
+}
+
+@media (max-width: 759px) {
+  .page :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+    scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Neutralise the collection page's bare h1/h2/footer rules without outranking component classes. */
+:where(.page) :is(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul) {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  margin: 0;
+  max-width: none;
+}
+
+:where(.page) :is(h1, h2, h3, h4) {
+  text-wrap: balance;
+}
+
+:where(.page) p {
+  text-wrap: pretty;
+}
+
+:where(.page) footer {
+  background: none;
+  border: 0;
+  color: inherit;
+}
+
+:where(.page) :is(button, input, select, textarea) {
+  color: inherit;
+  font: inherit;
+}
+
+:where(.page) button {
+  cursor: pointer;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--mx-bronze-600);
+  outline-offset: 3px;
+}
+
+.page ::selection {
+  background: rgb(122 85 48 / 22%);
+  color: var(--mx-ink);
+}
+
+.skip {
+  background: var(--mx-ink);
+  border-radius: 999px;
+  color: var(--mx-ivory-50);
+  font-size: 13px;
+  font-weight: 600;
+  left: 12px;
+  letter-spacing: .08em;
+  min-height: 44px;
+  padding: 12px 20px;
+  position: fixed;
+  text-transform: uppercase;
+  top: 12px;
+  transform: translateY(-200%);
+  z-index: 1200;
+}
+
+.skip:focus-visible {
+  transform: none;
+}
+
+.main {
+  display: block;
+}
+
+/* SplitText line masks (motion.tsx): room for the display face's descenders, so nothing clips. */
+.page :global(.mx-line-mask) {
+  margin-bottom: -.16em;
+  padding-bottom: .16em;
+}
+
+.srOnly {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

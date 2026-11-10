@@ -1,0 +1,366 @@
+/* Privileges: memberships, packages and gift cards, as three tabs on walnut. Tokens live on .page. */
+
+.root {
+  background: var(--mx-walnut-950);
+  color: var(--mx-ivory-on-dark);
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* A low brass light behind the cards, like the pendants in the film. */
+.glow {
+  background:
+    radial-gradient(42% 38% at 70% 62%, rgb(226 181 127 / 13%), transparent 70%),
+    radial-gradient(36% 30% at 18% 8%, rgb(184 145 95 / 9%), transparent 70%);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.lead {
+  color: var(--mx-muted-on-dark);
+}
+
+/* ---------- Tabs ---------- */
+
+.tabBar {
+  border-bottom: 1px solid var(--mx-line-dark);
+  margin-bottom: 40px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabBar::-webkit-scrollbar {
+  display: none;
+}
+
+.tabList {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  width: max-content;
+}
+
+/* The bronze underline, measured by privilege-tabs.tsx. */
+.tabList::after {
+  background: var(--mx-glow-300);
+  bottom: -1px;
+  content: "";
+  height: 2px;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  transform: translateX(var(--mx-tab-x, 0));
+  transition: transform 500ms var(--mx-ease), width 500ms var(--mx-ease), opacity 200ms linear;
+  width: var(--mx-tab-w, 0);
+}
+
+.tabList[data-measured]::after {
+  opacity: 1;
+}
+
+.tab {
+  align-items: baseline;
+  background: none;
+  border: 0;
+  color: var(--mx-muted-on-dark);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--mx-display);
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 400;
+  gap: 8px;
+  line-height: 1.2;
+  min-height: 56px;
+  padding: 8px 16px 14px 0;
+  transition: color var(--mx-ui) var(--mx-ease);
+  white-space: nowrap;
+}
+
+.tab + .tab {
+  padding-left: 16px;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--mx-ivory-on-dark);
+}
+
+.tabCount {
+  color: var(--mx-brass-400);
+  font-family: var(--mx-text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  transform: translateY(-.6em);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tab:hover {
+    color: var(--mx-ivory-on-dark);
+  }
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--mx-glow-300);
+  outline-offset: -2px;
+}
+
+/* ---------- Panels ---------- */
+
+.panel {
+  scroll-margin-top: var(--mx-anchor);
+}
+
+.panelHead {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.panelTitle {
+  font-family: var(--mx-display-italic);
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.2;
+  outline: none;
+}
+
+.panelText {
+  color: var(--mx-muted-on-dark);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 56ch;
+}
+
+@media (min-width: 1100px) {
+  .panelHead {
+    align-items: baseline;
+    column-gap: 24px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    margin-bottom: 48px;
+  }
+
+  .panelTitle {
+    grid-column: 1 / 6;
+  }
+
+  .panelText {
+    grid-column: 6 / 13;
+  }
+}
+
+/* The newly selected panel's cards rise in, one after another. */
+@media (prefers-reduced-motion: no-preference) {
+  .panel:not([hidden]) .item {
+    animation: privilege-in 700ms var(--mx-ease) both;
+  }
+
+  .panel:not([hidden]) .item:nth-child(2) {
+    animation-delay: 70ms;
+  }
+
+  .panel:not([hidden]) .item:nth-child(3) {
+    animation-delay: 140ms;
+  }
+}
+
+@keyframes privilege-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* ---------- Rail (phone and tablet) / grid (desktop) ---------- */
+
+.rail {
+  list-style: none;
+  /* Room for the tilt, the lift and the button focus ring inside the scroll container. */
+  margin-block: -12px -12px;
+  padding-block: 12px 12px;
+}
+
+.item {
+  display: flex;
+  min-width: 0;
+}
+
+@media (760px <= width < 1100px) {
+  .panel .rail {
+    gap: 20px;
+    grid-auto-columns: 44vw;
+  }
+}
+
+@media (min-width: 1100px) {
+  .panel .rail {
+    gap: 32px;
+    grid-auto-columns: auto;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-inline: 0;
+    overflow: visible;
+    padding-inline: 0;
+    scroll-snap-type: none;
+  }
+
+  .panel .controls {
+    display: none;
+  }
+}
+
+.controls .railBtn {
+  border-color: rgb(243 235 221 / 30%);
+  color: var(--mx-ivory-on-dark);
+}
+
+.controls > span {
+  color: var(--mx-muted-on-dark);
+}
+
+.controls .railBtn[aria-disabled="true"] {
+  cursor: default;
+  opacity: .35;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .controls .railBtn:not([aria-disabled="true"]):hover {
+    background: var(--mx-ivory-on-dark);
+    border-color: var(--mx-ivory-on-dark);
+    color: var(--mx-walnut-900);
+  }
+
+  .controls .railBtn[aria-disabled="true"]:hover {
+    background: transparent;
+    border-color: rgb(243 235 221 / 30%);
+    color: var(--mx-ivory-on-dark);
+  }
+}
+
+/* ---------- Privilege card ---------- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.faceHit {
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .faceHit:hover {
+    --mx-lift: -6px;
+    --mx-sheen: 1;
+  }
+
+  /* Follow the pointer closely while it moves; settle slowly when it leaves. */
+  .faceHit:hover > * {
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 24%)) drop-shadow(0 30px 28px rgb(0 0 0 / 55%));
+    transition-duration: 160ms, 700ms;
+  }
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 24px 2px 0;
+}
+
+.name {
+  margin-top: 12px;
+}
+
+.tagline {
+  color: var(--mx-muted-on-dark);
+  font-size: 15px;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.price {
+  align-items: end;
+  border-top: 1px solid var(--mx-line-dark);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+.priceEnd {
+  text-align: right;
+}
+
+.priceLabel {
+  color: var(--mx-muted-on-dark);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.pay {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 4px;
+}
+
+.worth {
+  color: var(--mx-muted-on-dark);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-top: 4px;
+}
+
+.perSession {
+  color: var(--mx-muted-on-dark);
+  font-size: 13px;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+.meta {
+  color: var(--mx-muted-on-dark);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+.cta {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+/* ---------- Demonstration note ---------- */
+
+.note {
+  align-items: flex-start;
+  border-top: 1px solid var(--mx-line-dark);
+  color: var(--mx-muted-on-dark);
+  display: flex;
+  font-size: 14px;
+  gap: 10px;
+  line-height: 1.5;
+  margin-top: 48px;
+  max-width: 76ch;
+  padding-top: 24px;
+}
+
+.note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+@media (min-width: 1100px) {
+  .note {
+    margin-top: 64px;
+  }
+}

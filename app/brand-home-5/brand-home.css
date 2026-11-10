@@ -181,41 +181,6 @@ html:has(.o2-home) { background: var(--o2-porcelain); scroll-behavior: smooth; }
 .o2-finale footer span:nth-child(2) { justify-self: center; }
 .o2-finale footer a { justify-self: end; }
 
-.o2-home .salon-booking-overlay { align-items: stretch; animation: o2-overlay .3s ease both; background: rgb(31 20 33 / 68%); display: flex; inset: 0; justify-content: flex-end; position: fixed; z-index: 100; }
-.o2-home .salon-booker { background: var(--o2-porcelain); height: 100%; overflow: auto; padding: 42px; width: min(580px, 100%); }
-.o2-home .salon-booker-head { align-items: start; display: flex; justify-content: space-between; }
-.o2-home .salon-booker-head small, .o2-home .salon-booker-step > p, .o2-home .salon-booker-step label span { font-size: 8px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-.o2-home .salon-booker-head small { color: var(--o2-vermilion); }
-.o2-home .salon-booker-head h2 { font-family: Didot, "Bodoni 72", Georgia, serif; font-size: 52px; font-weight: 400; letter-spacing: -.06em; line-height: .85; margin: 14px 0 0; }
-.o2-home .salon-booker-head button { background: transparent; border: 1px solid; border-radius: 50%; font-size: 21px; height: 42px; width: 42px; }
-.o2-home .salon-booker-progress { display: flex; gap: 5px; margin: 38px 0; }
-.o2-home .salon-booker-progress i { background: var(--o2-lavender); flex: 1; height: 3px; }
-.o2-home .salon-booker-progress i.active { background: var(--o2-vermilion); }
-.o2-home .salon-booker-services { border-top: 1px solid; }
-.o2-home .salon-booker-services button { align-items: center; background: transparent; border: 0; border-bottom: 1px solid rgb(45 32 48 / 25%); display: flex; justify-content: space-between; padding: 17px 12px; text-align: left; width: 100%; }
-.o2-home .salon-booker-services button.selected { background: var(--o2-aubergine); color: white; }
-.o2-home .salon-booker-services span { display: grid; gap: 4px; }
-.o2-home .salon-booker-services strong { font-family: Didot, "Bodoni 72", Georgia, serif; font-size: 22px; font-weight: 400; }
-.o2-home .salon-booker-services small, .o2-home .salon-booker-services b { font-size: 8px; }
-.o2-home .salon-booker-next { background: var(--o2-vermilion); border: 0; color: white; display: flex; justify-content: space-between; margin-top: 28px; min-height: 56px; padding: 0 18px; text-transform: uppercase; width: 100%; }
-.o2-home .salon-booker-back { background: transparent; border: 0; color: var(--o2-vermilion); font-size: 8px; font-weight: 800; padding: 0; text-transform: uppercase; }
-.o2-home .salon-booker-dates, .o2-home .salon-booker-times { display: grid; grid-template-columns: repeat(3, 1fr); }
-.o2-home .salon-booker-times { grid-template-columns: repeat(5, 1fr); }
-.o2-home .salon-booker-dates button, .o2-home .salon-booker-times button { background: transparent; border: 1px solid rgb(45 32 48 / 35%); min-height: 50px; padding: 6px; }
-.o2-home .salon-booker-dates button + button, .o2-home .salon-booker-times button + button { border-left: 0; }
-.o2-home .salon-booker-dates button.selected, .o2-home .salon-booker-times button.selected { background: var(--o2-lavender); }
-.o2-home .salon-booker-step label { display: grid; gap: 7px; margin-top: 18px; }
-.o2-home .salon-booker-step input,
-.o2-home .salon-booker-phone-row select { background: transparent; border: 0; border-bottom: 1px solid; border-radius: 0; min-height: 45px; outline: none; }
-.o2-home .salon-booker-summary { background: var(--o2-lavender); display: flex; justify-content: space-between; margin-top: 25px; padding: 18px; }
-.o2-home .salon-booker-summary strong { font-size: 9px; text-align: right; }
-.o2-home .salon-booker-confirmation { padding-top: 70px; text-align: center; }
-.o2-home .salon-booker-confirmation > span { align-items: center; background: var(--o2-vermilion); border-radius: 50%; color: white; display: inline-flex; font-family: Didot, "Bodoni 72", Georgia, serif; font-size: 48px; height: 100px; justify-content: center; width: 100px; }
-.o2-home .salon-booker-confirmation h3 { font-family: Didot, "Bodoni 72", Georgia, serif; font-size: 44px; font-weight: 400; margin: 10px 0; }
-.o2-home .salon-booker-confirmation strong, .o2-home .salon-booker-confirmation small { display: block; }
-.o2-home .salon-booker-confirmation small { line-height: 1.6; margin: 35px auto 20px; max-width: 330px; }
-.o2-home .salon-booker-confirmation button { background: transparent; border: 0; border-bottom: 1px solid; padding-bottom: 5px; }
-
 @keyframes o2-write {
   from { clip-path: inset(-.22em 100% -.22em -.12em); transform: translateX(-16px); }
   to { clip-path: inset(-.22em -.16em -.22em -.12em); transform: translateX(0); }
@@ -275,8 +240,6 @@ html:has(.o2-home) { background: var(--o2-porcelain); scroll-behavior: smooth; }
   .o2-finale > button { height: 125px; width: 125px; }
   .o2-finale footer { gap: 20px; grid-template-columns: 1fr auto; }
   .o2-finale footer span:nth-child(2) { display: none; }
-  .o2-home .salon-booker { padding: 28px 18px; }
-  .o2-home .salon-booker-times { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {

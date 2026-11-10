@@ -1,0 +1,276 @@
+/*
+ * The arrival. Full-bleed photograph, copy on the dark side of the frame.
+ * Phones and portrait screens take the 2:3 crop with the copy over its lower
+ * half.
+ */
+
+.cover {
+  isolation: isolate;
+  min-height: max(640px, 100svh);
+  overflow: clip;
+  position: relative;
+  view-timeline: --cover block;
+}
+
+.media {
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+}
+
+.picture,
+.img {
+  height: 100%;
+  width: 100%;
+}
+
+.img {
+  animation: cover-settle 2.6s var(--at-ease) both;
+  object-fit: cover;
+  object-position: 62% 30%;
+  transform-origin: 62% 40%;
+}
+
+/* Darkest where the copy sits, lifting towards the woman and the mirror. */
+.shade {
+  background:
+    linear-gradient(0deg, rgb(14 11 8 / 92%) 0%, rgb(14 11 8 / 55%) 34%, rgb(14 11 8 / 0%) 62%),
+    linear-gradient(180deg, rgb(14 11 8 / 55%) 0%, rgb(14 11 8 / 0%) 26%);
+  inset: 0;
+  position: absolute;
+}
+
+/* The scene dims towards the doors as the visitor scrolls away. */
+.dusk {
+  background: var(--at-noir);
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: inherit;
+  padding: calc(var(--at-header) + 32px) var(--at-gutter) 88px;
+  position: relative;
+  z-index: 1;
+}
+
+.copy {
+  max-width: 640px;
+}
+
+.h1 {
+  color: var(--at-ivory);
+  font-size: clamp(52px, 13vw, 76px);
+}
+
+.line {
+  display: inline-block;
+}
+
+.em {
+  color: var(--at-champagne-light);
+  padding-right: 0.06em;
+}
+
+.lead {
+  color: rgb(243 238 230 / 78%);
+  font-family: var(--at-serif);
+  font-size: 18px;
+  line-height: 1.55;
+  margin-top: 22px;
+  max-width: 34ch;
+}
+
+.cta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-top: 32px;
+}
+
+.book {
+  min-width: 248px;
+}
+
+.step {
+  color: var(--at-ivory);
+}
+
+/* A hairline that falls from the bottom edge: scroll. */
+.cue {
+  bottom: 0;
+  height: 56px;
+  left: 50%;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  z-index: 1;
+}
+
+.cue i {
+  animation: cover-cue 2.6s var(--at-ease) infinite;
+  background: rgb(243 238 230 / 70%);
+  display: block;
+  height: 100%;
+  transform-origin: top;
+  width: 1px;
+}
+
+/* ---------- Phones: the copy under the doorway ---------- */
+
+@media (max-width: 759px), (max-aspect-ratio: 4/5) {
+  .img {
+    object-position: 50% 20%;
+  }
+
+  .cue {
+    display: none;
+  }
+
+  .book {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* ---------- Desktop: the copy on the dark side of the room ---------- */
+
+@media (min-width: 760px) and (min-aspect-ratio: 4/5) {
+  .shade {
+    background:
+      linear-gradient(90deg, rgb(14 11 8 / 94%) 0%, rgb(14 11 8 / 74%) 30%, rgb(14 11 8 / 16%) 62%, rgb(14 11 8 / 42%) 100%),
+      linear-gradient(0deg, rgb(14 11 8 / 66%) 0%, rgb(14 11 8 / 0%) 46%),
+      linear-gradient(180deg, rgb(14 11 8 / 50%) 0%, rgb(14 11 8 / 0%) 22%);
+  }
+
+  .frame {
+    justify-content: center;
+    padding-bottom: 96px;
+    padding-top: calc(var(--at-header) + 48px);
+  }
+
+  .copy {
+    max-width: 760px;
+  }
+
+  .h1 {
+    font-size: clamp(64px, 8.4vw, 132px);
+  }
+
+  .lead {
+    font-size: clamp(18px, 1.5vw, 22px);
+    margin-top: 30px;
+  }
+
+  .cta {
+    margin-top: 44px;
+  }
+}
+
+/* Landscape phones: the wide crop, compact type. */
+@media (max-height: 500px) and (pointer: coarse) {
+  .frame {
+    justify-content: flex-end;
+    padding-bottom: 32px;
+  }
+
+  .h1 {
+    font-size: 44px;
+  }
+
+  .lead {
+    display: none;
+  }
+
+  .cta {
+    margin-top: 20px;
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .picture {
+      animation: cover-drift linear both;
+      animation-range: exit 0% exit 100%;
+      animation-timeline: --cover;
+    }
+
+    .dusk {
+      animation: cover-dusk linear both;
+      animation-range: exit 10% exit 95%;
+      animation-timeline: --cover;
+    }
+
+    .copy {
+      animation: cover-lift linear both;
+      animation-range: exit 0% exit 70%;
+      animation-timeline: --cover;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .line {
+    animation: cover-line 1.4s var(--at-ease) both;
+  }
+
+  .em {
+    animation-delay: 140ms;
+  }
+
+  .lead {
+    animation: cover-fade 1.4s var(--at-ease) 320ms both;
+  }
+
+  .cta {
+    animation: cover-fade 1.4s var(--at-ease) 460ms both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img,
+  .cue i {
+    animation: none;
+  }
+}
+
+@keyframes cover-settle {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+@keyframes cover-drift {
+  to { transform: translateY(16%) scale(1.06); }
+}
+
+@keyframes cover-dusk {
+  to { opacity: 0.9; }
+}
+
+@keyframes cover-lift {
+  to { opacity: 0; transform: translateY(-48px); }
+}
+
+@keyframes cover-line {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes cover-fade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes cover-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  48% { transform: scaleY(1); transform-origin: top; }
+  52% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}

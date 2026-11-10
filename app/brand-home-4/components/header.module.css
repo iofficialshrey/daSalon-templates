@@ -1,0 +1,326 @@
+/*
+ * The masthead: fixed, solid porcelain, a 1px ink rule and the 3px cobalt
+ * reading-progress line on its bottom edge. 56 / 64 / 72px tall.
+ * Phone: wordmark | numeral Contents, Book. Tablet: + Issue 04, two-line Book.
+ * Desktop: + the Primary nav centred between the two groups.
+ */
+
+.header {
+  background: var(--p4-porcelain);
+  border-bottom: 1px solid var(--p4-ink);
+  color: var(--p4-ink);
+  height: var(--p4-nav-h);
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.bar {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+  justify-content: space-between;
+  padding-inline: var(--p4-margin);
+}
+
+/* ---------- Wordmark and issue ---------- */
+
+.brand {
+  align-items: center;
+  display: flex;
+  flex: none;
+  gap: 12px;
+}
+
+.mark {
+  align-items: center;
+  color: var(--p4-ink);
+  display: inline-flex;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  min-height: 44px;
+  text-transform: uppercase;
+}
+
+.rule,
+.issue {
+  display: none;
+}
+
+.rule {
+  background: var(--p4-ink);
+  height: 20px;
+  width: 1px;
+}
+
+.issue {
+  color: var(--p4-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 760px) {
+  .mark {
+    font-size: 24px;
+  }
+
+  .rule {
+    display: block;
+  }
+
+  .issue {
+    display: block;
+  }
+}
+
+/* ---------- Primary nav (desktop) ---------- */
+
+.nav {
+  display: none;
+}
+
+.navList {
+  display: flex;
+  gap: 28px;
+}
+
+.navLink {
+  align-items: center;
+  color: var(--p4-muted);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  min-height: 44px;
+  text-decoration-color: transparent;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-transform: uppercase;
+  text-underline-offset: 6px;
+  transition: color var(--p4-fast) var(--p4-ease), text-decoration-color var(--p4-fast) var(--p4-ease);
+  white-space: nowrap;
+}
+
+.navLink[aria-current="location"] {
+  color: var(--p4-ink);
+  text-decoration-color: var(--p4-cobalt);
+}
+
+@media (hover: hover) {
+  .navLink:hover {
+    color: var(--p4-ink);
+  }
+}
+
+.navLink:focus-visible {
+  color: var(--p4-ink);
+}
+
+@media (min-width: 1100px) {
+  .nav {
+    display: block;
+  }
+}
+
+/* ---------- Actions: Contents, then Book ---------- */
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+
+.contents {
+  align-items: center;
+  color: var(--p4-ink);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  gap: 6px;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  min-height: 44px;
+  text-transform: uppercase;
+  transition: color var(--p4-fast) var(--p4-ease);
+  white-space: nowrap;
+}
+
+/* Phones only: the current chapter's numeral leads the label. */
+.contentsNo {
+  color: var(--p4-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 760px) {
+  .contentsNo {
+    display: none;
+  }
+}
+
+.contentsIcon {
+  flex: none;
+  height: 16px;
+  width: 16px;
+}
+
+@media (hover: hover) {
+  .contents:hover {
+    color: var(--p4-cobalt);
+  }
+}
+
+.contents:focus-visible {
+  color: var(--p4-cobalt);
+}
+
+/* Header Book: cobalt and flat (no lifted shadow). Phone: 64×44, visible "Book" only. */
+.book {
+  align-items: center;
+  background: var(--p4-cobalt);
+  color: var(--p4-porcelain);
+  display: inline-flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0;
+  position: relative;
+  text-align: left;
+  text-transform: uppercase;
+  transition: background-color var(--p4-fast) var(--p4-ease);
+  width: 64px;
+}
+
+@media (hover: hover) {
+  .book:hover {
+    background: var(--p4-cobalt-deep);
+  }
+}
+
+.book:focus-visible {
+  background: var(--p4-cobalt-deep);
+}
+
+.bookLine {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+/* Visually hidden on phones (still part of the name); visible from 760px. */
+.bookTail,
+.bookAt {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.bookArrow {
+  display: none;
+}
+
+/* While the cover circle is on screen, two Books never compete (space kept). */
+@media (max-width: 759px) {
+  .actions[data-past-cover="false"] .book {
+    visibility: hidden;
+  }
+}
+
+@media (min-width: 760px) {
+  .actions {
+    gap: 12px;
+  }
+
+  .book {
+    align-items: flex-start;
+    height: 44px;
+    min-width: 216px;
+    padding: 0 44px 0 16px;
+    width: auto;
+  }
+
+  .bookTail {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    white-space: normal;
+    width: auto;
+  }
+
+  .bookAt {
+    clip: auto;
+    color: var(--p4-wash-2);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    height: auto;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    margin: 2px 0 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+  }
+
+  .bookArrow {
+    display: block;
+    height: 16px;
+    position: absolute;
+    right: 16px;
+    top: calc(50% - 8px);
+    width: 16px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .book {
+    height: 48px;
+  }
+}
+
+/* ---------- Reading progress: 3px cobalt on the bottom edge ---------- */
+
+.progress {
+  background: var(--p4-cobalt);
+  bottom: -1px;
+  height: 3px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+@supports (animation-timeline: scroll()) {
+  .progress {
+    animation: p4-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes p4-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}

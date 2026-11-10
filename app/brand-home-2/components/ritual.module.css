@@ -1,0 +1,315 @@
+/*
+ * The ritual, as a sequence of three steps.
+ * Narrow screens: the head, then each step with its own detail of the
+ * photograph, like pages of a quiet photo essay.
+ * Wide screens (900px+): the photograph holds still in the left column and
+ * turns to each step as it reaches the middle of the screen; the head, the
+ * steps and the round Book scroll past in the right column. The current step
+ * reads at full strength and draws its hairline; the others rest.
+ */
+
+.ritual {
+  overflow: clip;
+}
+
+.sequence {
+  display: grid;
+}
+
+/* ---------- The photograph (wide screens) ---------- */
+
+.stage {
+  display: none;
+}
+
+.window {
+  aspect-ratio: 4 / 5;
+  background: var(--at-noir-2);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.shot {
+  object-fit: cover;
+}
+
+/* Where each detail's subject sits when a frame crops it. */
+.shot1 {
+  object-position: 50% 18%;
+}
+
+.shot2 {
+  object-position: 50% 24%;
+}
+
+.shot3 {
+  object-position: 50% 34%;
+}
+
+/* A champagne hairline inset, as on the doors. */
+.frame,
+.inline::after {
+  border: 1px solid rgb(216 193 154 / 36%);
+  inset: 16px;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.inline::after {
+  content: "";
+  inset: 12px;
+}
+
+/* ---------- Head ---------- */
+
+.head {
+  display: grid;
+  gap: 24px;
+  margin-bottom: 56px;
+}
+
+.title {
+  max-width: 12ch;
+}
+
+.second {
+  display: block;
+}
+
+.lead {
+  max-width: 40ch;
+}
+
+/* ---------- Steps ---------- */
+
+.steps {
+  display: grid;
+  gap: 56px;
+}
+
+.step {
+  align-content: start;
+  display: grid;
+  gap: 12px;
+  position: relative;
+}
+
+/* Phones: each step's own detail of the photograph. */
+.inline {
+  aspect-ratio: 1 / 1;
+  background: var(--at-noir-2);
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.inlineImg {
+  object-fit: cover;
+}
+
+.stepHead {
+  align-items: baseline;
+  display: flex;
+  gap: 16px;
+}
+
+.no {
+  color: var(--at-bronze);
+  font-family: var(--at-serif);
+  font-size: 15px;
+  font-variant-numeric: lining-nums;
+  line-height: 1;
+}
+
+.stepTitle {
+  font-family: var(--at-serif);
+  font-size: clamp(34px, 3.4vw, 50px);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.stepBody {
+  color: var(--at-muted);
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 34ch;
+}
+
+/* ---------- The round Book: a hairline circle that fills on hover ---------- */
+
+.circle {
+  align-items: center;
+  border: 1px solid var(--at-ink);
+  border-radius: 50%;
+  color: var(--at-ink);
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--at-sans);
+  font-size: 11px;
+  font-weight: 700;
+  gap: 10px;
+  height: 132px;
+  justify-content: center;
+  justify-self: start;
+  letter-spacing: 0.16em;
+  line-height: 1.5;
+  margin-top: 56px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: background-color var(--at-ui) var(--at-ease), color var(--at-ui) var(--at-ease), transform 600ms var(--at-ease);
+  width: 132px;
+}
+
+.circle svg {
+  transition: transform var(--at-ui) var(--at-ease);
+}
+
+@media (hover: hover) {
+  .circle:hover {
+    background: var(--at-ink);
+    color: var(--at-ivory);
+    transform: rotate(-6deg);
+  }
+
+  .circle:hover svg {
+    transform: translateX(4px);
+  }
+}
+
+.circleText {
+  display: block;
+}
+
+.text {
+  display: grid;
+  min-width: 0;
+}
+
+/* ---------- Small tablets: wider details ---------- */
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .inline {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* ---------- Wide screens: the photograph holds, the steps pass ---------- */
+
+@media (min-width: 900px) {
+  .sequence {
+    align-items: start;
+    column-gap: clamp(56px, 7vw, 128px);
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+
+  .stage {
+    align-self: start;
+    display: block;
+    position: sticky;
+    top: calc(var(--at-header) + 32px);
+  }
+
+  /* Short screens keep the whole frame in view and crop the photograph a little squarer. */
+  .window {
+    max-height: calc(100svh - var(--at-header) - 64px);
+  }
+
+  .shot {
+    opacity: 0;
+    transform: scale(1.06);
+    transition:
+      opacity 1.1s var(--at-ease),
+      transform 2.4s var(--at-ease);
+  }
+
+  .sequence[data-step="1"] .shot1,
+  .sequence[data-step="2"] .shot2,
+  .sequence[data-step="3"] .shot3 {
+    opacity: 1;
+    transform: none;
+  }
+
+  .inline {
+    display: none;
+  }
+
+  .head {
+    margin-bottom: 64px;
+  }
+
+  .title {
+    font-size: clamp(40px, 4.6vw, 76px);
+  }
+
+  .steps {
+    gap: 0;
+  }
+
+  /* Each step holds the middle of the screen for a while: the pace of the sequence. */
+  .step {
+    border-top: 1px solid var(--at-line);
+    min-height: 46svh;
+    padding: 32px 0 48px;
+  }
+
+  .step:last-child {
+    min-height: 34svh;
+  }
+
+  /* The current step's hairline, drawn in ink over the resting one. */
+  .step::before {
+    background: var(--at-ink);
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: -1px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 900ms var(--at-ease);
+  }
+
+  .sequence[data-live] :is(.no, .stepTitle, .stepBody) {
+    opacity: 0.32;
+    transition: opacity 700ms var(--at-ease);
+  }
+
+  .sequence[data-step="1"] [data-ritual-step="1"] :is(.no, .stepTitle, .stepBody),
+  .sequence[data-step="2"] [data-ritual-step="2"] :is(.no, .stepTitle, .stepBody),
+  .sequence[data-step="3"] [data-ritual-step="3"] :is(.no, .stepTitle, .stepBody) {
+    opacity: 1;
+  }
+
+  .sequence[data-live][data-step="1"] [data-ritual-step="1"]::before,
+  .sequence[data-live][data-step="2"] [data-ritual-step="2"]::before,
+  .sequence[data-live][data-step="3"] [data-ritual-step="3"]::before {
+    transform: scaleX(1);
+  }
+
+  .circle {
+    margin-top: 40px;
+  }
+}
+
+@media (min-width: 900px) and (prefers-reduced-motion: reduce) {
+  .shot {
+    transform: none;
+    transition: opacity 300ms linear;
+  }
+
+  .step::before,
+  .sequence[data-live] :is(.no, .stepTitle, .stepBody) {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle,
+  .circle svg {
+    transition: none;
+  }
+}

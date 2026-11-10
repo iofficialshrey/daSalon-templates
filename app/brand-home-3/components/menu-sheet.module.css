@@ -1,0 +1,209 @@
+/*
+ * The menu sheet (spec §4.0). The Layer gives the full-viewport paper panel,
+ * its 320ms drop-in and 200ms exit. Inside: the header's top row (mark | Close),
+ * then a scrolling body on the page grid. Phone: one column. Tablet: Explore in
+ * columns 1–4, booking in 5–8. A still orb closes the sheet at the bottom right.
+ */
+
+.sheet {
+  display: grid;
+  grid-template-rows: var(--sr-header) minmax(0, 1fr);
+  height: 100%;
+}
+
+/* The header's own grid, so Close sits exactly where the menu button was. */
+.top {
+  align-items: center;
+  border-bottom: 1px solid var(--sr-line);
+  column-gap: var(--sr-gap);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  padding-inline: var(--sr-margin);
+}
+
+.top .close {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.body {
+  align-content: start;
+  grid-template-rows: auto auto minmax(160px, 1fr);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: 32px calc(32px + env(safe-area-inset-bottom));
+  /* Contains the visually hidden spans, so only the body scrolls (never the panel around it). */
+  position: relative;
+}
+
+/* ---------- Explore: the page's sections in Newsreader Light ---------- */
+
+.body > .explore {
+  display: grid;
+  gap: 16px;
+}
+
+.links li {
+  border-bottom: 1px solid var(--sr-line);
+}
+
+.links li:first-child {
+  border-top: 1px solid var(--sr-line);
+}
+
+.link {
+  align-items: center;
+  color: var(--tone-text);
+  display: flex;
+  font-family: var(--sr-display);
+  font-size: 40px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  min-height: 64px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
+  transition: text-decoration-color var(--sr-fast) var(--sr-ease);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.link:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+@media (max-width: 359px) {
+  .link {
+    font-size: 36px;
+  }
+}
+
+/* ---------- Booking: Book a ritual, then the four places ---------- */
+
+.body > .book {
+  align-content: start;
+  display: grid;
+  margin-top: 40px;
+}
+
+.book .placesLabel {
+  margin-top: 40px;
+}
+
+.places {
+  margin-top: 16px;
+}
+
+.places li {
+  border-bottom: 1px solid var(--sr-line);
+}
+
+.places li:first-child {
+  border-top: 1px solid var(--sr-line);
+}
+
+/* A 56px row: the place in serif 20px over its sub-line, ending in the arrow (or the busy ring). */
+.place {
+  align-items: center;
+  color: var(--tone-text);
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 56px;
+  padding-block: 6px;
+  text-align: left;
+  touch-action: manipulation;
+  transition: background-color var(--sr-fast) var(--sr-ease);
+  width: 100%;
+}
+
+.place > svg {
+  height: 20px;
+  width: 20px;
+}
+
+@media (hover: hover) {
+  .place:hover {
+    background: rgb(32 49 44 / 6%);
+  }
+}
+
+.place:focus-visible {
+  background: rgb(32 49 44 / 6%);
+}
+
+.place[data-waiting] {
+  cursor: progress;
+}
+
+.placeText {
+  display: grid;
+}
+
+.placeName {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.book .now {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  margin-top: 32px;
+}
+
+/* ---------- The still orb, bottom right ---------- */
+
+.body > .orb {
+  align-self: end;
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin-top: 32px;
+  width: 160px;
+}
+
+@media (min-width: 760px) {
+  .body {
+    grid-template-rows: auto minmax(160px, 1fr);
+  }
+
+  .body > .explore {
+    grid-column: 1 / 5;
+    grid-row: 1;
+  }
+
+  .body > .book {
+    grid-column: 5 / 9;
+    grid-row: 1;
+    margin-top: 0;
+  }
+
+  .body > .orb {
+    grid-column: 5 / 9;
+    grid-row: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .place {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .place {
+    border: 1px solid transparent;
+  }
+
+  .place:focus-visible,
+  .link:focus-visible {
+    outline-color: Highlight;
+  }
+}

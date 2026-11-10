@@ -1,0 +1,151 @@
+/*
+ * 06 · The Serein hour (spec §4.6), tone band: paper-soft text (5.50), mist
+ * labels and meta (4.70), paper-soft focus ring. The timeline is four steps
+ * on a 1px hairline with 12px pool dots: a vertical list on phones (line at
+ * x = 6px, text indented 32px), 2×2 on tablets, four 3/12 columns on desktop.
+ */
+
+/* The head note is paper-soft here, not the tone's muted mist. */
+p.note {
+  color: var(--tone-text);
+}
+
+/* ---------- Timeline ---------- */
+
+.timeline {
+  display: grid;
+  row-gap: 32px;
+}
+
+.step {
+  padding-left: 32px;
+  position: relative;
+}
+
+/* The hairline: on phones a vertical segment from this dot to the next one (gap 32px + the next dot's 20px). */
+.step::before {
+  background: var(--sr-line-dark);
+  bottom: -52px;
+  content: "";
+  left: 5px;
+  position: absolute;
+  top: 20px;
+  width: 1px;
+}
+
+.step:last-child::before {
+  display: none;
+}
+
+.dot {
+  background: var(--sr-pool);
+  border-radius: 50%;
+  height: 12px;
+  left: 0;
+  position: absolute;
+  top: 14px;
+  width: 12px;
+}
+
+.numeral {
+  color: var(--tone-text);
+  font-family: var(--sr-display);
+  font-size: 40px;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stepLabel {
+  margin-top: 16px;
+}
+
+.stepLine {
+  margin-top: 8px;
+  max-width: 34ch;
+}
+
+/* ---------- CTA row and quote ---------- */
+
+.cta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin-top: var(--sr-stack);
+}
+
+.quote {
+  display: grid;
+  gap: 24px;
+  justify-items: center;
+  margin-top: var(--sr-head-gap);
+  text-align: center;
+}
+
+.quoteText {
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+/* ---------- Tablet: 2×2 with a hairline across each row ---------- */
+
+@media (min-width: 760px) {
+  .timeline {
+    column-gap: var(--sr-gap);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 48px;
+  }
+
+  .step {
+    padding-left: 0;
+    padding-top: 36px;
+  }
+
+  /* Across, through the dots' centre; runs on through the gap to the next step and stops at a row's end. */
+  .step::before {
+    bottom: auto;
+    height: 1px;
+    left: 0;
+    right: calc(-1 * var(--sr-gap));
+    top: 5px;
+    width: auto;
+  }
+
+  .step:last-child::before {
+    display: block;
+  }
+
+  .step:nth-child(2n)::before {
+    right: 0;
+  }
+
+  .dot {
+    top: 0;
+  }
+}
+
+/* ---------- Desktop: four 3/12 columns on one hairline ---------- */
+
+@media (min-width: 1100px) {
+  .timeline {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .step:nth-child(2n)::before {
+    right: calc(-1 * var(--sr-gap));
+  }
+
+  .step:last-child::before {
+    right: 0;
+  }
+}
+
+@media (forced-colors: active) {
+  .step::before,
+  .dot {
+    background: CanvasText;
+    forced-color-adjust: none;
+  }
+}

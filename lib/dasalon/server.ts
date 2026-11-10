@@ -7,7 +7,10 @@ import type {
   PartnerVenue,
   PublicService,
   TaxCalculation,
+  TimeSlot,
 } from "./types";
+
+export { addMinutes } from "./locale";
 
 type ApiEnvelope<T> = {
   success?: boolean;
@@ -81,6 +84,16 @@ export async function daSalonRequest<T>(
       | null;
 
     if (!response.ok || payload?.success === false) {
+      // A rejected key or an upstream fault is ours to fix, not the guest's: its wording stays in the
+      // server log, and the page shows a plain "unavailable" message (as 503, not a misleading 401).
+      if (response.status === 401 || response.status === 403 || response.status >= 500) {
+        console.error(`da Salon request failed (${response.status}): ${payload?.message ?? "no message"}`);
+        throw new DaSalonError(
+          "Online booking is unavailable just now. Please try again shortly.",
+          response.status >= 500 ? 502 : 503,
+          "UNAVAILABLE",
+        );
+      }
       throw new DaSalonError(
         payload?.message || "The booking service could not complete the request.",
         safeStatus(response.status),
@@ -102,6 +115,25 @@ export async function daSalonRequest<T>(
   } finally {
     clearTimeout(timeout);
   }
+}
+
+const readCache = new Map<string, { expires: number; value: Promise<unknown> }>();
+
+/**
+ * Venue profile and menu reads change rarely, so a warm server instance reuses
+ * them briefly. Availability and appointment writes always go to da Salon fresh.
+ */
+export function cachedDaSalonRequest<T>(path: string, ttlMs = 30_000): Promise<T> {
+  const now = Date.now();
+  const hit = readCache.get(path);
+  if (hit && hit.expires > now) return hit.value as Promise<T>;
+
+  const value = daSalonRequest<T>(path);
+  readCache.set(path, { expires: now + ttlMs, value });
+  value.catch(() => {
+    if (readCache.get(path)?.value === value) readCache.delete(path);
+  });
+  return value;
 }
 
 export function apiErrorResponse(error: unknown) {
@@ -138,6 +170,19 @@ export function normalizeDates(value: unknown) {
     .filter((date): date is string => typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date));
 }
 
+export function normalizeSlots(value: unknown) {
+  return asArray<Record<string, unknown>>(value, ["timeSlots", "slots"])
+    .map((slot): TimeSlot | null => {
+      const rawTime = slot.time ?? slot.startTime;
+      if (typeof rawTime !== "string" || slot.hasAvailableStaff === false || slot.available === false) return null;
+      return {
+        time: rawTime.slice(0, 5),
+        staffIds: Array.isArray(slot.staffIds) ? slot.staffIds.filter((id): id is string => typeof id === "string") : [],
+      };
+    })
+    .filter((slot): slot is TimeSlot => Boolean(slot));
+}
+
 export function normalizeServices(value: unknown) {
   return asArray<PartnerService>(value, ["services"]).filter((service) => (
     typeof service?.id === "string"
@@ -149,13 +194,22 @@ export function normalizeServices(value: unknown) {
   ));
 }
 
-export function publicService(service: PartnerService): PublicService {
+export function publicService(
+  service: PartnerService,
+  fallbackTaxCalculation: TaxCalculation = "EXCLUSIVE",
+): PublicService {
+  const line = priceLine(service, "00:00", fallbackTaxCalculation);
+  const taxName = service.taxSetting?.name?.trim() || "Tax";
   return {
     id: service.id,
     name: service.name,
     description: service.description ?? null,
     duration: Number(service.duration),
-    price: Number(service.price ?? service.onlinePrice ?? 0),
+    price: line.price,
+    total: line.total,
+    taxLabel: line.taxPercentage > 0
+      ? `${line.taxType === "INCLUSIVE" ? "Incl." : "+"} ${taxName} ${line.taxPercentage}%`
+      : null,
     category: service.categoryName ?? service.category?.name ?? null,
   };
 }
@@ -169,12 +223,6 @@ export function ownedVenue(me: PartnerMe, venueId?: string | null): PartnerVenue
 
 function roundMoney(value: number) {
   return Math.round((value + Number.EPSILON) * 100) / 100;
-}
-
-export function addMinutes(startTime: string, minutes: number) {
-  const [hours, mins] = startTime.split(":").map(Number);
-  const total = hours * 60 + mins + minutes;
-  return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
 export function priceLine(

@@ -1,0 +1,383 @@
+/*
+ * The threshold: a sticky noir stage. Bottom to top: the film (poster and
+ * scrubbed video, dollied together), a dimmer, the light spill, shades for
+ * legibility, the captions, the progress rail and the doors
+ * (walk-doors.module.css). The controller writes only opacity, transform,
+ * text and data / aria attributes. No filters or blend modes over the video.
+ */
+
+/* The first 30% of the pinned travel opens the doors; the rest plays the film. */
+.walk {
+  height: 510vh;
+  height: 510svh;
+  position: relative;
+  scroll-margin-top: 0;
+}
+
+@media (max-aspect-ratio: 4/5) {
+  .walk {
+    height: 410vh;
+    height: 410svh;
+  }
+}
+
+@media (max-height: 500px) and (pointer: coarse) {
+  .walk {
+    height: 360vh;
+    height: 360svh;
+  }
+}
+
+.stage {
+  --at-bar: 0px;
+  background: var(--at-noir);
+  contain: layout paint;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+}
+
+/* The iOS toolbar: bottom-anchored text stays above it. */
+@supports (height: 100lvh) {
+  .stage {
+    --at-bar: calc(100lvh - 100svh);
+  }
+}
+
+/* ---------- Film, dimmer, spill, shades ---------- */
+
+.film,
+.poster,
+.poster img,
+.video,
+.dimmer,
+.shades,
+.shadeBase,
+.beatShade {
+  inset: 0;
+  position: absolute;
+}
+
+/* The poster dollies with the video, so the reveal never jumps in scale. */
+.film {
+  transform: scale(1.04);
+  z-index: 1;
+}
+
+.walk[data-active="on"][data-film="ready"] .film {
+  will-change: transform;
+}
+
+.poster img,
+.video {
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  width: 100%;
+}
+
+.video {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+
+.walk[data-film="ready"] .video {
+  opacity: 1;
+}
+
+.dimmer {
+  background: var(--at-noir);
+  opacity: 0.5;
+  z-index: 2;
+}
+
+/* Lamplight through the opening doors. */
+.spill {
+  background: radial-gradient(38% 55% at 50% 46%, rgb(255 217 168 / 52%), rgb(255 190 130 / 16%) 46%, transparent 72%);
+  bottom: 0;
+  left: 15%;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 70%;
+  z-index: 3;
+}
+
+.walk[data-active="on"]:not([data-doors="open"]) :is(.dimmer, .spill) {
+  will-change: opacity;
+}
+
+.shades {
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* A soft vignette, and the floor kept dark under the rail. */
+.shadeBase {
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 55%, rgb(14 11 8 / 55%) 100%),
+    linear-gradient(0deg, rgb(14 11 8 / 55%) 0%, transparent 24%);
+}
+
+.beatShade {
+  opacity: 0;
+}
+
+.shade1,
+.shade3 {
+  background: linear-gradient(90deg, rgb(14 11 8 / 72%) 0%, rgb(14 11 8 / 28%) 34%, transparent 56%);
+}
+
+.shade2 {
+  background: linear-gradient(270deg, rgb(14 11 8 / 72%) 0%, rgb(14 11 8 / 28%) 34%, transparent 56%);
+}
+
+.shade4 {
+  background:
+    linear-gradient(90deg, rgb(14 11 8 / 82%) 0%, rgb(14 11 8 / 46%) 40%, transparent 70%),
+    linear-gradient(0deg, rgb(14 11 8 / 50%) 0%, transparent 50%);
+}
+
+/* ---------- Captions (z5) ---------- */
+
+.captions {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 5;
+}
+
+.caption {
+  bottom: calc(var(--at-bar) + 112px);
+  left: var(--at-gutter);
+  max-width: min(560px, calc(100% - 2 * var(--at-gutter)));
+  opacity: 0;
+  pointer-events: auto;
+  position: absolute;
+}
+
+.walk[data-active="on"] .caption {
+  will-change: opacity, transform;
+}
+
+.beat1,
+.beat3 {
+  text-align: left;
+}
+
+.beat2 {
+  left: auto;
+  right: var(--at-gutter);
+  text-align: right;
+}
+
+.beat4 {
+  bottom: auto;
+  max-width: min(680px, calc(100% - 2 * var(--at-gutter)));
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.text {
+  color: var(--at-ivory);
+}
+
+.title {
+  font-family: var(--at-serif);
+  font-size: clamp(36px, 4.6vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-shadow: 0 2px 30px rgb(0 0 0 / 35%);
+}
+
+.titleLarge {
+  font-size: clamp(44px, 6.4vw, 104px);
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+}
+
+.body {
+  color: rgb(243 238 230 / 82%);
+  font-family: var(--at-serif);
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+  margin-top: 18px;
+  max-width: 34ch;
+}
+
+.beat2 .body {
+  margin-left: auto;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-top: 36px;
+}
+
+.cta {
+  min-width: 248px;
+}
+
+.onward {
+  color: var(--at-ivory);
+}
+
+/* ---------- Progress rail and Skip (z8, above the doors) ---------- */
+
+.rail {
+  align-items: center;
+  bottom: calc(var(--at-bar) + 24px + env(safe-area-inset-bottom));
+  color: var(--at-ivory);
+  display: flex;
+  gap: 24px;
+  left: var(--at-gutter);
+  position: absolute;
+  right: var(--at-gutter);
+  z-index: 8;
+}
+
+.progress {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(4, 1fr);
+  width: min(240px, 40vw);
+}
+
+.track {
+  background: rgb(243 238 230 / 22%);
+  display: block;
+  height: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fill {
+  background: var(--at-champagne-light);
+  inset: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.loading {
+  color: rgb(243 238 230 / 60%);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  opacity: 0;
+  text-transform: uppercase;
+  transition: opacity var(--at-ui) linear;
+}
+
+.walk[data-active="on"]:not([data-film="ready"], [data-film="failed"]) .loading {
+  opacity: 1;
+}
+
+.skip {
+  color: var(--at-ivory);
+  margin-left: auto;
+}
+
+.skipShort {
+  display: none;
+}
+
+.rail[data-skip="off"] .skip {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* ---------- Phones and portrait screens: captions over the floor of the frame ---------- */
+
+@media (max-width: 759px), (max-aspect-ratio: 4/5) {
+  .caption,
+  .beat2,
+  .beat4 {
+    bottom: calc(var(--at-bar) + 96px + env(safe-area-inset-bottom));
+    left: var(--at-gutter);
+    right: var(--at-gutter);
+    text-align: left;
+    top: auto;
+    translate: none;
+  }
+
+  .beat2 .body {
+    margin-left: 0;
+  }
+
+  .shade1,
+  .shade2,
+  .shade3,
+  .shade4 {
+    background: linear-gradient(0deg, rgb(14 11 8 / 88%) 0%, rgb(14 11 8 / 55%) 36%, transparent 64%);
+  }
+
+  .title {
+    font-size: clamp(34px, 9.4vw, 44px);
+  }
+
+  .titleLarge {
+    font-size: clamp(40px, 11vw, 52px);
+  }
+
+  .body {
+    font-size: 17px;
+    margin-top: 14px;
+  }
+
+  .actions {
+    gap: 12px 24px;
+    margin-top: 24px;
+  }
+
+  .cta {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .skipFull {
+    display: none;
+  }
+
+  .skipShort {
+    display: inline;
+  }
+}
+
+/* Landscape phones: compact type, the body line dropped. */
+@media (max-height: 500px) and (pointer: coarse) {
+  .caption,
+  .beat2,
+  .beat4 {
+    bottom: calc(56px + env(safe-area-inset-bottom));
+    max-width: 60%;
+    top: auto;
+    translate: none;
+  }
+
+  .title,
+  .titleLarge {
+    font-size: 32px;
+  }
+
+  .body {
+    display: none;
+  }
+
+  .actions {
+    margin-top: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video {
+    transition: none;
+  }
+}

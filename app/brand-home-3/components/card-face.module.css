@@ -1,0 +1,154 @@
+/*
+ * The 1.586:1 card face (spec §7.5). Square, a 1px hairline, the art full
+ * bleed; text lives only on the solid paper-soft plate. Sizes are container
+ * units on the face, never below 12px.
+ */
+
+.face {
+  aspect-ratio: 856 / 540;
+  background: var(--sr-paper-soft);
+  border: 1px solid var(--sr-line);
+  container-type: inline-size;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.art {
+  display: block;
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.artImg {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Three concentric hairlines, top-right: 30%, 22% and 14% of the face height. */
+.rings {
+  aspect-ratio: 1;
+  height: 30%;
+  position: absolute;
+  right: 5%;
+  top: 8%;
+}
+
+.rings i {
+  border: 1px solid rgb(247 244 236 / 40%);
+  border-radius: 50%;
+  inset: 0;
+  position: absolute;
+}
+
+.rings i:nth-child(2) {
+  inset: 13.333%;
+}
+
+.rings i:nth-child(3) {
+  inset: 26.667%;
+}
+
+/* The label block: text never sits on the art. */
+.plate {
+  background: var(--sr-paper-soft);
+  bottom: 0;
+  color: var(--sr-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  left: 0;
+  min-height: 40%;
+  padding: 10px 12px;
+  position: absolute;
+  width: 52%;
+}
+
+.top {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-bottom: auto;
+  padding-bottom: 4px;
+}
+
+.mark {
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-flex;
+  flex: none;
+  font-family: var(--sr-display);
+  font-size: 12px;
+  font-weight: 400;
+  height: 16px;
+  justify-content: center;
+  line-height: 1;
+  width: 16px;
+}
+
+.kicker {
+  color: var(--sr-sage-ink);
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--sr-display);
+  font-size: clamp(16px, 4.6cqi, 22px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.value {
+  font-family: var(--sr-display);
+  font-size: clamp(18px, 5.2cqi, 26px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.for {
+  color: var(--sr-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+/*
+ * Small faces (the tablet gift row, about 216px): the brand row steps aside so the
+ * plate keeps to the bottom of the card. The name and value stay (decorative; the
+ * same facts sit in real text beside the face).
+ */
+@container (max-width: 259px) {
+  .top {
+    display: none;
+  }
+}
+
+/* Buy pressed: the rings breathe once. */
+@media (prefers-reduced-motion: no-preference) {
+  .face[data-breathing] .rings i {
+    animation: face-breathe 1.2s var(--sr-ease-breath) 1 both;
+  }
+}
+
+@keyframes face-breathe {
+  0% { scale: 0.96; }
+  50% { scale: 1.04; }
+  100% { scale: 1; }
+}
+
+@media (forced-colors: active) {
+  .rings {
+    display: none;
+  }
+
+  .plate {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,106 @@
+/*
+ * 08 — Editor's note, on wash. Desktop: kicker in columns 1–2, the paragraph in
+ * 3–9, the facts in 10–12 bottom-aligned. The shared head is display: contents
+ * here, so its kicker (which is the H2) joins this grid directly.
+ */
+
+.spread {
+  border-top: 1px solid var(--tone-line);
+  column-gap: var(--p4-gap);
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(var(--p4-cols), minmax(0, 1fr));
+  padding-top: 24px;
+  position: relative;
+  row-gap: 24px;
+  z-index: 1;
+}
+
+.section .spread .head {
+  display: contents;
+}
+
+.paragraph {
+  grid-column: 1 / -1;
+  max-width: 24em;
+}
+
+/* Phones: two facts, the live total across the row beneath ("neighbourhoods" needs the width). */
+.facts {
+  display: grid;
+  gap: var(--p4-gap);
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.facts > :nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+/* Wider phones and tablets: a row of three. */
+@media (min-width: 480px) {
+  .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .facts > :nth-child(3) {
+    grid-column: auto;
+  }
+}
+
+.fact {
+  align-content: start;
+  border-top: 1px solid var(--p4-ink);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 16px;
+}
+
+.factFigure {
+  color: var(--tone-accent);
+  font-size: 40px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.factLabel {
+  color: var(--tone-text);
+}
+
+@media (min-width: 760px) {
+  .facts {
+    grid-column: 1 / 7;
+  }
+}
+
+@media (min-width: 1100px) {
+  .paragraph {
+    grid-column: 3 / 10;
+    grid-row: 1;
+  }
+
+  .facts {
+    align-self: end;
+    display: block;
+    grid-column: 10 / -1;
+    grid-row: 1;
+    margin-top: 0;
+  }
+
+  .fact {
+    padding-block: 16px;
+  }
+
+  .fact:last-child {
+    border-bottom: 1px solid var(--p4-ink);
+  }
+
+  .factFigure {
+    font-size: 64px;
+  }
+}

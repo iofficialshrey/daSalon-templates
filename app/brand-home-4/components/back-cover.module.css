@@ -1,0 +1,221 @@
+/*
+ * 09 — Back cover, on ink. A centred stack (columns 2–11 on desktop): the
+ * film's final frame, the PALOMA mark, the finale H2 and the CTA; then the
+ * "Book at" strip across the full frame.
+ */
+
+.section[data-chapter] {
+  padding-block: 96px 64px;
+  text-align: center;
+}
+
+.stack {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- The cover's final frame (tablet and desktop) ---------- */
+
+.thumb {
+  display: none;
+  margin: 0 0 32px;
+}
+
+.thumbFrame {
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgb(245 244 239 / 24%);
+  display: block;
+  margin-inline: auto;
+  overflow: hidden;
+  width: 144px;
+}
+
+.thumbImg {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.thumbCaption {
+  color: var(--p4-mist);
+  margin-top: 8px;
+}
+
+/* ---------- Mark ---------- */
+
+.mark {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.markName {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.markIssue {
+  color: var(--p4-mist);
+}
+
+/* ---------- Finale ---------- */
+
+.title {
+  margin-bottom: 48px;
+  max-width: 100%;
+}
+
+.line {
+  display: block;
+}
+
+/* ---------- CTA: one line, or two once a studio is chosen ---------- */
+
+.section .cta {
+  align-content: center;
+  column-gap: 24px;
+  display: grid;
+  grid-template-areas:
+    "label arrow"
+    "line arrow";
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-width: 260px;
+  padding-block: 8px;
+  row-gap: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.ctaLabel {
+  grid-area: label;
+}
+
+.ctaLine {
+  color: var(--p4-wash-2);
+  font-size: 12px;
+  font-weight: 700;
+  grid-area: line;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  margin-top: 2px;
+}
+
+.ctaArrow {
+  align-self: center;
+  grid-area: arrow;
+  height: 16px;
+  width: 16px;
+}
+
+/* ---------- "Book at" strip ---------- */
+
+.strip {
+  margin-top: 48px;
+  position: relative;
+  text-align: left;
+  z-index: 1;
+}
+
+.stripLabel {
+  color: var(--p4-mist);
+  margin-bottom: 12px;
+}
+
+.stripGrid {
+  display: grid;
+  gap: var(--p4-gap);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studio {
+  --tone-accent: var(--p4-wash);
+  --tone-muted: var(--p4-mist);
+  align-content: start;
+  box-shadow: inset 0 0 0 1px var(--p4-control-dark);
+  color: var(--p4-porcelain);
+  display: grid;
+  gap: 4px;
+  min-height: 72px;
+  padding: 12px 14px;
+  text-align: left;
+  transition: background-color var(--p4-fast) var(--p4-ease);
+}
+
+.studioTop {
+  display: block;
+}
+
+.studioNo {
+  color: var(--tone-accent);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-right: 4px;
+}
+
+.studioName {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.studioArea,
+.studioStatus {
+  color: var(--tone-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.studioStatus {
+  font-weight: 600;
+}
+
+/* Cobalt fill: secondary text moves to wash-2 (5.37:1); mist on cobalt would be 3.03. */
+@media (hover: hover) {
+  .studio:hover {
+    --tone-accent: var(--p4-porcelain);
+    --tone-muted: var(--p4-wash-2);
+    background: var(--p4-cobalt);
+  }
+}
+
+/* ---------- Tablet and up ---------- */
+
+@media (min-width: 760px) {
+  .section[data-chapter] {
+    padding-block: 128px 96px;
+  }
+
+  .thumb {
+    display: block;
+  }
+
+  .section .cta {
+    width: auto;
+  }
+
+  .studio {
+    min-height: 64px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .section > .stack {
+    grid-column: 2 / 12;
+  }
+
+  .stripGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,470 @@
+/*
+ * 03 — The Circle. Cobalt chapter: native-radio tier rows (porcelain fill and
+ * a 6px ink shadow when chosen) beside the tilted porcelain member ledger.
+ * The ledger pieces are shared with the membership spread's stage.
+ */
+
+.aside {
+  color: var(--tone-muted);
+}
+
+/* ---------- Tier picker ---------- */
+
+.pickerCol {
+  grid-column: 1 / -1;
+}
+
+.picker {
+  position: relative;
+  z-index: 1;
+}
+
+.legend {
+  color: var(--tone-muted);
+  float: left;
+  padding-bottom: 16px;
+  width: 100%;
+}
+
+.tiers {
+  border-top: 1px solid var(--p4-wash-2);
+  clear: both;
+}
+
+.tier {
+  position: relative;
+}
+
+.tierLabel {
+  align-items: center;
+  border-bottom: 1px solid var(--p4-wash-2);
+  color: var(--p4-porcelain);
+  column-gap: 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-areas:
+    "name price"
+    "type price";
+  grid-template-columns: minmax(0, 1fr) auto;
+  isolation: isolate;
+  min-height: 72px;
+  padding: 14px 16px;
+  position: relative;
+  row-gap: 6px;
+}
+
+/* The selected fill draws in from the left. */
+.tierLabel::before {
+  background: var(--p4-porcelain);
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: -1;
+}
+
+.tierName {
+  font-size: clamp(28px, 3.2vw, 32px);
+  font-weight: 800;
+  grid-area: name;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.tierType {
+  align-items: center;
+  color: var(--p4-wash-2);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 4px 10px;
+  grid-area: type;
+  line-height: 1.4;
+}
+
+.tierPrice {
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  grid-area: price;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.tierInput:checked + .tierLabel {
+  box-shadow: 6px 6px 0 var(--p4-ink);
+  color: var(--p4-ink);
+  z-index: 1;
+}
+
+.tierInput:checked + .tierLabel::before {
+  transform: none;
+}
+
+/* Muted on porcelain is 5.58:1; wash-2 would vanish. */
+.tierInput:checked + .tierLabel .tierType {
+  color: var(--p4-muted);
+}
+
+.tierInput:focus-visible + .tierLabel {
+  outline: 3px solid var(--p4-porcelain);
+  outline-offset: 3px;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .tierInput:not(:checked) + .tierLabel:hover {
+    background: var(--p4-cobalt-deep);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tierLabel {
+    transition: color var(--p4-ui) var(--p4-ease), box-shadow var(--p4-ui) var(--p4-ease), background-color var(--p4-fast) var(--p4-ease);
+  }
+
+  .tierLabel::before {
+    transition: transform var(--p4-ui) var(--p4-ease);
+  }
+}
+
+.bought {
+  flex: none;
+}
+
+.pickerNote {
+  margin-top: 16px;
+}
+
+/* ---------- Ledger column ---------- */
+
+.ledgerCol {
+  grid-column: 1 / -1;
+  margin-top: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 760px) {
+  .pickerCol {
+    grid-column: 1 / 4;
+  }
+
+  .ledgerCol {
+    align-self: start;
+    grid-column: 4 / 9;
+    margin-top: 0;
+  }
+
+  /* About 250px wide: name, type and price stack. */
+  .tierLabel {
+    grid-template-areas:
+      "name"
+      "type"
+      "price";
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 88px;
+    padding: 16px;
+  }
+
+  .tierPrice {
+    font-size: 20px;
+    margin-top: 4px;
+  }
+}
+
+@media (min-width: 1100px) {
+  /* The ledger runs taller than the three tiers: keep the choice beside it. */
+  .pickerCol {
+    grid-column: 1 / 6;
+  }
+
+  .picker {
+    position: sticky;
+    top: calc(var(--p4-nav-h) + 32px);
+  }
+
+  .ledgerCol {
+    grid-column: 7 / 13;
+  }
+
+  .tierLabel {
+    grid-template-areas:
+      "name price"
+      "type price";
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 16px 20px;
+  }
+
+  .tierPrice {
+    font-size: 24px;
+    margin-top: 0;
+  }
+}
+
+/* ---------- The ledger page ---------- */
+
+.ledger {
+  border: 1px solid var(--p4-ink);
+  box-shadow: 0 24px 60px rgb(21 23 26 / 24%);
+  color: var(--p4-ink);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  position: relative;
+}
+
+@media (min-width: 760px) {
+  .ledger {
+    padding: 32px;
+  }
+}
+
+/* Tilted at rest on desktop; it straightens and lifts when you reach for it. */
+@media (min-width: 1100px) {
+  .ledgerLive {
+    padding: 40px;
+    transform: rotate(1.5deg);
+  }
+}
+
+@media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
+  .ledgerLive {
+    transition: transform 400ms var(--p4-ease);
+  }
+
+  .ledgerLive:focus-within {
+    transform: translateY(-6px);
+  }
+}
+
+@media (min-width: 1100px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .ledgerLive:hover {
+    transform: translateY(-6px);
+  }
+}
+
+/* The 3:1 cyanotype band; a wash ground until (or unless) the art arrives. */
+.band {
+  aspect-ratio: 3 / 1;
+  background: var(--p4-wash);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Phones: the band runs to the page's edges (350 × 117 at 390). */
+@media (max-width: 759px) {
+  .ledgerLive .band {
+    margin: -24px -24px 0;
+  }
+}
+
+.band > picture {
+  inset: 0;
+  position: absolute;
+}
+
+.bandPicture {
+  opacity: 0;
+}
+
+.bandOn {
+  opacity: 1;
+}
+
+.bandImg {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bandPicture {
+    transition: opacity 260ms var(--p4-ease);
+  }
+}
+
+.ledgerHead {
+  align-items: center;
+  border-bottom: 2px solid var(--p4-ink);
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding-block: 16px 12px;
+}
+
+.tierRow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.ledgerName {
+  min-width: 0;
+}
+
+.saving {
+  flex: none;
+}
+
+/* ---------- Figure (rolls when the tier changes) ---------- */
+
+.figureRoll {
+  display: grid;
+  margin-top: 16px;
+}
+
+.figureRoll > * {
+  grid-area: 1 / 1;
+}
+
+.ledger > .figureBlock {
+  margin-top: 16px;
+}
+
+.figureBlock {
+  display: grid;
+  gap: 10px;
+}
+
+/* Cobalt-deep on porcelain: 7.97:1. */
+.figure {
+  color: var(--p4-cobalt-deep);
+}
+
+.caption {
+  color: var(--p4-muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rollOut {
+    animation: ledger-out 160ms var(--p4-ease) both;
+    pointer-events: none;
+  }
+
+  .rollIn {
+    animation: ledger-in 240ms var(--p4-ease) 160ms both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rollOut {
+    display: none;
+  }
+}
+
+@keyframes ledger-out {
+  to {
+    opacity: 0;
+    transform: translateY(-30%);
+  }
+}
+
+@keyframes ledger-in {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Rows ---------- */
+
+.rows {
+  border-top: 1px solid var(--p4-ink);
+  margin-top: 24px;
+}
+
+.row {
+  align-items: baseline;
+  border-bottom: 1px solid var(--p4-ink);
+  column-gap: 12px;
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  min-height: 44px;
+  padding-block: 11px;
+}
+
+.rowLabel {
+  color: var(--p4-muted);
+}
+
+.rowValue {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Cobalt on porcelain: 6.24:1. */
+.rowAccent {
+  color: var(--p4-cobalt);
+}
+
+@media (min-width: 760px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .rowValue {
+    text-align: right;
+  }
+}
+
+.ledger .ledgerButton {
+  margin-top: 28px;
+  min-height: 52px;
+}
+
+.ledgerNote {
+  margin-top: 12px;
+}
+
+/* ---------- On the membership spread's stage ---------- */
+
+.ledgerStage {
+  transform: rotate(1.5deg);
+  width: min(520px, 86cqw);
+}
+
+/* A short stage (phones 200px, tablets 280px): band, name and figure only. */
+@container (max-height: 459px) {
+  .ledgerStage {
+    padding: 12px;
+    width: min(420px, 80cqw, calc((100cqh - 104px) * 3 + 24px));
+  }
+
+  .ledgerStage .ledgerHead,
+  .ledgerStage .caption {
+    display: none;
+  }
+
+  .ledgerStage .tierRow {
+    margin-top: 10px;
+  }
+
+  .ledgerStage .ledgerName {
+    font-size: 20px;
+  }
+
+  .ledgerStage > .figureBlock {
+    margin-top: 6px;
+  }
+
+  .ledgerStage .figure {
+    font-size: 40px;
+  }
+}

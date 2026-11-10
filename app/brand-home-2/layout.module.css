@@ -1,0 +1,218 @@
+/*
+ * Atelier — beauty, made personal.
+ * Every token for template 2 lives on .root. A private-house palette: warm
+ * noir for the film and the night scenes, ivory paper and stone by day,
+ * champagne for hairlines and the italic. Newsreader sets the display and
+ * reading type; Manrope the labels and controls. Corners are square.
+ */
+
+.root {
+  /* Palette */
+  --at-noir: #14110e;
+  --at-noir-2: #1d1814;
+  --at-espresso: #241d17;
+  --at-ink: #17140f;
+  --at-paper: #f7f5f0;
+  --at-stone: #ece7de;
+  --at-chalk: #fbfaf7;
+  --at-ivory: #f3eee6;
+  --at-muted: #6a6359;
+  --at-muted-dark: #b8ad9c;
+  --at-champagne: #b49a68;
+  --at-champagne-light: #d8c19a;
+  --at-bronze: #85704e;
+  --at-error: #9a3a2a;
+  --at-filmlight: #ffd9a8;
+  --at-line: rgb(23 20 15 / 13%);
+  --at-line-strong: rgb(23 20 15 / 46%);
+  --at-line-dark: rgb(247 240 228 / 15%);
+  --at-line-dark-strong: rgb(247 240 228 / 48%);
+  --at-scrim: rgb(14 11 8 / 72%);
+
+  /* Former names, kept as aliases for the flows: no red remains. */
+  --at-bordeaux: var(--at-espresso);
+  --at-bordeaux-700: var(--at-noir);
+  --at-rouge: var(--at-ink);
+  --at-rouge-700: #3a3027;
+  --at-rouge-bright: var(--at-ivory);
+  --at-rose: var(--at-champagne-light);
+  --at-nude: var(--at-stone);
+  --at-blush: var(--at-paper);
+  --at-art-oxblood: var(--at-noir-2);
+  --at-art-frame: var(--at-noir);
+
+  /* Type */
+  --at-serif: var(--at-font-serif), "Iowan Old Style", Baskerville, Georgia, serif;
+  --at-sans: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+  --at-italic: var(--at-serif);
+
+  /* Layout */
+  --at-max: 1320px;
+  --at-wide: 1520px;
+  --at-gutter: 20px;
+  --at-header: 64px;
+  --at-section: 96px;
+  --at-head-gap: 48px;
+
+  /* Motion */
+  --at-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --at-swing: cubic-bezier(0.55, 0, 0.1, 1);
+  --at-fast: 160ms;
+  --at-ui: 260ms;
+  --at-sheet: 420ms;
+  --at-sheet-out: 260ms;
+  --at-reveal: 900ms;
+
+  /* Context-aware colours: light bands by default, dark bands override in ui.module.css. */
+  --focus: var(--at-bronze);
+  --tone-text: var(--at-ink);
+  --tone-muted: var(--at-muted);
+  --tone-accent: var(--at-bronze);
+  --tone-line: var(--at-line);
+  --tone-line-strong: var(--at-line-strong);
+  --tone-stitch: var(--at-line-strong);
+
+  -webkit-font-smoothing: antialiased;
+  background: var(--at-noir);
+  color: var(--at-ink);
+  font-family: var(--at-sans);
+  font-kerning: normal;
+  font-size: 16px;
+  font-synthesis: none;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Clip (not hidden) keeps sticky children working and leaves <html> free for scroll locks. */
+  overflow-x: clip;
+  position: relative;
+}
+
+@media (min-width: 760px) {
+  .root {
+    --at-gutter: 40px;
+    --at-header: 76px;
+    --at-section: 128px;
+    --at-head-gap: 64px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .root {
+    --at-gutter: clamp(48px, 5vw, 96px);
+    --at-header: 84px;
+    --at-section: clamp(136px, 11vw, 184px);
+    --at-head-gap: 80px;
+  }
+}
+
+/* This route scrolls instantly so anchor jumps never scrub through the film. */
+:global(html):has(.root) {
+  scroll-behavior: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Tokens live on .root, so the body needs the literal noir. */
+:global(body):has(.root) {
+  background: #14110e;
+}
+
+/* Keyboard focus never settles under the fixed header (or, on phones, the Book tag). */
+:where(.root) :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-bottom: 16px;
+  scroll-margin-top: calc(var(--at-header) + 24px);
+}
+
+@media (max-width: 759px) {
+  :where(.root) :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+    scroll-margin-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Neutralise the collection page's bare element rules without outranking component classes. */
+:where(.root) :is(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul) {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+}
+
+:where(.root) :is(h1, h2, h3, h4) {
+  color: inherit;
+  font-family: inherit;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+:where(.root) p {
+  text-wrap: pretty;
+}
+
+:where(.root) :is(ol, ul) {
+  list-style: none;
+}
+
+:where(.root) :is(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.root) :is(button, input, select, textarea) {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+:where(.root) button {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+:where(.root) :is(img, picture, video, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(.root) footer {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* Skip link: off-screen until focused, then a chalk label at the top left. */
+.skip {
+  align-items: center;
+  background: var(--at-chalk);
+  color: var(--at-ink);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  left: 12px;
+  letter-spacing: 0.14em;
+  min-height: 44px;
+  padding: 0 16px;
+  position: fixed;
+  text-transform: uppercase;
+  top: 12px;
+  transform: translateY(-200%);
+  z-index: 1200;
+}
+
+.skip:focus-visible {
+  outline-color: var(--at-bronze);
+  transform: none;
+}
+
+.main {
+  display: block;
+}

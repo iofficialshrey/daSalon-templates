@@ -57,7 +57,12 @@ export type PublicService = {
   name: string;
   description: string | null;
   duration: number;
+  /** Menu price as listed by the venue. */
   price: number;
+  /** Amount due at the venue, including any tax the venue adds on top. */
+  total: number;
+  /** For example `Incl. GST 9%` or `+ GST 9%`; null when no tax applies. */
+  taxLabel: string | null;
   category: string | null;
 };
 

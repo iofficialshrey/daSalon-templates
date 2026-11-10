@@ -1,0 +1,261 @@
+/*
+ * Paloma — Hair, Form and Colour. The living issue, Singapore edition.
+ * Every token lives on .root. Brand colours are porcelain, ink, cobalt and
+ * wash; anything else is a mix of those four. One family (Manrope, 200–800),
+ * set tight and uppercase for display. Square edges throughout.
+ */
+
+.root {
+  /* Brand */
+  --p4-ink: #15171a;
+  --p4-porcelain: #f5f4ef;
+  --p4-cobalt: #2459a6;
+  --p4-wash: #c7d3e6;
+
+  /* Derived (mixes of the brand colours only) */
+  --p4-cobalt-deep: #214a87;
+  --p4-muted: #5c626c;
+  --p4-muted-deep: #3e4249;
+  --p4-mist: #a3adbd;
+  --p4-wash-2: #dee4ea;
+  --p4-porcelain-2: #e8e7e2;
+  --p4-ink-2: #1a2b44;
+
+  /* Lines */
+  --p4-rule: rgb(21 23 26 / 22%);
+  --p4-control: rgb(21 23 26 / 64%);
+  --p4-rule-dark: rgb(245 244 239 / 24%);
+  --p4-control-dark: rgb(245 244 239 / 64%);
+  --p4-scrim: rgb(21 23 26 / 64%);
+
+  /* Type */
+  --p4-font: var(--font-manrope), Arial, sans-serif;
+
+  /* Grid: 4 / 8 / 12 columns, symmetric margins; the rail lives in the right margin from 1200px. */
+  --p4-cols: 4;
+  --p4-gutter: 20px;
+  --p4-gap: 12px;
+  --p4-margin: max(var(--p4-gutter), calc((100vw - 1680px) / 2));
+  --p4-nav-h: 56px;
+  --p4-section: 64px;
+  --p4-head-gap: 40px;
+
+  /* Motion */
+  --p4-ease: cubic-bezier(0.2, 0.75, 0.2, 1);
+  --p4-fast: 160ms;
+  --p4-ui: 220ms;
+  --p4-layer-in: 280ms;
+  --p4-layer-out: 200ms;
+
+  /* Context colours: porcelain by default; [data-tone] bands override. */
+  --tone-bg: var(--p4-porcelain);
+  --tone-text: var(--p4-ink);
+  --tone-muted: var(--p4-muted);
+  --tone-accent: var(--p4-cobalt);
+  --tone-line: var(--p4-rule);
+  --tone-control: var(--p4-control);
+  --focus: var(--p4-cobalt);
+
+  -webkit-font-smoothing: antialiased;
+  background: var(--p4-porcelain);
+  color: var(--p4-ink);
+  font-family: var(--p4-font);
+  font-kerning: normal;
+  font-size: 16px;
+  font-synthesis: none;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Clip (not hidden) keeps sticky children working and leaves <html> free for scroll locks. */
+  overflow-x: clip;
+  position: relative;
+}
+
+@media (max-width: 359px) {
+  .root {
+    --p4-gutter: 16px;
+  }
+}
+
+@media (min-width: 760px) {
+  .root {
+    --p4-cols: 8;
+    --p4-gutter: 32px;
+    --p4-gap: 20px;
+    --p4-nav-h: 64px;
+    --p4-section: 96px;
+    --p4-head-gap: 56px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .root {
+    --p4-cols: 12;
+    --p4-gutter: 48px;
+    --p4-gap: 24px;
+    --p4-nav-h: 72px;
+    --p4-section: clamp(112px, 9vw, 160px);
+    --p4-head-gap: 72px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .root {
+    --p4-gutter: 96px;
+  }
+}
+
+/* ---------- Tones: every band sets data-tone ---------- */
+
+.root [data-tone="porcelain"],
+.root [data-tone="wash"],
+.root [data-tone="ink"],
+.root [data-tone="cobalt"] {
+  background: var(--tone-bg);
+  color: var(--tone-text);
+}
+
+.root [data-tone="porcelain"] {
+  --tone-bg: var(--p4-porcelain);
+  --tone-text: var(--p4-ink);
+  --tone-muted: var(--p4-muted);
+  --tone-accent: var(--p4-cobalt);
+  --tone-line: var(--p4-rule);
+  --tone-control: var(--p4-control);
+  --focus: var(--p4-cobalt);
+}
+
+.root [data-tone="wash"] {
+  --tone-bg: var(--p4-wash);
+  --tone-text: var(--p4-ink);
+  --tone-muted: var(--p4-muted-deep);
+  --tone-accent: var(--p4-cobalt-deep);
+  --tone-line: var(--p4-rule);
+  --tone-control: var(--p4-control);
+  --focus: var(--p4-cobalt);
+}
+
+.root [data-tone="ink"] {
+  --tone-bg: var(--p4-ink);
+  --tone-text: var(--p4-porcelain);
+  --tone-muted: var(--p4-mist);
+  --tone-accent: var(--p4-wash);
+  --tone-line: var(--p4-rule-dark);
+  --tone-control: var(--p4-control-dark);
+  --focus: var(--p4-wash);
+}
+
+.root [data-tone="cobalt"] {
+  --tone-bg: var(--p4-cobalt);
+  --tone-text: var(--p4-porcelain);
+  --tone-muted: var(--p4-wash-2);
+  --tone-accent: var(--p4-porcelain);
+  --tone-line: rgb(245 244 239 / 28%);
+  --tone-control: var(--p4-wash-2);
+  --focus: var(--p4-porcelain);
+}
+
+/* ---------- Page-level rules ---------- */
+
+/* This route scrolls instantly: jumpTo decides when to glide. */
+:global(html):has(.root) {
+  scroll-behavior: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Past the cover the page never flashes white behind overscroll. */
+:global(body):has(.root) {
+  background: #15171a;
+}
+
+/* Keyboard focus never settles under the fixed masthead. Zero specificity, so components can refine it. */
+:where(.root) :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-bottom: 24px;
+  scroll-margin-top: calc(var(--p4-nav-h) + 24px);
+}
+
+:where(.root) :focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+:where(.root) [tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Resets at zero specificity: any single class wins. */
+:where(.root) :is(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul) {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+}
+
+:where(.root) :is(h1, h2, h3, h4) {
+  color: inherit;
+  font-family: inherit;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+:where(.root) p {
+  text-wrap: pretty;
+}
+
+:where(.root) :is(ol, ul) {
+  list-style: none;
+}
+
+:where(.root) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.root) :is(button, input, select, textarea) {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+:where(.root) button {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+:where(.root) :is(img, picture, video, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(.root) :is(em, i) {
+  font-style: normal;
+}
+
+:where(.root) fieldset {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+:where(.root) legend {
+  padding: 0;
+}
+
+:where(.root) footer {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 0;
+}
+
+.main {
+  display: block;
+}

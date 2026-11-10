@@ -1,0 +1,593 @@
+/*
+ * Shared primitives for Atelier. Compose with template literals:
+ *   className={`${ui.btn} ${ui.primary} ${ui.lg}`}
+ * Tone classes set the band colour and the context variables every primitive
+ * reads, so a button or label is right on whichever band it sits:
+ *   noir · bordeaux (espresso)   dark bands
+ *   paper · blush · chalk · nude (stone)   light bands
+ */
+
+/* ---------- Bands and tones ---------- */
+
+.section {
+  padding-block: var(--at-section);
+  position: relative;
+}
+
+.noir,
+.bordeaux,
+.blush,
+.nude,
+.chalk,
+.paper {
+  color: var(--tone-text);
+}
+
+.noir,
+.bordeaux {
+  --focus: var(--at-champagne-light);
+  --tone-text: var(--at-ivory);
+  --tone-muted: var(--at-muted-dark);
+  --tone-accent: var(--at-champagne-light);
+  --tone-line: var(--at-line-dark);
+  --tone-line-strong: var(--at-line-dark-strong);
+  --tone-stitch: var(--at-line-dark-strong);
+  --btn-fill: var(--at-ivory);
+  --btn-fill-hover: var(--at-champagne-light);
+  --btn-ink: var(--at-ink);
+  --btn2-ink: var(--at-ivory);
+  --btn2-line: var(--at-line-dark-strong);
+  --btn2-fill-hover: var(--at-ivory);
+  --btn2-ink-hover: var(--at-ink);
+}
+
+.noir { background: var(--at-noir); }
+.bordeaux { background: var(--at-espresso); }
+
+.blush,
+.nude,
+.chalk,
+.paper {
+  --focus: var(--at-bronze);
+  --tone-text: var(--at-ink);
+  --tone-muted: var(--at-muted);
+  --tone-accent: var(--at-bronze);
+  --tone-line: var(--at-line);
+  --tone-line-strong: var(--at-line-strong);
+  --tone-stitch: var(--at-line-strong);
+  --btn-fill: var(--at-ink);
+  --btn-fill-hover: #3a3027;
+  --btn-ink: var(--at-ivory);
+  --btn2-ink: var(--at-ink);
+  --btn2-line: var(--at-line-strong);
+  --btn2-fill-hover: var(--at-ink);
+  --btn2-ink-hover: var(--at-ivory);
+}
+
+.blush,
+.paper { background: var(--at-paper); }
+.nude { background: var(--at-stone); }
+.chalk { background: var(--at-chalk); }
+
+/* ---------- Containers ---------- */
+
+.container,
+.wide {
+  margin-inline: auto;
+  padding-inline: var(--at-gutter);
+  width: 100%;
+}
+
+.container { max-width: calc(var(--at-max) + 2 * var(--at-gutter)); }
+.wide { max-width: calc(var(--at-wide) + 2 * var(--at-gutter)); }
+
+/* ---------- Section head: a serif H2, the lead beside it on wide screens ---------- */
+
+.head {
+  display: grid;
+  gap: 20px;
+  margin-bottom: var(--at-head-gap);
+}
+
+.head .h2 {
+  max-width: 15ch;
+}
+
+.headLead {
+  max-width: 46ch;
+}
+
+.headAction {
+  justify-self: start;
+}
+
+@media (min-width: 1100px) {
+  .head {
+    align-items: end;
+    column-gap: 48px;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .head > :not(.headLead, .headAction) {
+    grid-column: 1;
+  }
+
+  .headLead,
+  .headAction {
+    grid-column: 2;
+    justify-self: end;
+  }
+}
+
+/* ---------- Type ---------- */
+
+.h1,
+.h2,
+.h2s,
+.h3 {
+  font-family: var(--at-serif);
+  font-weight: 400;
+}
+
+.h1 {
+  font-size: clamp(52px, 8.2vw, 128px);
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+
+.h2 {
+  font-size: clamp(40px, 5.4vw, 84px);
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+}
+
+.h2s {
+  font-size: clamp(30px, 3.2vw, 46px);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+}
+
+.h3 {
+  font-size: clamp(24px, 2.2vw, 32px);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+
+/* The second voice: italic serif, in bronze by day and champagne by night. */
+.italic {
+  color: var(--tone-accent);
+  font-family: var(--at-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.lead {
+  color: var(--tone-muted);
+  font-family: var(--at-serif);
+  font-size: clamp(18px, 1.45vw, 21px);
+  line-height: 1.55;
+  max-width: 46ch;
+}
+
+.body {
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 62ch;
+}
+
+.secondaryText {
+  color: var(--tone-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.small {
+  color: var(--tone-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.meta {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.muted {
+  color: var(--tone-muted);
+}
+
+.accent {
+  color: var(--tone-accent);
+}
+
+/* Small capitals for controls and the odd quiet label: never a section eyebrow. */
+.label {
+  color: var(--tone-muted);
+  font-family: var(--at-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Former tag label: now a plain quiet label. */
+.tag {
+  color: var(--tone-muted);
+  display: inline-block;
+  font-family: var(--at-sans);
+  font-size: 11px;
+  font-weight: 700;
+  justify-self: start;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  align-items: center;
+  display: inline-flex;
+  flex: none;
+  font-family: var(--at-sans);
+  font-size: 11px;
+  font-weight: 700;
+  gap: 14px;
+  justify-content: center;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  min-height: 44px;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    color var(--at-ui) var(--at-ease),
+    background-color var(--at-ui) var(--at-ease),
+    border-color var(--at-ui) var(--at-ease);
+}
+
+.btn svg {
+  flex: none;
+  transition: transform var(--at-ui) var(--at-ease);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover svg {
+    transform: translateX(4px);
+  }
+}
+
+.lg { min-height: 56px; padding: 0 30px; }
+.md { min-height: 48px; padding: 0 24px; }
+.sm { min-height: 44px; padding: 0 18px; }
+.block { width: 100%; }
+
+.primary {
+  background: var(--btn-fill);
+  color: var(--btn-ink);
+}
+
+@media (hover: hover) {
+  .primary:hover {
+    background: var(--btn-fill-hover);
+  }
+}
+
+.primary[aria-busy="true"] {
+  cursor: progress;
+}
+
+.secondary {
+  border: 1px solid var(--btn2-line);
+  color: var(--btn2-ink);
+}
+
+@media (hover: hover) {
+  .secondary:hover {
+    background: var(--btn2-fill-hover);
+    border-color: var(--btn2-fill-hover);
+    color: var(--btn2-ink-hover);
+  }
+}
+
+/* Text button: a hairline that draws across on hover. */
+.textBtn {
+  color: var(--tone-text);
+  gap: 12px;
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.underline {
+  background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--tone-line-strong), var(--tone-line-strong));
+  background-position: 0 100%, 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px, 100% 1px;
+  padding-bottom: 7px;
+  transition: background-size 500ms var(--at-ease);
+}
+
+@media (hover: hover) {
+  .textBtn:hover .underline,
+  .link:hover {
+    background-size: 100% 1px, 100% 1px;
+  }
+}
+
+.link {
+  background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--tone-line-strong), var(--tone-line-strong));
+  background-position: 0 100%, 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px, 100% 1px;
+  color: inherit;
+  padding-bottom: 3px;
+  transition: background-size 500ms var(--at-ease);
+}
+
+.iconBtn {
+  align-items: center;
+  border: 1px solid var(--tone-line-strong);
+  border-radius: 50%;
+  color: var(--tone-text);
+  display: inline-flex;
+  flex: none;
+  height: 44px;
+  justify-content: center;
+  transition: background-color var(--at-ui) var(--at-ease), color var(--at-ui) var(--at-ease);
+  width: 44px;
+}
+
+@media (hover: hover) {
+  .iconBtn:hover {
+    background: var(--tone-text);
+    color: var(--btn2-ink-hover, var(--at-paper));
+  }
+}
+
+/* ---------- Badges ---------- */
+
+.badge {
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--tone-accent) 55%, transparent);
+  color: var(--tone-accent);
+  display: inline-flex;
+  font-family: var(--at-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  min-height: 24px;
+  padding: 0 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badgeDark {
+  border-color: color-mix(in srgb, var(--at-champagne-light) 55%, transparent);
+  color: var(--at-champagne-light);
+}
+
+.demoBadge {
+  border-style: dashed;
+}
+
+/* ---------- Rules and markers ---------- */
+
+.stitch,
+.hairline {
+  background: var(--tone-line);
+  border: 0;
+  height: 1px;
+  margin: 0;
+  width: 100%;
+}
+
+.eyelet {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+  height: 6px;
+  width: 6px;
+}
+
+.dot {
+  background: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+  height: 6px;
+  width: 6px;
+}
+
+/* ---------- Forms ---------- */
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.fieldLabel {
+  color: var(--tone-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.fieldHelp {
+  color: var(--tone-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.fieldError {
+  align-items: center;
+  color: var(--at-error);
+  display: flex;
+  font-size: 13px;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.input,
+.textarea {
+  appearance: none;
+  background: var(--at-chalk);
+  border: 1px solid var(--at-line-strong);
+  border-radius: 0;
+  color: var(--at-ink);
+  font-size: 16px;
+  min-height: 52px;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.textarea {
+  line-height: 1.5;
+  min-height: 112px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--at-muted);
+  opacity: 1;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  border-color: var(--at-ink);
+  outline: 2px solid var(--at-bronze);
+  outline-offset: 2px;
+}
+
+.input[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--at-error);
+}
+
+.counter {
+  color: var(--tone-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  justify-self: end;
+}
+
+/* Segmented control: two native radios sharing one boundary. */
+.segmented {
+  border: 1px solid var(--at-line-strong);
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+}
+
+.segment {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 11px;
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: 0.14em;
+  min-height: 48px;
+  padding: 0 12px;
+  position: relative;
+  text-transform: uppercase;
+  transition: background-color var(--at-ui) var(--at-ease), color var(--at-ui) var(--at-ease);
+}
+
+.segment + .segment {
+  border-left: 1px solid var(--at-line-strong);
+}
+
+.segment:has(input:checked) {
+  background: var(--at-ink);
+  color: var(--at-ivory);
+}
+
+.segment:has(input:focus-visible) {
+  outline: 2px solid var(--at-bronze);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.srOnly,
+.segment input {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ---------- Loading ---------- */
+
+.skeleton {
+  animation: skeleton 1.2s ease-in-out infinite alternate;
+  background: color-mix(in srgb, var(--tone-text) 8%, transparent);
+  display: block;
+}
+
+@keyframes skeleton {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* ---------- Reveals: CSS scroll-driven, static where unsupported ---------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rise {
+      animation: rise linear both;
+      animation-range: entry 0% entry 50%;
+      animation-timeline: view();
+    }
+
+    .rise2 { animation-range: entry 6% entry 56%; }
+    .rise3 { animation-range: entry 12% entry 62%; }
+
+    .pull {
+      animation: pull linear both;
+      animation-range: entry 0% cover 40%;
+      animation-timeline: view();
+    }
+
+    .hang {
+      animation: rise linear both;
+      animation-range: entry 10% entry 60%;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pull {
+  from { clip-path: inset(12% 0 0 0); transform: scale(1.06); }
+  to { clip-path: inset(0); transform: none; }
+}

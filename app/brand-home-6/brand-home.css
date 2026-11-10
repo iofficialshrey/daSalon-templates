@@ -238,41 +238,6 @@ html:has(.n6-home) { background: var(--n6-ground); scroll-behavior: smooth; }
 .n6-finale footer > span { justify-self: center; }
 .n6-finale footer > a { justify-self: end; }
 
-.n6-home .salon-booking-overlay { align-items: stretch; animation: n6-overlay .35s ease both; background: rgb(16 36 34 / 62%); display: flex; inset: 0; justify-content: flex-end; position: fixed; z-index: 100; }
-.n6-home .salon-booker { background: var(--n6-ground); height: 100%; overflow: auto; padding: 42px; width: min(580px, 100%); }
-.n6-home .salon-booker-head { align-items: start; display: flex; justify-content: space-between; }
-.n6-home .salon-booker-head small, .n6-home .salon-booker-step > p, .n6-home .salon-booker-step label span { font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-.n6-home .salon-booker-head small { color: var(--n6-coral); }
-.n6-home .salon-booker-head h2 { font-family: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif; font-size: 48px; font-weight: 400; letter-spacing: -.05em; line-height: .9; margin: 12px 0 0; }
-.n6-home .salon-booker-head button { background: transparent; border: 1px solid; border-radius: 50%; font-size: 22px; height: 42px; width: 42px; }
-.n6-home .salon-booker-progress { display: flex; gap: 5px; margin: 38px 0; }
-.n6-home .salon-booker-progress i { background: var(--n6-celadon); flex: 1; height: 3px; }
-.n6-home .salon-booker-progress i.active { background: var(--n6-coral); }
-.n6-home .salon-booker-services { border-top: 1px solid; }
-.n6-home .salon-booker-services button { align-items: center; background: transparent; border: 0; border-bottom: 1px solid rgb(24 48 46 / 25%); display: flex; justify-content: space-between; padding: 18px 12px; text-align: left; width: 100%; }
-.n6-home .salon-booker-services button.selected { background: var(--n6-ink); color: white; }
-.n6-home .salon-booker-services span { display: grid; gap: 4px; }
-.n6-home .salon-booker-services strong { font-family: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif; font-size: 22px; font-weight: 400; }
-.n6-home .salon-booker-services small, .n6-home .salon-booker-services b { font-size: 9px; }
-.n6-home .salon-booker-next { background: var(--n6-coral); border: 0; color: white; display: flex; justify-content: space-between; margin-top: 28px; min-height: 56px; padding: 0 18px; text-transform: uppercase; width: 100%; }
-.n6-home .salon-booker-back { background: transparent; border: 0; color: var(--n6-coral); font-size: 9px; font-weight: 800; padding: 0; text-transform: uppercase; }
-.n6-home .salon-booker-dates, .n6-home .salon-booker-times { display: grid; grid-template-columns: repeat(3, 1fr); }
-.n6-home .salon-booker-times { grid-template-columns: repeat(5, 1fr); }
-.n6-home .salon-booker-dates button, .n6-home .salon-booker-times button { background: transparent; border: 1px solid rgb(24 48 46 / 35%); min-height: 50px; padding: 6px; }
-.n6-home .salon-booker-dates button + button, .n6-home .salon-booker-times button + button { border-left: 0; }
-.n6-home .salon-booker-dates button.selected, .n6-home .salon-booker-times button.selected { background: var(--n6-celadon); }
-.n6-home .salon-booker-step label { display: grid; gap: 7px; margin-top: 18px; }
-.n6-home .salon-booker-step input,
-.n6-home .salon-booker-phone-row select { background: transparent; border: 0; border-bottom: 1px solid; border-radius: 0; min-height: 45px; outline: none; }
-.n6-home .salon-booker-summary { background: var(--n6-mist); display: flex; justify-content: space-between; margin-top: 25px; padding: 18px; }
-.n6-home .salon-booker-summary strong { font-size: 10px; text-align: right; }
-.n6-home .salon-booker-confirmation { padding-top: 70px; text-align: center; }
-.n6-home .salon-booker-confirmation > span { align-items: center; background: var(--n6-coral); border-radius: 50%; color: white; display: inline-flex; font-family: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif; font-size: 48px; height: 100px; justify-content: center; width: 100px; }
-.n6-home .salon-booker-confirmation h3 { font-family: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif; font-size: 44px; font-weight: 400; margin: 10px 0; }
-.n6-home .salon-booker-confirmation strong, .n6-home .salon-booker-confirmation small { display: block; }
-.n6-home .salon-booker-confirmation small { line-height: 1.6; margin: 35px auto 20px; max-width: 330px; }
-.n6-home .salon-booker-confirmation button { background: transparent; border: 0; border-bottom: 1px solid; padding-bottom: 5px; }
-
 @keyframes n6-write-in { from { clip-path: inset(0 100% 0 0); transform: translateX(-18px); } to { clip-path: inset(0); transform: translateX(0); } }
 @keyframes n6-scroll { 0%, 100% { opacity: .2; transform: translateY(0); } 55% { opacity: 1; transform: translateY(20px); } }
 @keyframes n6-overlay { from { opacity: 0; } to { opacity: 1; } }
@@ -339,8 +304,6 @@ html:has(.n6-home) { background: var(--n6-ground); scroll-behavior: smooth; }
   .n6-anchor-finale { left: 50%; top: 63%; }
   .n6-finale footer { gap: 20px; grid-template-columns: 1fr auto; }
   .n6-finale footer > span { display: none; }
-  .n6-home .salon-booker { padding: 28px 18px; }
-  .n6-home .salon-booker-times { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {

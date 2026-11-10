@@ -1,0 +1,3176 @@
+/*
+ * Shared live-booking dialog. One structure serves every Brand Home; each
+ * theme at the end of this file sets tokens and a few signature flourishes.
+ */
+
+.salon-booking-overlay.booking-experience-overlay {
+  align-items: center;
+  animation: booking-overlay-in 240ms ease both;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  background: rgb(19 24 22 / 72%);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 1000;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience {
+  --booking-gutter: clamp(22px, 3.2vw, 44px);
+  animation: booking-experience-in 620ms cubic-bezier(.16, .8, .2, 1) both;
+  background: var(--booking-paper);
+  box-shadow: 0 40px 120px rgb(0 0 0 / 28%);
+  color: var(--booking-ink);
+  display: grid;
+  grid-template-columns: minmax(280px, .72fr) minmax(0, 1.28fr);
+  height: min(840px, calc(100dvh - 40px));
+  max-width: 1160px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: calc(100% - 20px);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker button:disabled,
+.salon-booking-overlay.booking-experience-overlay .salon-booker select:disabled {
+  cursor: not-allowed;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker :focus-visible {
+  outline: 2px solid var(--booking-accent);
+  outline-offset: 2px;
+}
+
+/* Atmosphere: the brand moment, plus a running itinerary of the visit. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-atmosphere {
+  background: var(--booking-scene);
+  color: var(--booking-scene-ink);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: clamp(32px, 3.6vw, 56px);
+  position: relative;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-atmosphere > small {
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+  position: relative;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-atmosphere h2 {
+  font-family: var(--booking-display);
+  font-size: clamp(2.6rem, 4.2vw, 4.6rem);
+  font-weight: var(--booking-display-weight, 400);
+  letter-spacing: var(--booking-tracking, -.065em);
+  line-height: .88;
+  margin: auto 0 22px;
+  position: relative;
+  text-transform: var(--booking-transform, none);
+  z-index: 2;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-atmosphere h2 span {
+  display: block;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-atmosphere > p {
+  font-size: .82rem;
+  line-height: 1.7;
+  margin: 0 0 30px;
+  max-width: 320px;
+  opacity: .74;
+  position: relative;
+  z-index: 2;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary {
+  border-top: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary li {
+  align-items: baseline;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  column-gap: 14px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  opacity: .48;
+  padding: 11px 0;
+  row-gap: 3px;
+  transition: opacity 260ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary li.is-current,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary li.is-done {
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary span {
+  color: var(--booking-scene-accent, var(--booking-accent));
+  font-size: .56rem;
+  font-weight: 800;
+  grid-row: span 2;
+  letter-spacing: .1em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary b {
+  font-size: .55rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-itinerary em {
+  font-size: .8rem;
+  font-style: normal;
+  opacity: .84;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-ornament,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-ornament i {
+  position: absolute;
+}
+
+/* Panel: fixed header, scrolling body, sticky footer. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-panel {
+  background: var(--booking-paper);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-head {
+  align-items: flex-start;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: var(--booking-gutter) var(--booking-gutter) 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-eyebrow {
+  color: var(--booking-label, var(--booking-accent));
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-head h2 {
+  font-family: var(--booking-display);
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  font-weight: var(--booking-display-weight, 400);
+  letter-spacing: var(--booking-tracking, -.06em);
+  line-height: .9;
+  margin: 12px 0 0;
+  text-transform: var(--booking-transform, none);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-head > button {
+  align-items: center;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--booking-ink) 30%, transparent);
+  border-radius: var(--booking-close-radius, 50%);
+  color: inherit;
+  display: flex;
+  flex: none;
+  font-size: 1.35rem;
+  height: 44px;
+  justify-content: center;
+  transition: background-color 220ms ease, color 220ms ease, transform 220ms ease;
+  width: 44px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-head > button span {
+  display: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-head > button:hover {
+  background: var(--booking-ink);
+  color: var(--booking-paper);
+  transform: rotate(7deg);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-progress {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 24px var(--booking-gutter) 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-progress button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--booking-line);
+  color: inherit;
+  display: flex;
+  gap: 8px;
+  min-height: 38px;
+  opacity: .38;
+  padding: 0 2px 10px;
+  text-align: left;
+  transition: opacity 220ms ease, border-color 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-progress button.active {
+  border-bottom: 2px solid var(--booking-accent);
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-progress button:disabled {
+  cursor: default;
+  opacity: .38;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-progress i {
+  color: var(--booking-label, var(--booking-accent));
+  flex: none;
+  font-size: .55rem;
+  font-style: normal;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-progress span {
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px var(--booking-gutter) 32px;
+  scrollbar-color: color-mix(in srgb, var(--booking-ink) 35%, transparent) transparent;
+  scrollbar-width: thin;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-step {
+  animation: booking-step-in 420ms cubic-bezier(.2, .75, .2, 1) both;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-label {
+  display: block;
+  margin: 26px 0 14px;
+  outline: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-label-row {
+  align-items: baseline;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin: 26px 0 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-label-row .salon-booker-label {
+  margin: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-label-row > span {
+  font-size: .68rem;
+  opacity: .62;
+  text-align: right;
+}
+
+/* Location picker. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-venue {
+  display: grid;
+  gap: 6px;
+  margin-top: 22px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker select option {
+  background: var(--booking-paper);
+  color: var(--booking-ink);
+}
+
+/* Services, grouped by category. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-services {
+  counter-reset: booking-service;
+  display: grid;
+  gap: 24px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-group {
+  display: grid;
+  gap: 8px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-group h3 {
+  font-size: .58rem;
+  font-weight: 800;
+  grid-column: 1 / -1;
+  letter-spacing: .16em;
+  margin: 0 0 2px;
+  opacity: .58;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service {
+  align-items: center;
+  background: var(--booking-option);
+  border: 1px solid var(--booking-line);
+  border-radius: var(--booking-option-radius, 0);
+  color: inherit;
+  column-gap: 16px;
+  counter-increment: booking-service;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 20px;
+  min-height: 70px;
+  padding: 14px 16px;
+  row-gap: 4px;
+  text-align: left;
+  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+  width: 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service:hover {
+  border-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service.selected {
+  background: var(--booking-selected);
+  border-color: var(--booking-selected);
+  color: var(--booking-selected-ink);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-copy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-copy strong {
+  font-family: var(--booking-service-display, inherit);
+  font-size: var(--booking-service-size, .9rem);
+  font-weight: var(--booking-service-weight, 700);
+  line-height: 1.15;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-copy small {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  font-size: .68rem;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  line-height: 1.45;
+  opacity: .66;
+  overflow: hidden;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-meta {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  text-align: right;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-meta small {
+  font-size: .64rem;
+  opacity: .7;
+  white-space: nowrap;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service-meta b {
+  font-size: .82rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-check {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  height: 20px;
+  opacity: .32;
+  position: relative;
+  transition: opacity 200ms ease, background-color 200ms ease;
+  width: 20px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service.selected .salon-booker-check {
+  background: currentColor;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-service.selected .salon-booker-check::after {
+  border: solid var(--booking-selected);
+  border-width: 0 2px 2px 0;
+  content: "";
+  height: 9px;
+  left: 6px;
+  position: absolute;
+  top: 3px;
+  transform: rotate(45deg);
+  width: 5px;
+}
+
+/* Date rail. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-date-rail {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-rail-arrow {
+  background: transparent;
+  border: 1px solid var(--booking-line);
+  border-radius: var(--booking-chip-radius, 0);
+  color: inherit;
+  transition: border-color 180ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-rail-arrow:hover {
+  border-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates {
+  display: flex;
+  gap: 8px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  overflow-x: auto;
+  padding: 2px 10px;
+  position: relative;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates::-webkit-scrollbar {
+  display: none;
+}
+
+/* Flex scrollers ignore end padding, so a spacer keeps the last date clear of the edge. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates::after {
+  content: "";
+  flex: 0 0 var(--booking-rail-end, 2px);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates button {
+  align-content: center;
+  background: var(--booking-option);
+  border: 1px solid var(--booking-line);
+  border-radius: var(--booking-chip-radius, 0);
+  color: inherit;
+  display: grid;
+  flex: 0 0 70px;
+  gap: 3px;
+  justify-items: center;
+  min-height: 84px;
+  padding: 10px 4px;
+  scroll-snap-align: center;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates small {
+  font-size: .54rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  opacity: .7;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates strong {
+  font-family: var(--booking-display);
+  font-size: 1.55rem;
+  font-weight: var(--booking-display-weight, 400);
+  line-height: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates span {
+  font-size: .62rem;
+  opacity: .7;
+}
+
+/* Time of day and time slots. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-periods {
+  display: grid;
+  gap: 6px;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  margin-bottom: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-periods button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--booking-line);
+  color: inherit;
+  display: flex;
+  font-size: .62rem;
+  font-weight: 800;
+  gap: 6px;
+  justify-content: center;
+  letter-spacing: .08em;
+  min-height: 42px;
+  opacity: .62;
+  text-transform: uppercase;
+  transition: opacity 180ms ease, border-color 180ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-periods button[aria-pressed="true"] {
+  border-bottom: 2px solid var(--booking-accent);
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-periods button:disabled {
+  opacity: .25;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-periods small {
+  font-size: .56rem;
+  font-weight: 700;
+  opacity: .6;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-times {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-times button {
+  background: var(--booking-option);
+  border: 1px solid var(--booking-line);
+  border-radius: var(--booking-chip-radius, 0);
+  color: inherit;
+  font-size: .76rem;
+  font-weight: 600;
+  min-height: 46px;
+  padding: 8px;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates button:hover,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-times button:hover {
+  border-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-dates button[aria-pressed="true"],
+.salon-booking-overlay.booking-experience-overlay .salon-booker-times button[aria-pressed="true"] {
+  background: var(--booking-selected);
+  border-color: var(--booking-selected);
+  color: var(--booking-selected-ink);
+}
+
+/* Loading and status. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton {
+  display: grid;
+  gap: 8px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton i {
+  animation: booking-shimmer 1.4s ease-in-out infinite;
+  background: color-mix(in srgb, var(--booking-ink) 8%, transparent);
+  border-radius: var(--booking-chip-radius, 0);
+  display: block;
+  min-height: 46px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton-services i {
+  border-radius: var(--booking-option-radius, 0);
+  min-height: 70px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton-times {
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton i:nth-child(2n) { animation-delay: -.35s; }
+.salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton i:nth-child(3n) { animation-delay: -.7s; }
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-status {
+  align-items: center;
+  background: color-mix(in srgb, var(--booking-ink) 6%, transparent);
+  border-radius: var(--booking-summary-radius, 0);
+  display: flex;
+  font-size: .78rem;
+  gap: 12px;
+  justify-content: space-between;
+  line-height: 1.5;
+  margin: 14px 0;
+  min-height: 46px;
+  padding: 10px 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-notice {
+  background: color-mix(in srgb, var(--booking-accent) 16%, transparent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-error {
+  background: color-mix(in srgb, var(--booking-error, #9b2c2c) 12%, transparent);
+  color: var(--booking-error, #9b2c2c);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-status button {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  flex: none;
+  font-weight: 700;
+  padding: 0 0 2px;
+}
+
+/* Guest details. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review {
+  background: var(--booking-summary);
+  border-radius: var(--booking-summary-radius, 0);
+  margin: 0;
+  padding: 2px 18px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review > div {
+  align-items: center;
+  border-bottom: 1px solid var(--booking-line);
+  column-gap: 14px;
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  padding: 14px 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review > div:last-child {
+  border-bottom: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-details dt {
+  font-size: .55rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  opacity: .6;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review dd {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  min-width: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review strong {
+  font-size: .88rem;
+  font-weight: 700;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review span {
+  font-size: .72rem;
+  opacity: .7;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-review button {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  opacity: .78;
+  padding: 0 0 2px;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field {
+  display: grid;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field > label em {
+  color: var(--booking-ink);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .06em;
+  margin-left: 6px;
+  opacity: .55;
+  text-transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field input,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field textarea,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field select,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-venue select {
+  background: var(--booking-field, transparent);
+  border: 0;
+  border-bottom: 1px solid var(--booking-line);
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  /* 16px keeps iOS Safari from zooming into the field. */
+  font-size: 1rem;
+  min-height: 48px;
+  outline: none;
+  padding: 0 2px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  width: 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field textarea {
+  line-height: 1.5;
+  min-height: 84px;
+  padding: 12px 2px;
+  resize: vertical;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field input::placeholder,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field textarea::placeholder {
+  color: inherit;
+  opacity: .4;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field input:focus,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field textarea:focus,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field select:focus,
+.salon-booking-overlay.booking-experience-overlay .salon-booker-venue select:focus {
+  border-color: var(--booking-accent);
+  box-shadow: 0 1px 0 var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field [aria-invalid="true"] {
+  border-color: var(--booking-error, #9b2c2c);
+  box-shadow: 0 1px 0 var(--booking-error, #9b2c2c);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-field-error {
+  color: var(--booking-error, #9b2c2c);
+  font-size: .72rem;
+  line-height: 1.4;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-phone-row {
+  align-items: end;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-phone-row select {
+  min-width: 7.2rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-phone-prefix {
+  align-items: center;
+  border-bottom: 1px solid var(--booking-line);
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 48px;
+  padding: 0 4px;
+}
+
+/* Sticky footer: what you have chosen, and the next move. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer {
+  background: var(--booking-paper);
+  border-top: 1px solid var(--booking-line);
+  box-shadow: 0 -22px 32px -28px rgb(0 0 0 / 45%);
+  color: var(--booking-ink);
+  padding: 14px var(--booking-gutter) max(12px, env(safe-area-inset-bottom));
+  position: relative;
+  z-index: 2;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-summary {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  min-height: 36px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-summary > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-summary strong {
+  font-family: var(--booking-service-display, inherit);
+  font-size: .95rem;
+  font-weight: var(--booking-service-weight, 700);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-summary small {
+  font-size: .7rem;
+  opacity: .66;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-summary > b {
+  display: grid;
+  flex: none;
+  font-size: 1.05rem;
+  font-weight: 800;
+  gap: 2px;
+  justify-items: end;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-summary > b small {
+  font-size: .5rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  opacity: .58;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-next {
+  align-items: center;
+  background: var(--booking-accent);
+  border: 0;
+  border-radius: var(--booking-button-radius, 0);
+  color: var(--booking-accent-ink);
+  display: flex;
+  font-size: .64rem;
+  font-weight: 850;
+  justify-content: space-between;
+  letter-spacing: .12em;
+  margin-top: 26px;
+  min-height: 54px;
+  overflow: hidden;
+  padding: 0 20px;
+  position: relative;
+  text-transform: uppercase;
+  transition: filter 220ms ease, transform 220ms ease, opacity 220ms ease;
+  width: 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer .salon-booker-next {
+  flex: 1;
+  gap: 12px;
+  margin-top: 0;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-next:disabled {
+  opacity: .42;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-next:hover:not(:disabled) {
+  filter: brightness(.92);
+  transform: translateY(-1px);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-next > span {
+  font-size: 1rem;
+  transition: transform 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-next:hover:not(:disabled) > span {
+  transform: translateX(4px);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-back {
+  background: transparent;
+  border: 0;
+  color: var(--booking-label, var(--booking-accent));
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer .salon-booker-back {
+  align-items: center;
+  border: 1px solid var(--booking-line);
+  border-radius: var(--booking-button-radius, 0);
+  color: var(--booking-ink);
+  display: inline-flex;
+  flex: none;
+  gap: 6px;
+  min-height: 54px;
+  padding: 0 18px;
+  transition: border-color 180ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-footer .salon-booker-back:hover {
+  border-color: var(--booking-ink);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-powered {
+  font-size: .52rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  margin: 10px 0 0;
+  opacity: .5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Confirmation. */
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation {
+  animation: booking-confirm-in 800ms cubic-bezier(.16, .8, .2, 1) both;
+  display: grid;
+  justify-items: center;
+  padding: 26px 0 8px;
+  text-align: center;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-mark {
+  align-items: center;
+  background: var(--booking-accent);
+  border-radius: var(--booking-confirm-radius, 50%);
+  color: var(--booking-accent-ink);
+  display: inline-flex;
+  font-family: var(--booking-display);
+  font-size: 2.6rem;
+  height: 88px;
+  justify-content: center;
+  width: 88px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-eyebrow {
+  margin: 22px 0 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation h3 {
+  font-family: var(--booking-display);
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
+  font-weight: var(--booking-display-weight, 400);
+  letter-spacing: var(--booking-tracking, -.05em);
+  line-height: .95;
+  margin: 10px 0 24px;
+  outline: none;
+  text-transform: var(--booking-transform, none);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-details {
+  border-top: 1px solid var(--booking-line);
+  margin: 0;
+  max-width: 460px;
+  text-align: left;
+  width: 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-details > div {
+  border-bottom: 1px solid var(--booking-line);
+  column-gap: 14px;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  padding: 12px 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-details dd {
+  font-size: .84rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-secondary {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--booking-line);
+  border-radius: var(--booking-button-radius, 0);
+  color: inherit;
+  display: inline-flex;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  min-height: 48px;
+  padding: 0 22px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color 180ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-secondary:hover {
+  border-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation-links button {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-size: .74rem;
+  padding: 0 0 4px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation .salon-booker-powered {
+  margin-top: 30px;
+}
+
+/* 01 · Maison Élan — the suite at the end of the arrival film: espresso, ivory, bronze. */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-maison {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: rgb(18 12 8 / 64%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison {
+  --booking-paper: #f7f2ea;
+  --booking-ink: #1d1712;
+  --booking-scene: #120c08;
+  --booking-scene-ink: #f3ebdd;
+  --booking-accent: #7a5530;
+  --booking-accent-ink: #f7f2ea;
+  --booking-label: #7a5530;
+  --booking-scene-accent: #e2b57f;
+  --booking-line: rgb(29 23 18 / 14%);
+  --booking-option: #fbf8f3;
+  --booking-selected: #1d1712;
+  --booking-selected-ink: #f7f2ea;
+  --booking-summary: #efe7db;
+  --booking-field: #fbf8f3;
+  --booking-error: #9b3b2e;
+  --booking-display: var(--mx-font-display), "Cormorant Garamond", Georgia, serif;
+  --booking-service-display: var(--mx-font-display), "Cormorant Garamond", Georgia, serif;
+  --booking-display-weight: 400;
+  --booking-tracking: -.01em;
+  --booking-transform: none;
+  --booking-service-size: 1.375rem;
+  --booking-service-weight: 500;
+  --booking-button-radius: 2px;
+  --booking-chip-radius: 2px;
+  --booking-option-radius: 4px;
+  --booking-summary-radius: 4px;
+  --booking-close-radius: 50%;
+  --booking-confirm-radius: 50%;
+  --booking-rail-end: 24px;
+  border-radius: 6px;
+  box-shadow: 0 40px 120px rgb(18 12 8 / 35%);
+  height: min(820px, calc(100dvh - 48px));
+  max-width: 1120px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-atmosphere {
+  background:
+    linear-gradient(180deg, rgb(18 12 8 / 30%) 0%, rgb(18 12 8 / 78%) 58%, #120c08 100%),
+    #120c08 image-set(url("/brand-home-1/scroll-film/maison-film-576x768-last.v3.avif") type("image/avif"), url("/brand-home-1/scroll-film/maison-film-576x768-last.v3.webp") type("image/webp")) center 28% / cover no-repeat;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-ornament {
+  display: none;
+}
+
+/* An arch outline, echoing the mirror behind the chair. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-atmosphere::after {
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgb(226 181 127 / 34%);
+  border-radius: 999px 999px 0 0;
+  content: "";
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 9%;
+  transform: translateX(-50%);
+  width: 58%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-atmosphere > small {
+  color: #e2b57f;
+  font-size: 12px;
+  letter-spacing: .18em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-atmosphere h2 {
+  font-size: clamp(2.6rem, 3.6vw, 3.8rem);
+  line-height: .98;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-atmosphere > p {
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 300px;
+  opacity: .82;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary {
+  border-top-color: rgb(243 235 221 / 16%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary li {
+  border-bottom-color: rgb(243 235 221 / 16%);
+  padding: 12px 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary li.is-done {
+  opacity: .8;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary li.is-current {
+  box-shadow: inset 1px 0 0 #e2b57f;
+  opacity: 1;
+  padding-left: 10px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary em {
+  font-size: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-head h2 {
+  font-size: clamp(2rem, 3vw, 2.6rem);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-service::before {
+  color: #7a5530;
+  content: counter(booking-service, decimal-leading-zero);
+  font-size: 12px;
+  font-variant-numeric: lining-nums;
+  grid-column: 1 / -1;
+  letter-spacing: .1em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-service.selected::before {
+  color: #e2b57f;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-dates strong {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-times button {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-next {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  min-height: 52px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-next:hover:not(:disabled) {
+  background: #2b1d13;
+  filter: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-footer .salon-booker-back {
+  font-size: 14px;
+}
+
+/* Type floor: nothing in the booking window drops below 12px. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-atmosphere > small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-itinerary b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-progress i,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-confirmation-details dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-review dt {
+  font-size: 12px;
+  letter-spacing: .16em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-service-meta small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-dates span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-field-error,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-footer-summary small {
+  font-size: 13px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-review span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-confirmation-links button {
+  font-size: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-dates,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-times,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-service-meta,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-footer-summary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-confirmation-details dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-powered {
+  color: #655749;
+  opacity: 1;
+}
+
+@media (min-width: 821px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-dates {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+  }
+}
+
+@media (max-width: 820px) {
+  .salon-booking-overlay.booking-experience-overlay.booking-overlay-maison {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-maison .salon-booker-head {
+    border-bottom: 1px solid var(--booking-line);
+    border-top: 3px solid #b8915f;
+    padding-bottom: 16px;
+  }
+}
+
+/*
+ * 02 · Atelier — beauty, made personal. Ivory paper, Newsreader and Manrope,
+ * espresso selections with a champagne line, bronze labels, and the film's
+ * first frame (the doors, held open) behind the atmosphere.
+ */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-atelier {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: rgb(14 11 8 / 70%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier {
+  --booking-paper: #fbfaf7;
+  --booking-ink: #17140f;
+  --booking-scene: #1d1814;
+  --booking-scene-ink: #f7f5f0;
+  --booking-accent: #85704e;
+  --booking-accent-ink: #fbfaf7;
+  --booking-label: #85704e;
+  --booking-scene-accent: #d8c19a;
+  --booking-line: rgb(23 20 15 / 14%);
+  --booking-option: #fbfaf7;
+  --booking-selected: #241d17;
+  --booking-selected-ink: #fbfaf7;
+  --booking-summary: #f7f5f0;
+  --booking-field: #fbfaf7;
+  /* A warm brown for errors: clear on ivory without a red band. */
+  --booking-error: #7a4a2e;
+  --booking-display: var(--at-font-serif, "Newsreader"), "Iowan Old Style", Georgia, serif;
+  --booking-service-display: var(--at-font-serif, "Newsreader"), "Iowan Old Style", Georgia, serif;
+  --booking-display-weight: 400;
+  --booking-tracking: -.02em;
+  --booking-transform: none;
+  --booking-service-size: 1.125rem;
+  --booking-service-weight: 400;
+  --booking-button-radius: 0;
+  --booking-chip-radius: 0;
+  --booking-option-radius: 0;
+  --booking-summary-radius: 0;
+  --booking-close-radius: 0;
+  --booking-confirm-radius: 50%;
+  --booking-rail-end: 24px;
+  /* Control boundaries (options, fields, Close, Back): 3.6–4.0:1 on every light surface. */
+  --booking-control-line: rgb(23 20 15 / 56%);
+  border-radius: 0;
+  font-family: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+}
+
+/* The doors held open, from the film: already cached for anyone who stepped inside. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-atmosphere {
+  background:
+    linear-gradient(180deg, rgb(20 17 14 / 30%) 0%, rgb(20 17 14 / 78%) 56%, #14110e 100%),
+    #14110e url("/brand-home-2/film/atelier-film-576x768-first.v1.webp") center 30% / cover no-repeat;
+  background:
+    linear-gradient(180deg, rgb(20 17 14 / 30%) 0%, rgb(20 17 14 / 78%) 56%, #14110e 100%),
+    #14110e image-set(url("/brand-home-2/film/atelier-film-576x768-first.v1.avif") type("image/avif"), url("/brand-home-2/film/atelier-film-576x768-first.v1.webp") type("image/webp")) center 30% / cover no-repeat;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-ornament {
+  display: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-atmosphere > small {
+  color: #d8c19a;
+  font-weight: 500;
+  letter-spacing: .18em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-atmosphere h2 {
+  color: #ece7de;
+  font-size: clamp(2.6rem, 3.6vw, 3.8rem);
+  font-weight: 400;
+  line-height: .95;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-atmosphere > p {
+  color: #f7f5f0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 300px;
+  opacity: .86;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary {
+  border-top-color: rgb(216 193 154 / 18%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary li {
+  border-bottom-color: rgb(216 193 154 / 18%);
+  /* Steps still to come stay legible (at least 5.3:1 over the lantern art). */
+  opacity: .75;
+  padding: 12px 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary li.is-done {
+  opacity: .82;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary li.is-current {
+  box-shadow: inset 2px 0 0 #d8c19a;
+  opacity: 1;
+  padding-left: 12px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary span {
+  color: #d8c19a;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary b {
+  font-weight: 500;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary em {
+  font-size: 14px;
+  /* The step's own opacity already dims it; the shared .84 must not stack on top. */
+  opacity: 1;
+}
+
+/* Panel. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head small {
+  color: #85704e;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head h2 {
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -.02em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head > button {
+  border-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head > button:hover {
+  transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-progress button {
+  min-height: 44px;
+}
+
+/* Labels in Manrope at 500: nothing in this window is set at 600 or above. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-meta b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-status button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review strong,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-phone-prefix,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer-summary > b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-powered {
+  font-weight: 500;
+}
+
+/* Secondary text on light reads in warm grey, never by opacity alone. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-details dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field > label em {
+  color: #6a6359;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field > label em {
+  font-weight: 400;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-status {
+  font-size: 14px;
+}
+
+/* Services: a quiet number, the name, then duration and price. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service:not(.selected) {
+  border-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service:not(.selected):hover {
+  border-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service::before {
+  color: #85704e;
+  content: counter(booking-service, decimal-leading-zero);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+  grid-column: 1;
+  grid-row: 1;
+  letter-spacing: .1em;
+  line-height: 1.3;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service.selected::before {
+  color: #d8c19a;
+}
+
+/* Inside the shared two-column tag: Nº and the check on row 1, the name on row 2, the meta on row 3. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-copy {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service .salon-booker-service-meta {
+  grid-row: 3;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-meta b {
+  font-size: 14px;
+}
+
+/* Selected service, day and time: espresso with ivory text and a champagne line along the bottom. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service.selected,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates button[aria-pressed="true"],
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-times button[aria-pressed="true"] {
+  box-shadow: inset 0 -2px 0 #d8c19a;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-rail-arrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates button:not([aria-pressed="true"]),
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-times button:not([aria-pressed="true"]) {
+  border-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-rail-arrow:hover,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates button:not([aria-pressed="true"]):hover,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-times button:not([aria-pressed="true"]):hover {
+  border-color: var(--booking-accent);
+}
+
+/* Wide enough for 'TOMORROW' in 12px Manrope at .16em (about 85px). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates button {
+  flex: 0 0 96px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates strong {
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-times button {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-periods button {
+  min-height: 44px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-periods small {
+  opacity: 1;
+}
+
+/* Fields: a 3:1 underline on chalk; the placeholder stays readable without passing for a value. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field input,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field textarea,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field select,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-venue select,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-phone-prefix {
+  border-bottom-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field input:focus,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field textarea:focus,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field select:focus,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-venue select:focus {
+  border-bottom-color: var(--booking-accent);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field [aria-invalid="true"] {
+  border-bottom-color: var(--booking-error);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field input::placeholder,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field textarea::placeholder {
+  opacity: .64;
+}
+
+/* Small text buttons (Change, Try again, Book another visit): a hairline underline on a 44px target. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-status button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-links button {
+  align-items: center;
+  border-bottom: 0;
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: rgb(23 20 15 / 35%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review button:hover,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-status button:hover,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-links button:hover {
+  text-decoration-color: currentColor;
+}
+
+/* The primary move: a plain ink rectangle, as on the page. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-next {
+  background: #17140f;
+  border-radius: 0;
+  color: #f3eee6;
+  filter: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  min-height: 52px;
+  padding: 0 24px;
+  transition: background-color 220ms ease, opacity 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-next:hover:not(:disabled) {
+  background: #3a3027;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-next:hover:not(:disabled) {
+  filter: none;
+  transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-next:hover:not(:disabled)::before {
+  background: #6e5c3f;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-next:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-secondary {
+  border: 1px solid rgb(23 20 15 / 56%);
+  border-radius: 0;
+  color: var(--booking-ink);
+  transition: background-color 220ms cubic-bezier(.2, .7, 0, 1), border-color 220ms cubic-bezier(.2, .7, 0, 1), color 220ms cubic-bezier(.2, .7, 0, 1);
+}
+
+@media (hover: hover) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-back:hover,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-secondary:hover {
+    background: #17140f;
+    border-color: #17140f;
+    color: #fbfaf7;
+  }
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-powered {
+  color: #6a6359;
+  opacity: 1;
+}
+
+/* Confirmation: a round ink seal with an ivory ring, pressed on at an angle. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-mark {
+  background: #17140f;
+  box-shadow: inset 0 0 0 2px #fbfaf7, inset 0 0 0 4px #17140f;
+  color: #fbfaf7;
+  font-weight: 300;
+  transform: rotate(-12deg);
+}
+
+/* Type floor: nothing in the booking window drops below 12px. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-atmosphere > small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-itinerary b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-progress i,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-details dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review dt {
+  font-size: 12px;
+  letter-spacing: .16em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-meta small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-field-error,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer-summary small {
+  font-size: 13px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-links button {
+  font-size: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-times,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-meta,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer-summary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-confirmation-details dd {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@media (min-width: 821px) {
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience.booking-theme-atelier {
+    box-shadow: 0 40px 120px rgb(14 11 8 / 40%);
+    height: min(820px, calc(100dvh - 48px));
+    max-width: 1120px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-date-rail {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+  }
+}
+
+@media (max-width: 820px) {
+  .salon-booking-overlay.booking-experience-overlay.booking-overlay-atelier {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Without the atmosphere panel, a champagne hairline carries the brand. */
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-head {
+    border-bottom: 1px solid var(--booking-line);
+    border-top: 1px solid #b49a68;
+    padding-bottom: 16px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-dates button {
+    flex-basis: 92px;
+    padding-inline: 2px;
+  }
+
+  /* 'LOCATION' in 12px Manrope at .16em needs about 74px. */
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-review > div {
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+  }
+
+  /* 'Confirm appointment' wraps to two lines on a 320px phone instead of clipping. */
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-footer .salon-booker-next {
+    letter-spacing: .1em;
+    line-height: 1.2;
+    padding: 0 16px 0 32px;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+/* Shared by Atelier and Paloma: a two-column grid of tall service tags. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-group,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-group {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service {
+  align-content: space-between;
+  grid-template-columns: minmax(0, 1fr) 20px;
+  min-height: 108px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-meta,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-meta {
+  display: flex;
+  gap: 10px;
+  grid-column: 1;
+  grid-row: 2;
+  justify-content: flex-start;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-check,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-check {
+  align-self: start;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/*
+ * 03 · Serein House — a quiet sage room with breathing rings. Tokens match
+ * app/brand-home-3/layout.module.css. Sentence-case buttons, one caps style
+ * (12px, 600, .14em), nothing under 12px, and no photograph in the atmosphere.
+ */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-serein {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgb(32 49 44 / 62%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein {
+  --booking-paper: #f1eee5;
+  --booking-ink: #20312c; /* 11.78 */
+  --booking-muted: #4f5f59; /* 5.81 */
+  --booking-label: #4b5e54; /* 5.98 */
+  --booking-scene: #54675c;
+  --booking-scene-ink: #f7f4ec; /* 5.50 on #54675c, 4.76 on #5d7165 */
+  --booking-scene-accent: #dce5df; /* 4.70 on #54675c */
+  --booking-accent: #5d7165;
+  --booking-accent-ink: #f7f4ec; /* 4.76 */
+  --booking-selected: #5d7165;
+  --booking-selected-ink: #f7f4ec;
+  --booking-option: #f7f4ec;
+  --booking-summary: #dce5df; /* ink 10.61 */
+  --booking-field: #f7f4ec;
+  --booking-line: rgb(32 49 44 / 18%);
+  --booking-control-line: rgb(32 49 44 / 58%); /* ≥ 3.3:1 */
+  --booking-error: #8b513c; /* 5.42 */
+  --booking-display: var(--sr-font-display), "Newsreader", "Iowan Old Style", Georgia, serif;
+  --booking-service-display: var(--sr-font-display), "Newsreader", "Iowan Old Style", Georgia, serif;
+  --booking-display-weight: 300;
+  --booking-service-weight: 400;
+  --booking-service-size: 1.0625rem;
+  --booking-tracking: -.025em;
+  --booking-transform: none;
+  --booking-button-radius: 999px;
+  --booking-chip-radius: 999px;
+  --booking-option-radius: 0;
+  --booking-summary-radius: 0;
+  --booking-close-radius: 50%;
+  --booking-confirm-radius: 50%;
+}
+
+@media (min-width: 821px) {
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience.booking-theme-serein {
+    border-radius: 32px;
+    box-shadow: 0 40px 120px rgb(32 49 44 / 32%);
+    height: min(800px, calc(100dvh - 48px));
+    max-width: 1080px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere {
+    border-radius: 32px 0 0 32px;
+  }
+}
+
+/* Atmosphere: Serein's breathing rings on sage — no photograph (T1 and T4 use film stills). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere {
+  background: radial-gradient(circle at 50% 30%, rgb(185 211 209 / 28%), transparent 34%), linear-gradient(165deg, #5d7165 0%, #54675c 48%, #4b5e54 100%);
+  color: #f7f4ec;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere > small { color: #f7f4ec; } /* 4.76 on the lightest stop */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere > p { color: #f7f4ec; opacity: 1; }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-itinerary li { color: #dce5df; opacity: 1; } /* upcoming steps: mist, no opacity text */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-itinerary li.is-current,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-itinerary li.is-done { color: #f7f4ec; }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-itinerary em { opacity: 1; } /* mist ≥ 5.05, paper-soft 5.8 */
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament {
+  aspect-ratio: 1;
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+  width: 78%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament i {
+  border: 1px solid rgb(247 244 236 / 28%);
+  border-radius: 50%;
+  inset: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament i:nth-child(2) { inset: 15%; }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament i:nth-child(3) { inset: 30%; }
+
+/* The rings ripple once (4.8s), never under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament i { animation: booking-ripple 4.8s ease-in-out 1 both; }
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament i:nth-child(2) { animation-delay: .4s; }
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-ornament i:nth-child(3) { animation-delay: .8s; }
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-dates button { border-radius: 999px; }
+
+/* Head close: a visible control edge. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-head > button { border-color: rgb(32 49 44 / 58%); }
+
+/* Buttons are sentence case (the owner's "caps"). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-next,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-confirmation-links button {
+  letter-spacing: .01em;
+  text-transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-next { font-size: 15px; font-weight: 600; min-height: 52px; }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-next:hover:not(:disabled) { background: #8b513c; filter: none; } /* 5.72 */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-next:disabled { background: transparent; border: 1px solid rgb(32 49 44 / 58%); color: #4f5f59; opacity: 1; }
+
+/* Type floor: nothing below 12px; one caps tracking (.14em, weight 600). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere > small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-itinerary b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-progress i,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-confirmation-details dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-review dt {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-confirmation-details dt { color: var(--booking-muted); opacity: 1; }
+
+/* 'Optional' and placeholders: solid muted, never opacity (5.81 on paper, 6.14 on the field). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-field > label em,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-field :is(input, textarea)::placeholder { color: var(--booking-muted); opacity: 1; }
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-service-meta small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-dates span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-field-error,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-footer-summary small { font-size: 13px; }
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-review span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-confirmation-links button { font-size: 14px; min-height: 44px; }
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-dates,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-times,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-service-meta,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-footer-summary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-confirmation-details dd { font-variant-numeric: tabular-nums lining-nums; }
+
+/* Focus: sage-ink on paper; paper-soft on the scene and on selected fills. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein :focus-visible { outline: 2px solid #4b5e54; outline-offset: 3px; }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere :focus-visible,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein .selected:focus-visible,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein [aria-pressed="true"]:focus-visible,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-serein [aria-checked="true"]:focus-visible { box-shadow: 0 0 0 5px #4b5e54; outline-color: #f7f4ec; }
+
+/* Phones: the dialog is full-screen; a sage rule keeps the identity without the atmosphere panel. */
+@media (max-width: 820px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-head { border-top: 3px solid #5d7165; }
+
+  /* A wrapped step label ('Your details' at 390) hangs from the shared top line, never centred against it. */
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-progress button { align-items: flex-start; }
+}
+
+/* Short landscape (a phone on its side, a small laptop window): one column, and the whole panel
+   scrolls under a slim sticky footer, so the step never shrinks to a sliver. */
+@media (max-height: 520px) {
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience.booking-theme-serein {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-atmosphere {
+    display: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-body {
+    flex: none;
+    overflow: visible;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-footer {
+    bottom: 0;
+    position: sticky;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-footer .salon-booker-footer-summary,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-serein .salon-booker-footer .salon-booker-powered {
+    display: none;
+  }
+}
+
+/*
+ * 04 · Paloma — Issue 04's booking window: a 980px porcelain drawer from the
+ * right, cobalt and ink on Manrope 800, square edges, the cover film's final
+ * frame as a cobalt duotone behind the atmosphere. Brand colours only:
+ * porcelain #f5f4ef, ink #15171a, cobalt #2459a6, wash #c7d3e6, and mixes of
+ * them (#5c626c muted, #3e4249 muted-deep, #dee4ea wash-2, #e8e7e2 porcelain-2).
+ * Errors are ink with an '!' square, never a new hue. Contrast comes from solid
+ * colours, never opacity.
+ */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-paloma {
+  align-items: stretch;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgb(21 23 26 / 64%);
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma {
+  /* Surfaces and text */
+  --booking-paper: #f5f4ef;
+  --booking-ink: #15171a;
+  --booking-muted: #5c626c;
+  /* Scene panel */
+  --booking-scene: #2459a6;
+  --booking-scene-ink: #f5f4ef;
+  --booking-scene-accent: #c7d3e6;
+  /* Accent */
+  --booking-accent: #2459a6;
+  --booking-accent-ink: #f5f4ef;
+  --booking-label: #2459a6;
+  /* Lines: dividers at 22%, control edges at 64% (5.15:1 on porcelain, 4.53:1 on wash) */
+  --booking-line: rgb(21 23 26 / 22%);
+  --booking-control-line: rgb(21 23 26 / 64%);
+  /* Options and fields */
+  --booking-option: transparent;
+  --booking-selected: #2459a6;
+  --booking-selected-ink: #f5f4ef;
+  --booking-summary: #c7d3e6;
+  --booking-field: transparent;
+  --booking-error: #15171a;
+  /* Type */
+  --booking-display: var(--font-manrope), Arial, sans-serif;
+  --booking-service-display: var(--font-manrope), Arial, sans-serif;
+  --booking-display-weight: 800;
+  --booking-service-weight: 800;
+  --booking-service-size: 15px;
+  --booking-tracking: -.06em;
+  --booking-transform: uppercase;
+  /* Shape: square everywhere except the confirmation mark */
+  --booking-button-radius: 0;
+  --booking-chip-radius: 0;
+  --booking-option-radius: 0;
+  --booking-summary-radius: 0;
+  --booking-close-radius: 0;
+  --booking-confirm-radius: 50%;
+  --booking-rail-end: 24px;
+  /* Manrope has no arrow glyphs, so the arrows are drawn (the page's ArrowRight, stroke 1.75). */
+  --paloma-arrow-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='square'%3E%3Cpath d='M4 12h15M13.5 6.5 19 12l-5.5 5.5'/%3E%3C/svg%3E");
+  --paloma-arrow-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='square'%3E%3Cpath d='M20 12H5M10.5 6.5 5 12l5.5 5.5'/%3E%3C/svg%3E");
+  border-radius: 0;
+  font-family: var(--font-manrope), Arial, sans-serif;
+}
+
+/* 1 · The drawer: full height, 980px, flush right, sliding in from the right edge. */
+@media (min-width: 821px) {
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience.booking-theme-paloma {
+    animation: booking-paloma-drawer-in 320ms cubic-bezier(.2, .75, .2, 1) both;
+    border-left: 1px solid #15171a;
+    box-shadow: -32px 0 96px rgb(21 23 26 / 34%);
+    height: 100dvh;
+    max-width: 980px;
+    width: min(980px, 100%);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-date-rail {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-rail-arrow {
+    display: grid;
+    place-items: center;
+  }
+}
+
+@keyframes booking-paloma-drawer-in {
+  from { opacity: 0; transform: translateX(48px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 3 · Atmosphere: the film's final frame as a cobalt luminosity duotone, face in the top 300px only. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere {
+  background-color: #2459a6;
+  background-image:
+    linear-gradient(180deg, rgb(36 89 166 / 0%) 0, rgb(36 89 166 / 0%) 120px, rgb(36 89 166 / 72%) 220px, #2459a6 300px),
+    url("/brand-home-4/film/paloma-film-576x768-last.v2.jpg");
+  background-image:
+    linear-gradient(180deg, rgb(36 89 166 / 0%) 0, rgb(36 89 166 / 0%) 120px, rgb(36 89 166 / 72%) 220px, #2459a6 300px),
+    image-set(url("/brand-home-4/film/paloma-film-576x768-last.v2.avif") type("image/avif"), url("/brand-home-4/film/paloma-film-576x768-last.v2.webp") type("image/webp"));
+  background-blend-mode: normal, luminosity;
+  background-position: 0 0, center 0;
+  background-repeat: no-repeat;
+  background-size: auto, 100% auto;
+  padding-inline: 36px;
+}
+
+/* Short screens never put text over the photograph. */
+@media (max-height: 719px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere {
+    background-image: none;
+  }
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-ornament {
+  background-image: linear-gradient(rgb(255 255 255 / 10%) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 10%) 1px, transparent 1px);
+  background-size: 44px 44px;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(#000 0 40%, transparent 58%);
+  mask-image: linear-gradient(#000 0 40%, transparent 58%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-ornament i:nth-child(1) {
+  display: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-ornament i:nth-child(2) {
+  background: #c7d3e6;
+  height: 6px;
+  left: 36px;
+  top: 84px;
+  width: 72px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere > small {
+  align-self: flex-start;
+  background: #2459a6;
+  color: #f5f4ef;
+  padding: 6px 10px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere h2 {
+  font-size: clamp(2.75rem, 3.9vw, 3.5rem);
+  font-weight: 800;
+  line-height: .86;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere h2 span + span {
+  color: #c7d3e6;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere > p {
+  color: #dee4ea;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 290px;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary {
+  border-top-color: rgb(255 255 255 / 24%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary li {
+  border-bottom-color: rgb(255 255 255 / 24%);
+  color: #dee4ea;
+  opacity: 1;
+  padding: 12px 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary li.is-done,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary li.is-current {
+  color: #f5f4ef;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary li.is-done b::after {
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  content: "";
+  display: inline-block;
+  height: 9px;
+  margin: 0 0 3px 10px;
+  transform: rotate(45deg);
+  vertical-align: middle;
+  width: 5px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary li.is-current {
+  box-shadow: inset 3px 0 0 #c7d3e6;
+  padding-left: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary span {
+  color: #f5f4ef;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary em {
+  font-size: 14px;
+  opacity: 1;
+}
+
+/* 14 · Head: one line for 'BOOK YOUR EDIT.', a square Close that fills cobalt. */
+@media (min-width: 821px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-head h2 {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+  }
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-head > button {
+  border-color: #15171a;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-head > button:hover {
+  background: #2459a6;
+  border-color: #2459a6;
+  color: #f5f4ef;
+  transform: none;
+}
+
+/* Progress: every step at full strength; steps still to come read muted, not faded. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress button {
+  min-height: 44px;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress button:disabled {
+  color: var(--booking-muted);
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress button:disabled i {
+  color: inherit;
+}
+
+/* 4 · Type floor: nothing in the booking window drops below 12px. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere > small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress i,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field > label {
+  font-size: 12px;
+  letter-spacing: .16em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-details dt {
+  font-size: 12px;
+  letter-spacing: .12em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-meta small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field-error,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer-summary small {
+  font-size: 13px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-links button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-status {
+  font-size: 14px;
+}
+
+/* 5 · Contrast without opacity: muted #5c626c (5.58:1) on porcelain, muted-deep #3e4249 (6.68:1) on wash. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-meta small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer-summary small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field > label em,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-details dt {
+  color: var(--booking-muted);
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review span {
+  color: #3e4249;
+  opacity: 1;
+}
+
+/* Secondary text inside selected cobalt tiles, dates and times: wash-2 (5.37:1). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service.selected small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button[aria-pressed="true"] small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button[aria-pressed="true"] span {
+  color: #dee4ea;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field input::placeholder,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field textarea::placeholder {
+  color: #15171a;
+  opacity: .62;
+}
+
+/* 7 · Service tiles: a shared-edge grid on 64% control lines; the selected tile lifts on an ink offset. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-group {
+  gap: 0;
+  padding: 1px 0 0 1px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-group h3 {
+  margin-bottom: 10px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service {
+  margin: -1px 0 0 -1px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service:not(.selected) {
+  border-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service:is(:hover, :focus-visible, .selected) {
+  position: relative;
+  z-index: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service.selected,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button[aria-pressed="true"],
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-times button[aria-pressed="true"] {
+  box-shadow: 4px 4px 0 #15171a;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-copy strong {
+  letter-spacing: -.01em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-meta b {
+  font-size: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service:not(.selected) .salon-booker-service-meta b {
+  color: #2459a6;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-check {
+  border-color: var(--booking-control-line);
+  border-radius: 0;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service.selected .salon-booker-check {
+  border-color: currentColor;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-skeleton-services {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-skeleton-services i {
+  min-height: 108px;
+}
+
+/* Days, times and the rail arrows share the 64% control line. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-rail-arrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button:not([aria-pressed="true"]),
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-times button:not([aria-pressed="true"]) {
+  border-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates {
+  /* Room for the selected day's 4px offset inside the scroller. */
+  padding-block: 2px 8px;
+}
+
+/* Wide enough for 'TOMORROW' at 12px and .16em (about 87px). */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button {
+  flex: 0 0 100px;
+  padding-block: 8px 10px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates strong {
+  font-size: 26px;
+  letter-spacing: -.04em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-times button {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-rail-arrow {
+  font-size: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-rail-arrow::before {
+  background: currentColor;
+  content: "";
+  height: 16px;
+  -webkit-mask: var(--paloma-arrow-left) center / 16px 16px no-repeat;
+  mask: var(--paloma-arrow-left) center / 16px 16px no-repeat;
+  width: 16px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-rail-arrow:last-child::before {
+  -webkit-mask-image: var(--paloma-arrow-right);
+  mask-image: var(--paloma-arrow-right);
+}
+
+/* Time of day: ink tabs on a control line; the chosen one in cobalt; empty ones muted. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods button {
+  border-bottom-color: var(--booking-control-line);
+  min-height: 44px;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods button[aria-pressed="true"] {
+  border-bottom-color: #2459a6;
+  color: #2459a6;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods button:disabled {
+  border-bottom-color: var(--booking-line);
+  color: var(--booking-muted);
+  cursor: default;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods small {
+  opacity: 1;
+}
+
+/* Hover only where a pointer can hover. */
+@media (hover: hover) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service:not(.selected):hover,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-rail-arrow:hover,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button:not([aria-pressed="true"]):hover,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-times button:not([aria-pressed="true"]):hover {
+    border-color: #2459a6;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer .salon-booker-back:hover,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-secondary:hover {
+    background: #15171a;
+    border-color: #15171a;
+    color: #f5f4ef;
+  }
+}
+
+/* Fields: a 64% underline; on focus a wash tint, a cobalt underline and the ring. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field input,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field textarea,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field select,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-venue select,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-phone-prefix {
+  border-bottom-color: var(--booking-control-line);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field input:focus,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field textarea:focus,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field select:focus,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-venue select:focus {
+  background: rgb(199 211 230 / 32%);
+  border-bottom: 2px solid #2459a6;
+  box-shadow: 0 2px 0 #2459a6;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field [aria-invalid="true"],
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field [aria-invalid="true"]:focus {
+  border-bottom: 2px solid #15171a;
+  box-shadow: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field > label em {
+  font-weight: 600;
+}
+
+/* Errors: ink, weight and an '!' square, with role=alert already on the message. Colour is never the only cue. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-error {
+  background: #e8e7e2;
+  border-left: 3px solid #15171a;
+  color: #15171a;
+  font-weight: 700;
+  justify-content: flex-start;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-error > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field-error {
+  align-items: flex-start;
+  color: #15171a;
+  display: flex;
+  font-weight: 700;
+  gap: 8px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-error::before,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field-error::before {
+  background: #15171a;
+  color: #f5f4ef;
+  content: "!";
+  content: "!" / "";
+  flex: none;
+  font-size: 12px;
+  font-weight: 800;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  width: 16px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-field-error::before {
+  margin-top: 1px;
+}
+
+/* 6 · Small text buttons (Change, Try again, See …, Book another visit): 44px targets, underline at 6px. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-status button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-links button {
+  align-items: center;
+  border-bottom: 0;
+  display: inline-flex;
+  min-height: 44px;
+  opacity: 1;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review > div {
+  padding: 8px 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review strong {
+  font-weight: 800;
+}
+
+/* 8 · Next: a cobalt block lifted on a 6px ink offset, pressed flat on click. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next {
+  border: 1px solid #15171a;
+  box-shadow: 6px 6px 0 #15171a;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  min-height: 54px;
+  transition: background-color 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next > span {
+  background: currentColor;
+  flex: none;
+  font-size: 0;
+  height: 16px;
+  -webkit-mask: var(--paloma-arrow-right) center / 16px 16px no-repeat;
+  mask: var(--paloma-arrow-right) center / 16px 16px no-repeat;
+  width: 16px;
+}
+
+/* The shared brightness-and-lift hover never applies; a pointer that can hover gets the ink press instead. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next:hover:not(:disabled) {
+  filter: none;
+  transform: none;
+}
+
+@media (hover: hover) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next:hover:not(:disabled) {
+    background: #15171a;
+    box-shadow: 3px 3px 0 #2459a6;
+    color: #f5f4ef;
+    transform: translate(3px, 3px);
+  }
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(6px, 6px);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next:disabled {
+  background: transparent;
+  border-color: rgb(21 23 26 / 40%);
+  box-shadow: none;
+  color: var(--booking-muted);
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer-actions {
+  padding: 0 6px 6px 0;
+}
+
+/* Back and the confirmation's secondary buttons: square, on the 64% control line. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-secondary {
+  border-color: var(--booking-control-line);
+  color: #15171a;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-back > span[aria-hidden="true"] {
+  background: currentColor;
+  flex: none;
+  font-size: 0;
+  height: 16px;
+  -webkit-mask: var(--paloma-arrow-left) center / 16px 16px no-repeat;
+  mask: var(--paloma-arrow-left) center / 16px 16px no-repeat;
+  width: 16px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-empty button > span[aria-hidden="true"] {
+  background: currentColor;
+  display: inline-block;
+  font-size: 0;
+  height: 14px;
+  -webkit-mask: var(--paloma-arrow-right) center / 14px 14px no-repeat;
+  mask: var(--paloma-arrow-right) center / 14px 14px no-repeat;
+  vertical-align: -2px;
+  width: 14px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-powered {
+  font-weight: 700;
+}
+
+/* 10 · Focus: a 3px cobalt ring (6.24:1 on porcelain, 4.55:1 on wash); porcelain and inset on cobalt. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma :focus-visible {
+  outline: 3px solid #2459a6;
+  outline-offset: 3px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next:focus-visible {
+  outline-offset: 5px;
+}
+
+/* Days sit inside a scroller, so their ring is drawn inside the chip. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates button:focus-visible {
+  outline-offset: -5px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma :is(.salon-booker-service.selected, .salon-booker-dates button[aria-pressed="true"], .salon-booker-times button[aria-pressed="true"]):focus-visible {
+  outline-color: #f5f4ef;
+  outline-offset: -5px;
+}
+
+/* Step headings take focus programmatically; they are not controls. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma [tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* 11 · Tabular numerals wherever figures line up. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-times,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-meta,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer-summary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-details dd,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress i {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 13 · Confirmation: left-aligned, with a round cobalt mark turned like the cover circle. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation {
+  justify-items: start;
+  text-align: left;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-actions,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-links {
+  justify-content: flex-start;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-mark {
+  color: #f5f4ef;
+  font-size: 2.4rem;
+  font-weight: 800;
+  height: 96px;
+  transform: rotate(-8deg);
+  width: 96px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-confirmation-details {
+  max-width: none;
+}
+
+/* 9 · Phones and small tablets (820px and below): the sheet keeps Paloma's cobalt rule. */
+@media (max-width: 820px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-head {
+    border-bottom: 1px solid #15171a;
+    border-top: 4px solid #2459a6;
+    padding-bottom: 16px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-progress span {
+    letter-spacing: .08em;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-dates small {
+    letter-spacing: .12em;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-review > div {
+    grid-template-columns: 84px minmax(0, 1fr) auto;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-periods button {
+    font-size: 12px;
+    letter-spacing: .06em;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-skeleton-services {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-skeleton-services i {
+    min-height: 84px;
+  }
+
+  /* 'ADD YOUR DETAILS' wraps at 320px instead of clipping. */
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer .salon-booker-next {
+    font-size: 13px;
+    letter-spacing: .08em;
+    line-height: 1.2;
+    padding: 0 16px;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+/* Short landscape (a phone on its side, a small laptop window): one column, and the whole panel
+   scrolls under a slim sticky footer, so the step never shrinks to a sliver. */
+@media (max-height: 520px) {
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience.booking-theme-paloma {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-atmosphere {
+    display: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-body {
+    flex: none;
+    overflow: visible;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer {
+    bottom: 0;
+    position: sticky;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer .salon-booker-footer-summary,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-footer .salon-booker-powered {
+    display: none;
+  }
+}
+
+/* The wash bar sits at 84px: never let it cross the atmosphere title on short screens. */
+@media (max-height: 559px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-ornament i:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience.booking-theme-paloma {
+    animation: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-next {
+    transition: none;
+  }
+}
+
+/* 05 · Oru — warm botanical forms and an unhurried cadence. */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-oru {
+  background: rgb(45 32 48 / 76%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru {
+  --booking-paper: #f2eeea;
+  --booking-ink: #342538;
+  --booking-scene: #8e3d31;
+  --booking-scene-ink: #fff8ef;
+  --booking-accent: #b0412e;
+  --booking-accent-ink: #fff;
+  --booking-scene-accent: #f0a48f;
+  --booking-line: rgb(52 37 56 / 18%);
+  --booking-option: rgb(255 255 255 / 40%);
+  --booking-selected: #38263d;
+  --booking-selected-ink: #fff;
+  --booking-summary: #e4dceb;
+  --booking-display: Didot, "Bodoni 72", Georgia, serif;
+  --booking-service-display: Didot, "Bodoni 72", Georgia, serif;
+  --booking-service-size: 1.15rem;
+  --booking-service-weight: 400;
+  --booking-button-radius: 50% 50% 18px 18px / 30px 30px 18px 18px;
+  --booking-chip-radius: 50% 50% 12px 12px / 20px 20px 12px 12px;
+  --booking-option-radius: 28px 8px 28px 8px;
+  --booking-summary-radius: 36px 10px 36px 10px;
+  border-radius: 110px 18px 64px 18px;
+  max-width: 1140px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-atmosphere {
+  background: radial-gradient(circle at 50% 26%, #d96a4f 0 15%, transparent 15.5%), radial-gradient(circle at 22% 56%, #6f5d3c 0 14%, transparent 14.5%), #422b45;
+  border-radius: 110px 0 0 18px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-footer .salon-booker-back {
+  border-radius: 18px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament {
+  height: 300px;
+  right: -90px;
+  top: 60px;
+  width: 300px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament i {
+  background: rgb(247 233 213 / 12%);
+  border-radius: 72% 28% 70% 30%;
+  inset: 0;
+  transform: rotate(32deg);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament i:nth-child(2) { inset: 40px; transform: rotate(72deg); }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament i:nth-child(3) { inset: 80px; transform: rotate(112deg); }
+
+/* 06 · Néroli — a soft water path with lotus geometry. */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-neroli {
+  background: rgb(16 36 34 / 68%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli {
+  --booking-paper: #edf2ee;
+  --booking-ink: #18302e;
+  --booking-scene: #b8d7d2;
+  --booking-scene-ink: #18302e;
+  --booking-accent: #b9573f;
+  --booking-accent-ink: #fff;
+  --booking-label: #a94a35;
+  --booking-line: rgb(24 48 46 / 16%);
+  --booking-option: rgb(255 255 255 / 45%);
+  --booking-selected: #1b3a37;
+  --booking-selected-ink: #f5faf7;
+  --booking-summary: #d8e6e1;
+  --booking-display: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif;
+  --booking-service-display: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif;
+  --booking-service-size: 1.12rem;
+  --booking-service-weight: 400;
+  --booking-button-radius: 999px;
+  --booking-chip-radius: 22px;
+  --booking-option-radius: 40px;
+  --booking-summary-radius: 28px;
+  border-radius: 34px;
+  height: min(800px, calc(100dvh - 52px));
+  max-width: 1140px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-atmosphere {
+  background: radial-gradient(circle at 30% 24%, #f3faf6 0 4%, transparent 22%), linear-gradient(155deg, #cee3df, #8cbab3);
+  border-radius: 34px 0 0 34px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-dates button {
+  border-radius: 999px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service {
+  padding-inline: 24px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament {
+  height: 280px;
+  left: 50%;
+  top: 9%;
+  transform: translateX(-50%);
+  width: 280px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament i {
+  background: rgb(255 255 255 / 28%);
+  border: 1px solid rgb(255 255 255 / 62%);
+  border-radius: 70% 30% 67% 33%;
+  inset: 28px 82px;
+  transform: rotate(45deg);
+  transform-origin: 50% 100%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament i:nth-child(2) { transform: rotate(165deg); }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament i:nth-child(3) { transform: rotate(285deg); }
+
+/* 07 · STUDIO — black / ivory precision instrument. */
+.salon-booking-overlay.booking-experience-overlay.booking-overlay-studio {
+  background: rgb(9 9 9 / 78%);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio {
+  --booking-paper: #111111;
+  --booking-ink: #f3f0e9;
+  --booking-scene: #1a1a1a;
+  --booking-scene-ink: #f3f0e9;
+  --booking-accent: #b8a28a;
+  --booking-accent-ink: #090909;
+  --booking-line: rgb(243 240 233 / 16%);
+  --booking-option: #181818;
+  --booking-selected: #b8a28a;
+  --booking-selected-ink: #090909;
+  --booking-summary: #1b1b1b;
+  --booking-error: #f0a69a;
+  --booking-display: var(--font-studio-display), "Arial Narrow", Arial, sans-serif;
+  --booking-display-weight: 700;
+  --booking-service-weight: 650;
+  --booking-tracking: -.04em;
+  --booking-confirm-radius: 0;
+  border: 1px solid rgb(243 240 233 / 16%);
+  height: min(820px, calc(100dvh - 40px));
+  max-width: 1120px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-atmosphere {
+  background: linear-gradient(160deg, #252525, #0f0f0f);
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament {
+  inset: 12% 12% 42%;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament i {
+  border: 1px solid rgb(184 162 138 / 35%);
+  inset: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament i:nth-child(2) { inset: 18px; }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-ornament i:nth-child(3) { inset: 36px; }
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-confirmation {
+  justify-items: start;
+  text-align: left;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-confirmation-actions,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .salon-booker-confirmation-links {
+  justify-content: flex-start;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-card {
+  align-items: stretch;
+  border: 1px solid rgb(243 240 233 / 16%);
+  display: grid;
+  gap: .85rem;
+  grid-template-columns: 72px 1fr;
+  margin: 18px 0 1rem;
+  min-height: 72px;
+  overflow: hidden;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-card:not(.has-media) {
+  grid-template-columns: 1fr;
+  padding-left: .85rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-media,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-type {
+  min-height: 72px;
+  position: relative;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-media img {
+  object-fit: cover;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-type {
+  align-items: end;
+  background: linear-gradient(145deg, #222, #0d0d0d);
+  display: grid;
+  padding: .55rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-type span {
+  font-family: var(--booking-display);
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy {
+  display: grid;
+  gap: .2rem;
+  padding: .7rem .85rem .7rem 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy p {
+  color: rgb(243 240 233 / 55%);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy strong {
+  font-size: 1rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-copy span {
+  color: rgb(243 240 233 / 68%);
+  font-size: .78rem;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-step-reels > .salon-booker-back {
+  margin-top: 18px;
+}
+
+@keyframes booking-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes booking-experience-in {
+  from { opacity: 0; transform: translateY(24px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes booking-step-in {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes booking-confirm-in {
+  0% { opacity: 0; transform: translateY(18px); }
+  60% { opacity: 1; transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes booking-ripple {
+  0%, 100% { opacity: .38; transform: scale(.92); }
+  50% { opacity: .9; transform: scale(1.04); }
+}
+
+@keyframes booking-shimmer {
+  0%, 100% { opacity: .5; }
+  50% { opacity: 1; }
+}
+
+/* Phones and small tablets: a full-screen sheet with the essentials only. */
+@media (max-width: 820px) {
+  .salon-booking-overlay.booking-experience-overlay {
+    padding: 0;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience {
+    --booking-gutter: 18px;
+    border-radius: 0;
+    display: block;
+    height: 100dvh;
+    max-width: none;
+    width: 100%;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-atmosphere {
+    display: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience .salon-booker-panel {
+    border-radius: 0;
+    height: 100%;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-head {
+    padding-top: max(18px, env(safe-area-inset-top));
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-head h2 {
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-progress {
+    margin-top: 16px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-label,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-label-row {
+    margin-top: 22px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-date-rail {
+    grid-template-columns: minmax(0, 1fr);
+    margin-inline: calc(var(--booking-gutter) * -1);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-rail-arrow {
+    display: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-dates {
+    --booking-rail-end: calc(var(--booking-gutter) - 8px);
+    -webkit-mask-image: none;
+    mask-image: none;
+    padding-inline: var(--booking-gutter) 0;
+    scroll-padding-inline: var(--booking-gutter);
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-dates button {
+    flex-basis: 62px;
+    min-height: 78px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-periods button {
+    font-size: .56rem;
+    letter-spacing: .04em;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-times,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton-times {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-review > div {
+    grid-template-columns: 60px minmax(0, 1fr) auto;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-service {
+    column-gap: 12px;
+    padding: 13px 14px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service-group,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service-group {
+    grid-template-columns: 1fr;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-atelier .salon-booker-service,
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-paloma .salon-booker-service {
+    min-height: 84px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-footer .salon-booker-back {
+    font-size: 1rem;
+    justify-content: center;
+    padding: 0;
+    width: 54px;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-back-label {
+    display: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-next {
+    letter-spacing: .08em;
+    padding: 0 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salon-booking-overlay.booking-experience-overlay,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker.booking-experience,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-step,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-confirmation,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-ornament i,
+  .salon-booking-overlay.booking-experience-overlay .salon-booker-skeleton i {
+    animation: none;
+  }
+
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-studio .studio-booker-summary-card {
+    transition: none;
+  }
+}

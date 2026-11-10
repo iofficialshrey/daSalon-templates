@@ -1,0 +1,534 @@
+/*
+ * 07 — Studios. A masthead-table directory: numbered rows between 1px ink
+ * rules, each unfolding in place into a gatefold studio file on porcelain-2.
+ */
+
+.directory {
+  border-top: 1px solid var(--p4-ink);
+  position: relative;
+  z-index: 1;
+}
+
+.row {
+  border-bottom: 1px solid var(--p4-ink);
+  scroll-margin-top: calc(var(--p4-nav-h) + 24px);
+}
+
+/* ---------- Row: stacked on phones ---------- */
+
+.rowGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: 24px;
+}
+
+.rowMeta {
+  color: var(--p4-muted);
+}
+
+.rowNo {
+  color: var(--p4-cobalt-deep);
+}
+
+.name {
+  overflow-wrap: break-word;
+}
+
+.specialty,
+.hours {
+  display: none;
+}
+
+.address {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.rowLive {
+  display: grid;
+  gap: 2px;
+  justify-items: start;
+  min-height: 40px;
+}
+
+.facts {
+  color: var(--p4-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* Skeleton lines for the status and facts (also used by other chapters' studio lists). */
+.hold .statusSkel,
+.hold .factsSkel {
+  height: 12px;
+  margin-block: 3px;
+  max-width: 100%;
+  width: 132px;
+}
+
+.rowActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.rowActions .rowBook {
+  flex: 1;
+}
+
+/* "Studio file": a secondary button on phones, a text button from 760px. */
+.toggle {
+  align-items: center;
+  box-shadow: inset 0 0 0 1px currentColor;
+  display: inline-flex;
+  flex: none;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 10px;
+  justify-content: center;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  min-height: 48px;
+  padding: 0 16px;
+  text-align: left;
+  text-transform: uppercase;
+  transition: background-color var(--p4-fast) var(--p4-ease), color var(--p4-fast) var(--p4-ease);
+}
+
+.toggleIcon {
+  flex: none;
+}
+
+.toggle[aria-expanded="true"] .toggleIcon {
+  transform: rotate(45deg);
+}
+
+@media (hover: hover) {
+  .toggle:hover {
+    background: var(--p4-ink);
+    color: var(--p4-porcelain);
+  }
+}
+
+/* ---------- The gatefold file ---------- */
+
+.file {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.file[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.fileClip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fileInner {
+  background: var(--p4-porcelain-2);
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 48px 16px;
+}
+
+.fileHead {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.fileNo {
+  color: var(--p4-cobalt-deep);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.fileFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fileGroup dd {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.fileGroup dd + dd {
+  margin-top: 4px;
+}
+
+.term {
+  color: var(--p4-muted);
+}
+
+.addressValue {
+  display: grid;
+  justify-items: start;
+}
+
+/* Phones read Today before Hours; wider files keep the published order. */
+.fileToday {
+  order: 1;
+}
+
+.fileHours {
+  order: 2;
+}
+
+.fileGood {
+  order: 3;
+}
+
+.fileInner .statusSkel {
+  background: rgb(21 23 26 / 12%);
+}
+
+.fileMenu {
+  align-content: start;
+  display: grid;
+  gap: 12px;
+}
+
+.quickList {
+  border-top: 1px solid var(--p4-ink);
+}
+
+.quickList > li {
+  border-bottom: 1px solid var(--p4-rule);
+}
+
+.quick {
+  align-items: center;
+  column-gap: 16px;
+  display: grid;
+  grid-template-areas: "name book" "meta book";
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 56px;
+  padding: 10px 8px;
+  row-gap: 2px;
+  text-align: left;
+  transition: background-color var(--p4-fast) var(--p4-ease);
+  width: 100%;
+}
+
+.quick:focus-visible {
+  outline-offset: -3px;
+}
+
+.quickName {
+  font-size: 18px;
+  font-weight: 800;
+  grid-area: name;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  overflow-wrap: break-word;
+  text-transform: uppercase;
+}
+
+.quickMeta {
+  color: var(--p4-muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  grid-area: meta;
+  line-height: 1.4;
+}
+
+.quickTax {
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.quickBook {
+  align-items: center;
+  color: var(--p4-cobalt);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  gap: 6px;
+  grid-area: book;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) {
+  .quick:hover {
+    background: var(--p4-porcelain);
+  }
+}
+
+.quickSkel {
+  align-items: center;
+  display: flex;
+  min-height: 56px;
+  padding-inline: 8px;
+}
+
+.quickSkel .quickSkelBar {
+  background: rgb(21 23 26 / 12%);
+  height: 16px;
+  width: 60%;
+}
+
+.quickState {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.fileActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.fileActions .fileBook {
+  min-height: 52px;
+}
+
+.fileAmenities dd {
+  font-size: 15px;
+}
+
+/* ---------- Tablet: line 1 number and name, line 2 where and actions ---------- */
+
+@media (min-width: 760px) {
+  .rowGrid {
+    align-items: start;
+    column-gap: var(--p4-gap);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    padding-block: 32px;
+    row-gap: 16px;
+  }
+
+  .rowMeta {
+    grid-column: 1 / 3;
+    grid-row: 1;
+  }
+
+  .rowNo {
+    display: block;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .rowSep {
+    display: none;
+  }
+
+  .rowName {
+    grid-column: 3 / 9;
+    grid-row: 1;
+  }
+
+  .specialty {
+    display: block;
+    margin-top: 8px;
+  }
+
+  .rowWhere {
+    grid-column: 3 / 7;
+    grid-row: 2;
+  }
+
+  .rowLive {
+    grid-column: 3 / 7;
+    grid-row: 3;
+  }
+
+  .rowActions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    grid-column: 7 / 9;
+    grid-row: 2 / span 2;
+    margin-top: 0;
+  }
+
+  .rowActions .rowBook {
+    flex: none;
+    min-height: 44px;
+  }
+
+  .toggle {
+    box-shadow: none;
+    min-height: 44px;
+    padding: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
+  }
+
+  .fileInner {
+    column-gap: var(--p4-gap);
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    padding: 48px 24px;
+  }
+
+  .fileHead {
+    grid-column: 1 / -1;
+  }
+
+  .fileFacts {
+    grid-column: 1 / 5;
+    grid-row: 2;
+  }
+
+  .fileAmenities {
+    grid-column: 1 / 5;
+    grid-row: 3;
+  }
+
+  .fileMenu {
+    grid-column: 5 / 9;
+    grid-row: 2 / span 2;
+  }
+
+  .fileToday,
+  .fileHours,
+  .fileGood {
+    order: 0;
+  }
+
+  .fileActions {
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 760px) and (hover: hover) {
+  .toggle:hover {
+    background: none;
+    color: var(--tone-accent);
+  }
+}
+
+/* ---------- Desktop: 1–2 number, 3–7 name, 8–10 where over live, 11–12 actions ---------- */
+
+@media (min-width: 1100px) {
+  .rowGrid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    min-height: 128px;
+  }
+
+  .rowMeta {
+    grid-column: 1 / 3;
+    grid-row: 1 / span 2;
+  }
+
+  .rowName {
+    grid-column: 3 / 8;
+    grid-row: 1 / span 2;
+  }
+
+  /* Three columns: the address holds one line and today's status sits under it. */
+  .rowWhere {
+    grid-column: 8 / 11;
+    grid-row: 1;
+  }
+
+  .hours {
+    display: block;
+    margin-top: 4px;
+  }
+
+  .rowLive {
+    grid-column: 8 / 11;
+    grid-row: 2;
+    min-height: 0;
+  }
+
+  .rowLive .statusSkel,
+  .rowLive .factsSkel {
+    width: 100%;
+  }
+
+  .rowActions {
+    grid-column: 11 / 13;
+    grid-row: 1 / span 2;
+  }
+
+  .fileInner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .fileHead {
+    align-items: start;
+    flex-direction: column;
+    gap: 12px;
+    grid-column: 1 / 3;
+    grid-row: 1 / span 2;
+  }
+
+  .fileFacts {
+    grid-column: 3 / 7;
+    grid-row: 1;
+  }
+
+  .fileAmenities {
+    grid-column: 3 / 7;
+    grid-row: 2;
+  }
+
+  .fileMenu {
+    grid-column: 7 / 13;
+    grid-row: 1 / span 2;
+  }
+
+  .quick {
+    grid-template-areas: "name meta book";
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .fileActions {
+    align-items: center;
+    column-gap: 24px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- Motion: the file unfolds over 360ms, its contents follow 120ms later ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .file {
+    transition: grid-template-rows 360ms var(--p4-ease);
+  }
+
+  .fileInner {
+    transition: opacity 240ms var(--p4-ease) 120ms;
+  }
+
+  .file[data-open="false"] .fileInner {
+    opacity: 0;
+    transition-delay: 0s;
+    transition-duration: 160ms;
+  }
+
+  .toggleIcon {
+    transition: transform var(--p4-ui) var(--p4-ease);
+  }
+
+  @starting-style {
+    .file[data-open="true"] {
+      grid-template-rows: 0fr;
+    }
+
+    .file[data-open="true"] .fileInner {
+      opacity: 0;
+    }
+  }
+}

@@ -1,0 +1,637 @@
+/*
+ * 00 — Cover. Two compositions:
+ *   portrait  (max-width: 1099px) and (orientation: portrait): the film full-bleed
+ *             under the masthead, the H1 overlapping its foot, then deck + circle;
+ *   landscape everything else: the film from the column-5 line to the viewport
+ *             edge, the H1 crossing its dark left edge, a bottom row of deck,
+ *             circle and cover lines. Short landscape screens (phones) tighten it.
+ * Placements use `.cover > .x` so they always beat the frame's `> *` default.
+ */
+
+.cover {
+  isolation: isolate;
+  overflow: clip;
+  position: relative;
+  scroll-margin-top: 0;
+}
+
+/* ---------- Media: poster picture, the film over it, gradients over both ---------- */
+
+.media {
+  background: var(--p4-ink);
+  isolation: isolate;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+.media::after {
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.poster {
+  inset: 0;
+  position: absolute;
+}
+
+.posterImg,
+.film {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+}
+
+.film {
+  opacity: 0;
+  transition: opacity 240ms var(--p4-ease);
+}
+
+.film[data-state="playing"],
+.film[data-state="ended"] {
+  opacity: 1;
+}
+
+.film[data-orient="landscape"] {
+  object-position: 76% 42%;
+}
+
+.film[data-orient="portrait"] {
+  object-position: 50% 22%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film {
+    transition: none;
+  }
+}
+
+/* ---------- The frame's own columns, drawn over the film ---------- */
+
+.grid {
+  --line: rgb(245 244 239 / 8%);
+  background-image:
+    linear-gradient(90deg, var(--line) 0 1px, transparent 1px),
+    linear-gradient(
+      180deg,
+      transparent calc(100% / 3),
+      var(--line) 0 calc(100% / 3 + 1px),
+      transparent 0 calc(200% / 3),
+      var(--line) 0 calc(200% / 3 + 1px),
+      transparent 0
+    );
+  background-repeat: repeat-x, no-repeat;
+  /* One tile per column + gap, so each line falls on a column's left edge. */
+  background-size: calc((100% + var(--p4-gap)) / var(--p4-cols)) 100%, 100% 100%;
+  border-right: 1px solid var(--line);
+  bottom: 0;
+  /* As an absolutely placed grid item spanning 1 / -1, 0 is the frame's column edge. */
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: var(--p4-nav-h);
+  z-index: 1;
+}
+
+/* ---------- Issue line, motion controls ---------- */
+
+.issue {
+  align-items: center;
+  color: var(--p4-porcelain);
+  display: flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 10px;
+  letter-spacing: 0.16em;
+  line-height: 1.25;
+  min-height: 44px;
+  position: relative;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.diamond {
+  color: var(--p4-wash);
+  flex: none;
+  height: 8px;
+  width: 8px;
+}
+
+.controls {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 3;
+}
+
+.control {
+  align-items: center;
+  background: rgb(21 23 26 / 55%);
+  box-shadow: inset 0 0 0 1px rgb(245 244 239 / 64%);
+  color: var(--p4-porcelain);
+  display: inline-flex;
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 8px;
+  justify-content: center;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
+  text-transform: uppercase;
+  transition: background-color var(--p4-fast) var(--p4-ease), color var(--p4-fast) var(--p4-ease);
+}
+
+.control svg {
+  height: 16px;
+  width: 16px;
+}
+
+@media (hover: hover) {
+  .control:hover {
+    background: var(--p4-porcelain);
+    color: var(--p4-ink);
+  }
+}
+
+.control:focus-visible {
+  background: var(--p4-porcelain);
+  color: var(--p4-ink);
+}
+
+.controlLabel {
+  white-space: nowrap;
+}
+
+/* Phones: 44 × 44 icon buttons; the label stays for screen readers. */
+@media (max-width: 759px) {
+  .control {
+    padding: 0;
+    width: 44px;
+  }
+
+  .controlLabel {
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+/* ---------- H1: real text, a CSS-only word rise on first paint ---------- */
+
+.title {
+  color: var(--p4-porcelain);
+  font-size: clamp(52px, 16.4vw, 84px);
+  font-weight: 800;
+  letter-spacing: -0.075em;
+  line-height: 0.82;
+  position: relative;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.word {
+  display: block;
+}
+
+.wash {
+  color: var(--p4-wash);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .word {
+    animation: cover-word 600ms cubic-bezier(0.2, 0.75, 0.2, 1) 80ms backwards;
+  }
+
+  .word:nth-child(2) {
+    animation-delay: 170ms;
+  }
+
+  .word:nth-child(3) {
+    animation-delay: 260ms;
+  }
+}
+
+@keyframes cover-word {
+  from {
+    clip-path: inset(-0.15em -0.1em 100% -0.1em);
+    transform: translateY(0.35em);
+  }
+
+  to {
+    clip-path: inset(-0.15em -0.1em -0.15em -0.1em);
+    transform: none;
+  }
+}
+
+.deck {
+  color: var(--p4-porcelain);
+  font-size: 15px;
+  line-height: 1.5;
+  position: relative;
+  z-index: 3;
+}
+
+/* ---------- The circle: the one round control ---------- */
+
+.cta {
+  position: relative;
+  z-index: 5;
+}
+
+.circle {
+  --size: 104px;
+  align-items: center;
+  background: var(--p4-cobalt);
+  border-radius: 50%;
+  color: var(--p4-porcelain);
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 800;
+  gap: 4px;
+  height: var(--size);
+  justify-content: center;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-align: center;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+  transition: background-color 300ms var(--p4-ease), color 300ms var(--p4-ease), transform 300ms var(--p4-ease);
+  width: var(--size);
+}
+
+.circleText > span {
+  display: block;
+}
+
+.circleArrow {
+  height: 20px;
+  width: 20px;
+}
+
+.circle:focus-visible {
+  background: var(--p4-porcelain);
+  color: var(--p4-ink);
+  outline: 3px solid var(--p4-wash);
+  outline-offset: 4px;
+  transform: rotate(0) scale(1.04);
+}
+
+@media (hover: hover) {
+  .circle:hover {
+    background: var(--p4-porcelain);
+    color: var(--p4-ink);
+    transform: rotate(0) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle {
+    transition: background-color 300ms var(--p4-ease), color 300ms var(--p4-ease);
+  }
+
+  .circle:focus-visible,
+  .circle:hover {
+    transform: rotate(-8deg);
+  }
+}
+
+@media (min-width: 760px) {
+  .circle {
+    --size: 120px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .circle {
+    --size: 144px;
+    font-size: 14px;
+  }
+}
+
+/* ---------- Cover lines (tablet and desktop) ---------- */
+
+.lines {
+  display: none;
+  position: relative;
+  z-index: 3;
+}
+
+.lineItem + .lineItem {
+  border-top: 1px solid var(--p4-rule-dark);
+}
+
+.line {
+  align-content: center;
+  color: var(--p4-porcelain);
+  display: grid;
+  gap: 2px;
+  min-height: 48px;
+  padding-block: 6px;
+}
+
+.lineHead {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.lineNo,
+.lineDot {
+  color: var(--p4-wash);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.lineTitle {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  text-decoration-thickness: 1px;
+  text-transform: uppercase;
+  text-underline-offset: 4px;
+}
+
+.lineDek {
+  color: var(--p4-mist);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (hover: hover) {
+  .line:hover .lineTitle {
+    text-decoration-line: underline;
+  }
+}
+
+.line:focus-visible .lineTitle {
+  text-decoration-line: underline;
+}
+
+/* ================= Portrait: phones and tablets held upright ================= */
+
+@media (max-width: 1099px) and (orientation: portrait) {
+  .cover {
+    align-content: start;
+    grid-template-rows: 1fr auto auto auto;
+    min-height: 100svh;
+    padding-bottom: 32px;
+    padding-top: var(--p4-nav-h);
+  }
+
+  .cover > .media {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-inline: calc(-1 * var(--p4-margin));
+    min-height: min(133.33vw, 62svh);
+  }
+
+  .media::after {
+    background:
+      linear-gradient(180deg, rgb(21 23 26 / 55%) 0, transparent 22%),
+      linear-gradient(180deg, transparent 50%, rgb(21 23 26 / 72%) 78%, #15171a);
+  }
+
+  .posterImg {
+    object-position: 50% 22%;
+  }
+
+  /* Clear of the 44px Pause button at 320px: "Singapore edition" wraps rather than collide. */
+  .cover > .issue {
+    align-self: start;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: start;
+    margin-top: 8px;
+    max-width: calc(100% - 52px);
+  }
+
+  .cover > .controls {
+    align-self: start;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: end;
+    margin-top: 8px;
+  }
+
+  .cover > .title {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: -1.64em;
+  }
+
+  .cover > .deck {
+    align-self: start;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 20px;
+    max-width: calc(100% - 120px);
+  }
+
+  .cover > .cta {
+    align-self: start;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: end;
+    margin-top: 20px;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1099px) and (orientation: portrait) {
+  .cover > .media {
+    min-height: min(133.33vw, 60svh);
+  }
+
+  .cover > .title {
+    font-size: clamp(80px, 11vw, 112px);
+  }
+
+  .cover > .deck {
+    font-size: 16px;
+    grid-column: 1 / 6;
+    line-height: 1.55;
+    max-width: 34ch;
+  }
+
+  .cover > .cta {
+    grid-column: 6 / -1;
+  }
+
+  .cover > .lines {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: 32px;
+  }
+
+  .linesList {
+    display: grid;
+    gap: 0 var(--p4-gap);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lineItem,
+  .lineItem + .lineItem {
+    border-top: 1px solid var(--p4-rule-dark);
+  }
+}
+
+/* ================= Landscape: desktop, landscape tablets and phones ================= */
+
+@media (min-width: 1100px), (orientation: landscape) {
+  .cover {
+    /* The spacers give way (40 → 16, 56 → 24) before anything overflows on short laptops. */
+    grid-template-rows: minmax(16px, 40px) auto 1fr auto minmax(16px, 40px) auto minmax(24px, 56px);
+    height: 100svh;
+    max-height: 1040px;
+    min-height: 640px;
+    padding-top: var(--p4-nav-h);
+  }
+
+  .cover > .media {
+    grid-column: 5 / -1;
+    grid-row: 1 / -1;
+    margin-inline-end: calc(-1 * var(--p4-margin));
+  }
+
+  .media::after {
+    background:
+      linear-gradient(90deg, #15171a 0, rgb(21 23 26 / 0%) 22%),
+      linear-gradient(0deg, rgb(21 23 26 / 64%) 0, transparent 30%);
+  }
+
+  .posterImg {
+    object-position: 76% 42%;
+  }
+
+  .cover > .issue {
+    align-self: center;
+    grid-column: 1 / 5;
+    grid-row: 2;
+  }
+
+  .cover > .controls {
+    align-self: center;
+    grid-column: 9 / -1;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .cover > .title {
+    font-size: clamp(88px, 8.4vw, 136px);
+    grid-column: 1 / 8;
+    grid-row: 4;
+  }
+
+  .cover > .deck {
+    align-self: end;
+    font-size: 16px;
+    grid-column: 1 / 4;
+    grid-row: 6;
+    line-height: 1.55;
+    max-width: 34ch;
+  }
+
+  .cover > .cta {
+    align-self: end;
+    grid-column: 4 / 6;
+    grid-row: 6;
+    justify-self: center;
+  }
+
+  /* Over the film's darkest corner, on a solid-enough plate that mist text keeps 4.5:1 on any frame. */
+  .cover > .lines {
+    align-self: end;
+    background: rgb(21 23 26 / 80%);
+    display: block;
+    grid-column: 10 / -1;
+    grid-row: 6;
+    padding-inline: 16px;
+  }
+}
+
+/* Landscape below 1100px: the cover keeps an 8-column grid even on a 4-column phone. */
+@media (max-width: 1099px) and (orientation: landscape) {
+  .cover {
+    --p4-cols: 8;
+  }
+
+  .cover > .media {
+    grid-column: 4 / -1;
+  }
+
+  .cover > .issue {
+    grid-column: 1 / 5;
+  }
+
+  .cover > .controls {
+    grid-column: 5 / -1;
+  }
+
+  .cover > .title {
+    font-size: clamp(56px, 9vw, 96px);
+    grid-column: 1 / 6;
+  }
+
+  .cover > .deck {
+    grid-column: 1 / 4;
+  }
+
+  .cover > .cta {
+    grid-column: 4 / 6;
+  }
+
+  .cover > .lines {
+    grid-column: 6 / -1;
+  }
+}
+
+/* Short landscape (phones on their side): smaller type and circle, no deck or cover lines. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .cover {
+    grid-template-rows: 12px auto 1fr auto 16px auto 20px;
+    height: auto;
+    max-height: none;
+    min-height: 100svh;
+  }
+
+  .cover > .title {
+    font-size: clamp(40px, 11vh, 64px);
+  }
+
+  .cover > .deck,
+  .cover > .lines {
+    display: none;
+  }
+
+  .circle {
+    --size: 88px;
+    font-size: 12px;
+    gap: 2px;
+  }
+
+  .circleArrow {
+    height: 16px;
+    width: 16px;
+  }
+}

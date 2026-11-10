@@ -1,0 +1,180 @@
+/*
+ * The gift card face, 1.586:1, square corners, 1px ink edge, no gloss.
+ * One art file serves every size: the plates, band and type come from CSS
+ * and scale with the card (container units, 12px floor).
+ */
+
+.figure {
+  margin: 0;
+  position: relative;
+  width: 100%;
+}
+
+.card {
+  --face-ground: var(--p4-cobalt);
+  --face-text: var(--p4-porcelain);
+  --face-value: var(--p4-porcelain);
+  aspect-ratio: 1.586 / 1;
+  background: var(--face-ground);
+  border: 1px solid var(--p4-ink);
+  color: var(--face-text);
+  container-type: inline-size;
+  display: block;
+  font-family: var(--p4-font);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* Open Edition: porcelain on cobalt plates (6.24). */
+.cobalt {
+  --face-ground: var(--p4-cobalt);
+  --face-text: var(--p4-porcelain);
+  --face-value: var(--p4-porcelain);
+}
+
+/* First Proof: ink on porcelain plates (16.31); the value in cobalt (6.24). */
+.porcelain {
+  --face-ground: var(--p4-porcelain);
+  --face-text: var(--p4-ink);
+  --face-value: var(--p4-cobalt);
+}
+
+/* Late Edition: porcelain on ink plates (16.31); the value in wash (11.88). */
+.ink {
+  --face-ground: var(--p4-ink);
+  --face-text: var(--p4-porcelain);
+  --face-value: var(--p4-wash);
+}
+
+/* ---------- Layer 1: the plate, edge to edge ---------- */
+
+.art {
+  display: block;
+  inset: 0;
+  position: absolute;
+}
+
+.artImg {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* ---------- Layers 2 and 3: solid ground-colour plates ---------- */
+
+.plate {
+  background: var(--face-ground);
+  line-height: 1;
+  padding: max(6px, 1.8cqi) max(8px, 2.7cqi);
+  position: absolute;
+  top: 4.5cqi;
+  white-space: nowrap;
+}
+
+.wordmark {
+  font-size: max(12px, 4.4cqi);
+  font-weight: 800;
+  left: 4.5cqi;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+}
+
+.issue {
+  font-size: max(12px, 2.7cqi);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+  right: 4.5cqi;
+  text-transform: uppercase;
+}
+
+/* ---------- Layer 4: the bottom band, 34% of the height, hard edge ---------- */
+
+.band {
+  align-items: flex-end;
+  background: var(--face-ground);
+  bottom: 0;
+  display: flex;
+  gap: 3cqi;
+  height: 34%;
+  justify-content: space-between;
+  left: 0;
+  padding: 3cqi 4.5cqi;
+  position: absolute;
+  right: 0;
+}
+
+.lead {
+  display: grid;
+  gap: 1.2cqi;
+  min-width: 0;
+}
+
+.coverLine {
+  font-size: max(12px, 2.7cqi);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.value {
+  color: var(--face-value);
+  display: block;
+  font-size: max(24px, 10cqi);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.82;
+}
+
+.terms {
+  display: grid;
+  flex: none;
+  font-size: max(12px, 2.7cqi);
+  justify-items: end;
+  line-height: 1.25;
+  max-width: 50%;
+  text-align: right;
+}
+
+.kind {
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.validity {
+  font-weight: 500;
+}
+
+/* A small card (the phone spread stage) keeps only "Gift card"; the details list the terms. */
+@container (max-width: 300px) {
+  .validity {
+    display: none;
+  }
+}
+
+/* The value rolls in after the guest picks another one. */
+@media (prefers-reduced-motion: no-preference) {
+  .roll {
+    animation: face-roll 240ms var(--p4-ease) both;
+  }
+}
+
+@keyframes face-roll {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

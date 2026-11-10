@@ -1,0 +1,602 @@
+/* The arrival film. Copy sits in its own layers over static shade gradients:
+   no blend modes, filters or grain above the video. */
+
+.film {
+  --mx-bar: 0px;
+  background: var(--mx-walnut-950);
+  color: var(--mx-ivory-on-dark);
+  height: 340vh;
+  height: 340svh;
+  position: relative;
+}
+
+@media (max-width: 759px), (pointer: coarse) and (max-width: 1099px) and (orientation: portrait) {
+  .film {
+    height: 300vh;
+    height: 300svh;
+  }
+}
+
+.stage {
+  --mx-bar: calc(100lvh - 100svh);
+  background: var(--mx-walnut-950);
+  contain: layout paint;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+}
+
+.media,
+.picture,
+.picture img,
+.video,
+.shadeBase,
+.shadeSuite {
+  inset: 0;
+  position: absolute;
+}
+
+.picture img,
+.video {
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  width: 100%;
+}
+
+.video {
+  opacity: 0;
+  transition: opacity 240ms linear;
+}
+
+.film[data-film="ready"] .video {
+  opacity: 1;
+}
+
+/* ---------- Shades (legibility) ---------- */
+
+.shadeBase {
+  background:
+    radial-gradient(40% 50% at 100% 18%, rgb(18 12 8 / 45%), transparent 70%),
+    linear-gradient(180deg, rgb(18 12 8 / 50%), transparent 18%),
+    linear-gradient(0deg, rgb(18 12 8 / 55%), transparent 40%),
+    linear-gradient(90deg, rgb(18 12 8 / 72%) 0%, rgb(18 12 8 / 45%) 34%, transparent 62%);
+}
+
+.shadeSuite {
+  background:
+    linear-gradient(0deg, rgb(18 12 8 / 70%), transparent 46%),
+    linear-gradient(90deg, rgb(18 12 8 / 88%) 0%, rgb(18 12 8 / 74%) 36%, rgb(18 12 8 / 18%) 64%, transparent 78%);
+  opacity: 0;
+}
+
+.shadeFull {
+  opacity: 1;
+}
+
+/* ---------- Copy beats ---------- */
+
+.beat {
+  bottom: calc(var(--mx-bar) + clamp(120px, 15svh, 160px));
+  left: var(--mx-gutter);
+  max-width: 620px;
+  opacity: 0;
+  position: absolute;
+  text-shadow: 0 1px 24px rgb(0 0 0 / 28%);
+  z-index: 3;
+}
+
+.film[data-active="on"] .beat {
+  will-change: opacity, transform;
+}
+
+/* A keyboard user never lands on a half-faded control. */
+.beat:focus-within {
+  opacity: 1 !important;
+}
+
+.beatA {
+  opacity: 1;
+}
+
+.beatC {
+  max-width: 640px;
+}
+
+.h1 {
+  color: var(--mx-ivory-on-dark);
+  margin-bottom: 24px;
+  /* "The hour is yours." stays on one line at desktop sizes. */
+  max-width: 16ch;
+}
+
+.h2 {
+  font-family: var(--mx-display);
+  font-size: clamp(36px, 4.6vw, 68px);
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.02;
+  margin-bottom: 24px;
+  max-width: 16ch;
+}
+
+.reception {
+  font-family: var(--mx-display-italic);
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.2;
+  max-width: 22ch;
+}
+
+.lead {
+  color: rgb(243 235 221 / 88%);
+  font-size: clamp(17px, 1.25vw, 19px);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 44ch;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+}
+
+.chooseLink {
+  display: none;
+}
+
+/* ---------- House picker (beat C) ---------- */
+
+.picker {
+  margin-top: 28px;
+}
+
+.pickerLabel {
+  color: rgb(243 235 221 / 85%);
+  margin-bottom: 12px;
+}
+
+.pickerGrid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 316px));
+}
+
+.glass {
+  align-content: center;
+  background: rgb(18 12 8 / 55%);
+  border: 1px solid rgb(226 181 127 / 32%);
+  border-radius: var(--mx-r-xs);
+  color: var(--mx-ivory-on-dark);
+  display: grid;
+  gap: 2px;
+  min-height: 56px;
+  padding: 8px 14px;
+  text-align: left;
+  text-shadow: none;
+  transition: border-color var(--mx-ui) var(--mx-ease), background-color var(--mx-ui) var(--mx-ease);
+}
+
+.glassLabel {
+  color: var(--mx-glow-300);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.glassName {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glass:hover {
+    background: rgb(18 12 8 / 72%);
+    border-color: var(--mx-glow-300);
+  }
+}
+
+/* ---------- Desktop cover lines ---------- */
+
+.cover {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .cover {
+    color: rgb(243 235 221 / 88%);
+    display: block;
+    font-family: var(--mx-display);
+    font-size: 22px;
+    line-height: 1.45;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: var(--mx-gutter);
+    text-align: right;
+    text-shadow: 0 1px 24px rgb(0 0 0 / 28%);
+    top: calc(var(--mx-header) + 52px);
+    z-index: 2;
+  }
+
+  .cover::before {
+    background: var(--mx-brass-400);
+    content: "";
+    display: block;
+    height: 1px;
+    margin: 0 0 16px auto;
+    width: 48px;
+  }
+}
+
+/* ---------- Progress rail, chapters and skip ---------- */
+
+.rail {
+  bottom: calc(var(--mx-bar) + 48px);
+  /* The intro hint below drops out when the rail is too short to hold it. */
+  container: film-rail / inline-size;
+  height: 2px;
+  left: var(--mx-gutter);
+  /* Decorative: never takes taps meant for the controls above it. */
+  pointer-events: none;
+  position: absolute;
+  right: calc(var(--mx-gutter) + 176px);
+  z-index: 3;
+}
+
+.track {
+  background: var(--mx-line-dark);
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.fill {
+  background: var(--mx-brass-400);
+  inset: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* While the film is loading, a short segment breathes on the track. */
+.film:not([data-film="ready"]) .track::after {
+  animation: film-loading 1.6s ease-in-out infinite alternate;
+  background: rgb(243 235 221 / 60%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 48px;
+}
+
+@keyframes film-loading {
+  from { opacity: .3; }
+  to { opacity: .8; }
+}
+
+.chapters {
+  bottom: 14px;
+  height: 0;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 0;
+}
+
+.chapters li {
+  bottom: 0;
+  color: rgb(243 235 221 / 55%);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  line-height: 1.2;
+  position: absolute;
+  text-transform: uppercase;
+  transition: color var(--mx-ui) linear;
+  white-space: nowrap;
+}
+
+.chapters li::before {
+  background: var(--mx-brass-400);
+  content: "";
+  display: block;
+  height: 1px;
+  margin-bottom: 8px;
+  opacity: 0;
+  transition: opacity var(--mx-ui) linear;
+  width: 24px;
+}
+
+.chapters li[data-step="1"] { left: 3%; }
+.chapters li[data-step="2"] { left: 30%; }
+.chapters li[data-step="3"] { left: 80%; }
+
+.rail[data-chapter="1"] li[data-step="1"],
+.rail[data-chapter="2"] li[data-step="2"],
+.rail[data-chapter="3"] li[data-step="3"] {
+  color: var(--mx-ivory-on-dark);
+}
+
+.rail[data-chapter="1"] li[data-step="1"]::before,
+.rail[data-chapter="2"] li[data-step="2"]::before,
+.rail[data-chapter="3"] li[data-step="3"]::before {
+  opacity: 1;
+}
+
+.introHint {
+  display: none;
+}
+
+.rail[data-intro="on"] .introHint {
+  display: inline;
+}
+
+/* "01 Arrival · scroll to enter" needs about 27% of the rail before "02 Reception" begins at 30%. */
+@container film-rail (max-width: 979px) {
+  .rail[data-intro="on"] .introHint {
+    display: none;
+  }
+}
+
+.cue {
+  display: none;
+}
+
+.skip {
+  bottom: calc(var(--mx-bar) + 48px - 21px);
+  font-size: 12px;
+  letter-spacing: .16em;
+  position: absolute;
+  right: var(--mx-gutter);
+  z-index: 4;
+}
+
+/* ---------- Phones and portrait tablets ---------- */
+
+@media (max-width: 759px), (max-aspect-ratio: 4/5) {
+  .shadeBase {
+    background:
+      linear-gradient(180deg, rgb(18 12 8 / 50%), transparent 16%),
+      linear-gradient(0deg, rgb(18 12 8 / 86%) 0%, rgb(18 12 8 / 60%) 34%, transparent 62%);
+  }
+
+  .shadeSuite {
+    background: linear-gradient(0deg, rgb(18 12 8 / 94%) 0%, rgb(18 12 8 / 80%) 44%, transparent 72%);
+  }
+
+  .beat {
+    bottom: calc(var(--mx-bar) + 76px + env(safe-area-inset-bottom));
+    left: var(--mx-gutter);
+    max-width: 560px;
+    right: var(--mx-gutter);
+  }
+
+  .h1 {
+    font-size: clamp(42px, 11vw, 52px);
+  }
+
+  .h2 {
+    font-size: clamp(36px, 9.6vw, 44px);
+  }
+
+  .lead {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .beatA .actions,
+  .beatC .actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .bookBtn {
+    width: 100%;
+  }
+
+  .servicesLink {
+    display: none;
+  }
+
+  .picker {
+    margin-top: 16px;
+  }
+
+  .pickerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .glass {
+    min-height: 52px;
+  }
+
+  .glassName {
+    font-size: 14px;
+  }
+
+  .rail {
+    bottom: calc(var(--mx-bar) + 20px + env(safe-area-inset-bottom));
+    right: var(--mx-gutter);
+  }
+
+  .chapters {
+    display: none;
+  }
+
+  .cue {
+    align-items: center;
+    bottom: 12px;
+    color: rgb(243 235 221 / 85%);
+    display: flex;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 10px;
+    left: 0;
+    letter-spacing: .16em;
+    position: absolute;
+    text-transform: uppercase;
+  }
+
+  .cue i {
+    animation: film-cue 2.4s var(--mx-ease) infinite;
+    background: currentColor;
+    display: block;
+    height: 24px;
+    transform-origin: top center;
+    width: 1px;
+  }
+
+  .skip {
+    bottom: calc(var(--mx-bar) + 20px + env(safe-area-inset-bottom) + 4px);
+  }
+}
+
+@keyframes film-cue {
+  0% { transform: scaleY(0); }
+  50% { transform: scaleY(1); }
+  100% { transform: scaleY(0); transform-origin: bottom center; }
+}
+
+/* Short phones: keep the suite beat to its essentials. */
+@media (max-width: 759px) and (max-height: 700px) {
+  .suiteLead,
+  .picker {
+    display: none;
+  }
+
+  .chooseLink {
+    display: inline-flex;
+  }
+
+  .beatA .lead {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+/* Landscape phones: only the essentials fit under the header. */
+@media (max-height: 500px) and (pointer: coarse) {
+  .beat {
+    bottom: calc(var(--mx-bar) + 64px);
+    max-width: 70%;
+    right: auto;
+  }
+
+  .h1,
+  .h2 {
+    font-size: 34px;
+    margin-bottom: 16px;
+    max-width: none;
+  }
+
+  .lead,
+  .suiteLead,
+  .picker,
+  .chapters {
+    display: none;
+  }
+
+  .bookBtn {
+    min-height: 48px;
+    width: auto;
+  }
+
+  .beatA .actions,
+  .beatC .actions {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .chooseLink {
+    display: inline-flex;
+  }
+}
+
+/* Short desktop windows. */
+@media (min-width: 1100px) and (max-height: 760px) {
+  .beat {
+    bottom: calc(var(--mx-bar) + 104px);
+  }
+
+  .h1 {
+    font-size: clamp(40px, 4.6vw, 64px);
+  }
+
+  .h2 {
+    font-size: clamp(34px, 4vw, 52px);
+  }
+
+  .suiteLead {
+    display: none;
+  }
+}
+
+/* ---------- Static arrival (reduced motion, Save-Data, slow networks) ---------- */
+
+.static {
+  height: auto;
+}
+
+.panel {
+  min-height: max(560px, 100svh);
+  overflow: hidden;
+  position: relative;
+}
+
+.static .beat {
+  opacity: 1;
+  transform: none;
+}
+
+.static .skip {
+  bottom: 24px;
+}
+
+.interlude {
+  background: var(--mx-walnut-950);
+  padding: 96px var(--mx-gutter);
+  text-align: center;
+}
+
+.interlude .reception {
+  margin-inline: auto;
+}
+
+/* ---------- Sentinel ---------- */
+
+.sentinel {
+  height: 1px;
+  margin-top: -1px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue i,
+  .film:not([data-film="ready"]) .track::after {
+    animation: none;
+  }
+
+  .video,
+  .glass,
+  .chapters li,
+  .chapters li::before {
+    transition: none;
+  }
+}

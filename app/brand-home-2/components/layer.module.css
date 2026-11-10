@@ -1,0 +1,114 @@
+.root {
+  display: grid;
+  inset: 0;
+  position: fixed;
+}
+
+.fitting { z-index: 800; }
+.menu { z-index: 900; }
+
+.backdrop {
+  animation: layer-fade var(--at-ui) linear both;
+  background: var(--at-scrim);
+  inset: 0;
+  position: absolute;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------- Fitting room: bottom sheet on phones, centred stage + panel from tablet ---------- */
+
+.fitting {
+  align-items: end;
+}
+
+.fitting .panel {
+  animation: sheet-rise var(--at-sheet) var(--at-swing) both;
+  background: var(--at-chalk);
+  box-shadow: 0 -24px 80px rgb(30 18 20 / 35%);
+  color: var(--at-ink);
+  max-height: 94dvh;
+  width: 100%;
+}
+
+@media (min-width: 760px) {
+  .fitting {
+    align-items: center;
+    justify-items: center;
+    padding: 24px;
+  }
+
+  .fitting .panel {
+    animation: panel-in 280ms var(--at-ease) both;
+    box-shadow: 0 40px 120px rgb(30 18 20 / 40%);
+    height: min(820px, calc(100dvh - 48px));
+    max-height: none;
+    width: min(1120px, calc(100vw - 48px));
+  }
+}
+
+/* ---------- Menu sheet: drops from the top ---------- */
+
+.menu {
+  align-items: start;
+}
+
+.menu .panel {
+  animation: menu-drop var(--at-sheet) var(--at-swing) both;
+  background: var(--at-bordeaux);
+  color: var(--at-nude);
+  max-height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  width: 100%;
+}
+
+/* ---------- Closing ---------- */
+
+.root[data-state="closing"] .backdrop {
+  animation: layer-fade-out var(--at-sheet-out) linear both;
+}
+
+.fitting[data-state="closing"] .panel {
+  animation: sheet-fall var(--at-sheet-out) var(--at-ease) both;
+}
+
+.menu[data-state="closing"] .panel {
+  animation: menu-lift var(--at-sheet-out) var(--at-ease) both;
+}
+
+@media (min-width: 760px) {
+  .fitting[data-state="closing"] .panel {
+    animation: panel-out var(--at-sheet-out) var(--at-ease) both;
+  }
+}
+
+@keyframes layer-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes layer-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes sheet-rise { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes sheet-fall { from { transform: none; } to { transform: translateY(100%); } }
+@keyframes panel-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes panel-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(16px); } }
+@keyframes menu-drop { from { transform: translateY(-100%); } to { transform: none; } }
+@keyframes menu-lift { from { transform: none; } to { transform: translateY(-100%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .root .panel,
+  .root[data-state="closing"] .backdrop,
+  .root[data-state="closing"] .panel {
+    animation: layer-fade 120ms linear both;
+  }
+
+  .root[data-state="closing"] .panel,
+  .root[data-state="closing"] .backdrop {
+    animation-name: layer-fade-out;
+  }
+}

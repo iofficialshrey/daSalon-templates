@@ -780,12 +780,21 @@ body.s7-intro-lock { overflow: hidden; }
   line-height: 0.92;
 }
 
-.s7-motion-ready [data-s7-reveal] {
+.s7-motion-ready [data-s7-reveal],
+.s7-motion-ready .s7-commerce .bc-root > section {
   opacity: 0.92;
   transform: translateY(28px);
   transition: opacity 750ms var(--s7-ease), transform 750ms var(--s7-ease);
 }
-.s7-motion-ready [data-s7-reveal].is-in-view {
+.s7-motion-ready [data-s7-reveal].is-in-view,
+.s7-motion-ready .s7-commerce.is-in-view .bc-root > section {
+  opacity: 1;
+  transform: none;
+}
+/* BrandCommerce renders its position: fixed details dialog inside .s7-commerce, and a
+   transformed (or translucent) ancestor would trap it off-screen. Keep the wrapper still
+   and move the offer sections instead; the dialog is their sibling, not their child. */
+.s7-motion-ready .s7-commerce[data-s7-reveal] {
   opacity: 1;
   transform: none;
 }
@@ -1344,7 +1353,8 @@ body.s7-intro-lock { overflow: hidden; }
     transition: none !important;
   }
   .s7-hero-aperture { clip-path: none !important; }
-  .s7-motion-ready [data-s7-reveal] {
+  .s7-motion-ready [data-s7-reveal],
+  .s7-motion-ready .s7-commerce .bc-root > section {
     opacity: 1;
     transform: none;
   }

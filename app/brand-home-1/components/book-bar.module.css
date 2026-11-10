@@ -1,0 +1,126 @@
+/*
+ * Phone Book bar (under 760px only): walnut glass fixed to the bottom, sliding in
+ * once the film has passed and out again near the closing band and footer.
+ */
+
+.bar {
+  display: none;
+}
+
+@media (max-width: 759px) {
+  .bar {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    background: rgb(28 19 13 / 96%); /* --mx-walnut-900 at 96% */
+    border-top: 1px solid rgb(243 235 221 / 12%); /* --mx-ivory-on-dark at 12% */
+    bottom: 0;
+    color: var(--mx-ivory-on-dark);
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    left: 0;
+    /* 1px line + 9px + 44px content + 10px = 64px, plus the home-indicator inset. */
+    padding:
+      9px
+      max(var(--mx-gutter), env(safe-area-inset-right))
+      calc(10px + env(safe-area-inset-bottom))
+      max(var(--mx-gutter), env(safe-area-inset-left));
+    position: fixed;
+    right: 0;
+    transform: translateY(100%);
+    transition:
+      transform var(--mx-ui) var(--mx-ease),
+      visibility 0s linear var(--mx-ui);
+    visibility: hidden;
+    z-index: 60;
+  }
+
+  .bar[data-state="shown"] {
+    transform: none;
+    transition:
+      transform var(--mx-ui) var(--mx-ease),
+      visibility 0s linear 0s;
+    visibility: visible;
+  }
+}
+
+.bar[data-state] :focus-visible {
+  outline-color: var(--mx-glow-300);
+}
+
+.chooser {
+  align-content: center;
+  background: none;
+  border: 0;
+  color: inherit;
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  min-width: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.chooserTitle {
+  font-family: var(--mx-text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chooserLine {
+  color: var(--mx-muted-on-dark);
+  font-size: 12px;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar .book {
+  min-height: 44px;
+  padding: 0 22px;
+}
+
+/* ---------- House chooser (bottom sheet) ---------- */
+
+.sheet {
+  padding: 20px max(var(--mx-gutter), env(safe-area-inset-right)) 24px max(var(--mx-gutter), env(safe-area-inset-left));
+}
+
+.option {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.option .optionStatus {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.optionSkeleton {
+  height: 14px;
+  margin-top: 6px;
+  width: 120px;
+}
+
+/* Long house names wrap rather than overflow on narrow phones. */
+.chooserBook.chooserBook {
+  line-height: 1.3;
+  padding-block: 12px;
+  padding-inline: 20px;
+  text-align: center;
+  white-space: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .bar[data-state="shown"] {
+    transition: none;
+  }
+}

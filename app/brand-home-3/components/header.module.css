@@ -1,0 +1,216 @@
+/*
+ * The fixed header (spec §4.0). Film state: transparent, paper-soft text over
+ * the film's top shade, Book outlined. Solid state (data-solid="true", once
+ * #film-end has passed under it): 97% paper-soft, a 1px line, ink text, Book
+ * filled. Only colours change, over 240ms; nothing moves and the nav never fades.
+ * Phone: mark | Book, menu. Tablet: + "Book a ritual". Desktop: mark | nav | Book.
+ * The header sets its own --tone-* values (not data-tone, which paints a ground).
+ */
+
+.header {
+  --tone-text: var(--sr-paper-soft);
+  --tone-muted: var(--sr-paper-soft);
+  --tone-label: var(--sr-paper-soft);
+  --tone-control: var(--sr-paper-soft);
+  --tone-line: rgb(247 244 236 / 32%);
+  --tone-link: var(--sr-paper-soft);
+  --focus: var(--sr-paper-soft);
+  align-items: center;
+  background-color: rgb(247 244 236 / 0%);
+  border-bottom: 1px solid rgb(32 49 44 / 0%);
+  color: var(--tone-text);
+  column-gap: var(--sr-gap);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  height: var(--sr-header);
+  inset: 0 0 auto;
+  padding-inline: var(--sr-margin);
+  position: fixed;
+  transition:
+    background-color var(--sr-ui) var(--sr-ease),
+    border-color var(--sr-ui) var(--sr-ease),
+    color var(--sr-ui) var(--sr-ease);
+  z-index: var(--sr-z-header);
+}
+
+.header[data-solid="true"] {
+  --tone-text: var(--sr-ink);
+  --tone-muted: var(--sr-ink-soft);
+  --tone-label: var(--sr-sage-ink);
+  --tone-control: var(--sr-control);
+  --tone-line: var(--sr-line);
+  --tone-link: var(--sr-sage-ink);
+  --focus: var(--sr-sage-ink);
+  background-color: rgb(247 244 236 / 97%);
+  border-bottom-color: var(--sr-line);
+}
+
+/* ---------- The mark: the "S" circle and "Serein House" (also used by the menu sheet and footer) ---------- */
+
+.mark {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  gap: 8px;
+  grid-column: 1;
+  justify-self: start;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.symbol {
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: inline-flex;
+  flex: none;
+  font-family: var(--sr-display);
+  font-size: 18px;
+  font-weight: 400;
+  height: 32px;
+  justify-content: center;
+  line-height: 1;
+  width: 32px;
+}
+
+.wordmark {
+  font-size: var(--sr-fs-wordmark);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (min-width: 760px) {
+  .mark {
+    gap: 12px;
+  }
+}
+
+/* ---------- Primary nav (1100px and up) ---------- */
+
+.nav {
+  display: none;
+  grid-column: 2;
+}
+
+.navList {
+  display: flex;
+  gap: 28px;
+}
+
+.navLink {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  min-height: 44px;
+  position: relative;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* The underline grows from the left on hover and focus. */
+.navLink::after {
+  background: currentColor;
+  bottom: 10px;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 350ms var(--sr-ease);
+}
+
+@media (hover: hover) {
+  .navLink:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+.navLink:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@media (min-width: 1100px) {
+  .nav {
+    display: block;
+  }
+}
+
+/* ---------- Book and the menu button ---------- */
+
+.actions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  grid-column: 3;
+  justify-self: end;
+}
+
+.book {
+  white-space: nowrap;
+}
+
+/* Two 18px lines in a 44px circle with a 1px tone-control edge. */
+.actions .menuButton {
+  transition:
+    background-color var(--sr-fast) var(--sr-ease),
+    border-color var(--sr-ui) var(--sr-ease),
+    color var(--sr-ui) var(--sr-ease);
+}
+
+.actions .menuButton svg {
+  height: 24px;
+  width: 24px;
+}
+
+@media (hover: hover) {
+  .header[data-solid="false"] .menuButton:hover {
+    background: rgb(247 244 236 / 12%);
+  }
+}
+
+.header[data-solid="false"] .menuButton:focus-visible {
+  background: rgb(247 244 236 / 12%);
+}
+
+@media (min-width: 1100px) {
+  .actions .menuButton {
+    display: none;
+  }
+}
+
+/* The narrowest phones: the arrow gives way so the wordmark, Book and the menu button share 288px.
+   While a tap waits, the breathing ring still shows. */
+@media (max-width: 359px) {
+  .book > svg {
+    display: none;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .actions .menuButton {
+    transition: none;
+  }
+
+  .navLink::after {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .header,
+  .header[data-solid="true"] {
+    background-color: Canvas;
+    border-bottom-color: CanvasText;
+    color: CanvasText;
+  }
+
+  .navLink::after {
+    background: CanvasText;
+  }
+}

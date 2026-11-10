@@ -1,0 +1,245 @@
+/*
+ * The ateliers: four cards, each a photograph of the house and its facts.
+ * Phones: a swipeable rail. Tablet: two by two. Desktop: one row of four.
+ */
+
+.section {
+  overflow: clip;
+}
+
+.live {
+  display: block;
+  min-width: 0;
+}
+
+.list {
+  display: grid;
+  gap: 16px;
+  grid-auto-columns: min(82vw, 360px);
+  grid-auto-flow: column;
+  margin: 0 calc(var(--at-gutter) * -1);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0 var(--at-gutter) 8px;
+  scroll-padding-inline: var(--at-gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.media {
+  aspect-ratio: 4 / 5;
+  background: var(--at-stone);
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1400ms var(--at-ease);
+  width: 100%;
+}
+
+/* A hairline frame inside the photograph, and its number. */
+.media::after {
+  border: 1px solid rgb(247 240 228 / 38%);
+  content: "";
+  inset: 12px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.no {
+  color: var(--at-ivory);
+  font-family: var(--at-serif);
+  font-size: 15px;
+  font-variant-numeric: lining-nums;
+  left: 24px;
+  line-height: 1;
+  position: absolute;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 45%);
+  top: 24px;
+}
+
+.extra .media {
+  background: var(--at-noir-2);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.card .body {
+  padding-top: 22px;
+}
+
+.trade {
+  color: var(--at-bronze);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.name {
+  font-family: var(--at-serif);
+  font-size: clamp(28px, 2.4vw, 34px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-top: 12px;
+}
+
+.nameLink {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  padding-bottom: 2px;
+  transition: background-size 600ms var(--at-ease);
+}
+
+.address {
+  color: var(--at-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+.status {
+  align-items: center;
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
+  line-height: 1.4;
+  margin-top: 14px;
+}
+
+.statusDot {
+  color: #5d7a4f;
+}
+
+.meta {
+  color: var(--at-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.4;
+  margin-top: 4px;
+  min-height: 18px;
+}
+
+.metaPlaceholder {
+  background: color-mix(in srgb, var(--at-ink) 8%, transparent);
+  display: inline-block;
+  height: 12px;
+  width: 140px;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.footnote {
+  color: var(--at-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 40px;
+}
+
+/* ---------- Tablet: two by two ---------- */
+
+@media (min-width: 760px) {
+  .list {
+    gap: 56px 24px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+}
+
+/* ---------- Desktop: one row, the second and fourth set a little lower ---------- */
+
+@media (min-width: 1100px) {
+  .list {
+    align-items: start;
+    gap: 24px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .card:nth-child(even) {
+    margin-top: 64px;
+  }
+}
+
+/* ---------- Hover and motion ---------- */
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .nameLink {
+    background-size: 100% 1px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card:hover .img {
+    transform: scale(1.05);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (min-width: 760px) and (prefers-reduced-motion: no-preference) {
+    .media {
+      animation: ateliers-reveal linear both;
+      animation-range: entry 0% cover 35%;
+      animation-timeline: view();
+    }
+
+    .card .body {
+      animation: ateliers-rise linear both;
+      animation-range: entry 10% cover 30%;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes ateliers-reveal {
+  from {
+    clip-path: inset(14% 0 0 0);
+  }
+}
+
+@keyframes ateliers-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img,
+  .nameLink {
+    transition: none;
+  }
+}
