@@ -1,0 +1,167 @@
+/*
+ * 05 · Places (spec §4.5). Square cards on paper: a 3:4 sky, a number badge,
+ * the facts, then Book / See the menu / Directions.
+ * Phones: a scroll-snap track (82vw cards, max 320px; the next card peeks).
+ * 760–1199: 2×2, the right column 64px lower. 1200+: four 3/12 columns,
+ * cards 2 and 4 80px lower. Two equal columns with the frame's gap sit exactly
+ * on the 8- and 12-column lines.
+ */
+
+/* ---------- Track ---------- */
+
+.track {
+  display: flex;
+  gap: var(--sr-gap);
+  /* Bleed to the viewport edges so cards scroll edge to edge; the gutter comes back as padding. */
+  margin-inline: calc(-1 * var(--sr-gutter));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* Room below for the buttons' focus rings (a scroller clips both axes). */
+  padding: 0 var(--sr-gutter) 8px;
+  scroll-padding-inline: var(--sr-gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  display: flex;
+  flex: 0 0 82vw;
+  flex-direction: column;
+  max-width: 320px;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* Reveals ride the page's view timeline; inside the horizontal track that timeline is the track's, so none on phones. */
+@media (max-width: 759px) {
+  .track > article.card {
+    animation: none;
+  }
+}
+
+/* ---------- Media ---------- */
+
+.media {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  position: relative;
+}
+
+.art {
+  display: block;
+  height: 100%;
+  transition: scale 1.2s var(--sr-ease);
+  width: 100%;
+}
+
+.img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* "01": a 40px paper-soft circle, ink caps, inset 16px. */
+.media > .badge {
+  align-items: center;
+  background: var(--sr-paper-soft);
+  border-radius: 50%;
+  color: var(--sr-ink);
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  left: 16px;
+  position: absolute;
+  /* The caps tracking trails the last digit; indent by the same amount to centre the pair. */
+  text-indent: 0.14em;
+  top: 16px;
+  width: 40px;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card:hover .art,
+  .card:has(:focus-visible) .art {
+    scale: 1.035;
+  }
+}
+
+/* ---------- Body ---------- */
+
+.body {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding-top: 24px;
+}
+
+.name {
+  overflow-wrap: break-word;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 24px;
+}
+
+/* ---------- Carousel controls (phones only) ---------- */
+
+.controls {
+  margin-top: 24px;
+}
+
+/* ---------- Tablet: 2×2, the right column lower ---------- */
+
+@media (min-width: 760px) {
+  .track {
+    align-items: start;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-inline: 0;
+    overflow: visible;
+    padding: 0;
+    row-gap: var(--sr-stack);
+    scroll-snap-type: none;
+  }
+
+  .card {
+    max-width: none;
+  }
+
+  .card:nth-child(even) {
+    margin-top: 64px;
+  }
+
+  div.controls {
+    display: none;
+  }
+}
+
+/* ---------- Desktop: four staggered columns ---------- */
+
+@media (min-width: 1200px) {
+  .track {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .card:nth-child(even) {
+    margin-top: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .media > .badge {
+    forced-color-adjust: none;
+  }
+}

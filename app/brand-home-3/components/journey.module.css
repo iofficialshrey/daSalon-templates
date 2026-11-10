@@ -1,0 +1,274 @@
+/*
+ * Journey (spec §4.4). Phone: the sky on top at 1:1, full bleed. Tablet: 3:2.
+ * Desktop: a split; the sky runs from the viewport's left edge to the end of
+ * grid column 6 (50% − half a gap), the mist panel spans columns 8–12.
+ */
+
+.journey {
+  position: relative;
+}
+
+/* ---------- The sky and the giant word (decorative) ---------- */
+
+.visual {
+  aspect-ratio: 1 / 1;
+  justify-self: stretch;
+  /* Below 1100 the margin is always the gutter, so the bleed is exact. */
+  margin-inline: calc(-1 * var(--sr-margin));
+  overflow: hidden;
+  position: relative;
+}
+
+.art {
+  height: 100%;
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  transition: opacity var(--sr-cross) var(--sr-ease);
+  width: 100%;
+}
+
+.artImg {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.veil {
+  background: linear-gradient(0deg, rgb(32 49 44 / 58%) 0, rgb(32 49 44 / 54%) 30%, rgb(32 49 44 / 0) 62%);
+  inset: 0;
+  position: absolute;
+}
+
+/* Bottom-left at the page margin, 48px up. */
+.words {
+  bottom: 48px;
+  left: var(--sr-gutter);
+  position: absolute;
+}
+
+.word {
+  bottom: 0;
+  color: var(--sr-paper-soft);
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  transition: opacity var(--sr-cross) var(--sr-ease);
+  white-space: nowrap;
+}
+
+.active {
+  opacity: 1;
+}
+
+/* ---------- Content ---------- */
+
+.content {
+  min-width: 0;
+  padding-block: var(--sr-section);
+}
+
+.head {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+/* Need radios: one Tab stop, arrow keys move and select. */
+.needs {
+  margin-top: var(--sr-stack);
+}
+
+.need {
+  align-items: center;
+  column-gap: 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 56px;
+}
+
+.need + .need {
+  border-top: 1px solid var(--sr-line);
+}
+
+.needLabel {
+  font-size: 19px;
+  line-height: 1.3;
+  transition:
+    color var(--sr-ui) var(--sr-ease),
+    translate var(--sr-ui) var(--sr-ease);
+}
+
+.need:has(input:checked) .needLabel {
+  color: var(--sr-clay-deep);
+  translate: 12px 0;
+}
+
+/* A 14px ring; checked, a 3px clay-deep ring around a clay-deep dot. */
+.radio {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--sr-control);
+  border-radius: 50%;
+  cursor: pointer;
+  height: 14px;
+  margin: 0;
+  width: 14px;
+}
+
+.radio:checked {
+  background: var(--sr-clay-deep);
+  border: 3px solid var(--sr-clay-deep);
+  box-shadow: inset 0 0 0 2px var(--tone-bg);
+}
+
+/* The ring is small: its focus outline moves to the whole row. */
+.radio:focus-visible {
+  outline: none;
+}
+
+.need:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------- Recommendation (keeps its height, so changing the need never jumps) ---------- */
+
+.recommend {
+  align-content: start;
+  border-top: 1px solid var(--sr-line);
+  display: grid;
+  justify-items: start;
+  margin-top: var(--sr-stack);
+  min-height: 420px;
+  padding-top: 24px;
+}
+
+.title {
+  margin-top: 12px;
+}
+
+.meta {
+  margin-top: 6px;
+}
+
+.skelMeta {
+  height: 14px;
+  width: 96px;
+}
+
+.note {
+  margin-top: 16px;
+}
+
+.book {
+  margin-top: 24px;
+}
+
+.alt {
+  border-top: 1px solid var(--sr-line);
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
+  width: 100%;
+}
+
+.altRow {
+  align-items: center;
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.altText {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.altName {
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.altBook {
+  min-width: 64px;
+}
+
+.see {
+  margin-top: 16px;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (min-width: 760px) {
+  .visual {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* ---------- Desktop: the split ---------- */
+
+@media (min-width: 1100px) {
+  .journey {
+    min-height: max(640px, min(calc(100svh - var(--sr-header)), 880px));
+  }
+
+  /*
+   * % here is the section's width: the sky ends at column 6's end (50% − half a gap).
+   * grid-column: auto, or the grid area (not the padding box) would be its containing block.
+   */
+  .journey > .visual {
+    aspect-ratio: auto;
+    grid-column: auto;
+    grid-row: auto;
+    inset-block: 0;
+    inset-inline-start: 0;
+    margin: 0;
+    position: absolute;
+    width: calc(50% - var(--sr-gap) / 2);
+  }
+
+  /* % here is the sky's width (V): the page margin is max(gutter, V + gap/2 − max/2). */
+  .words {
+    left: max(var(--sr-gutter), calc(100% + var(--sr-gap) / 2 - var(--sr-max) / 2));
+  }
+
+  .journey > .content {
+    align-self: center;
+    grid-column: 8 / 13;
+  }
+
+  .recommend {
+    min-height: 360px;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .art,
+  .word,
+  .needLabel {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .veil {
+    display: none;
+  }
+
+  .radio {
+    border-color: CanvasText;
+  }
+
+  .radio:checked {
+    background: CanvasText;
+    border-color: CanvasText;
+    box-shadow: inset 0 0 0 2px Canvas;
+    forced-color-adjust: none;
+  }
+}

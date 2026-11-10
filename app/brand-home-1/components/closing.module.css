@@ -1,0 +1,121 @@
+/* Closing band: the film's last frame, the suite shade at full strength, copy bottom-left. */
+
+/* Element-qualified so it outranks ui.section's padding regardless of stylesheet order. */
+section.closing {
+  align-items: end;
+  background: var(--mx-walnut-950);
+  color: var(--mx-ivory-on-dark);
+  display: grid;
+  isolation: isolate;
+  min-height: max(560px, 88vh);
+  min-height: max(560px, 88svh);
+  overflow: clip;
+  padding-block: 0;
+  position: relative;
+}
+
+.media {
+  display: block;
+  inset: 0;
+  position: absolute;
+  transform-origin: 50% 60%;
+}
+
+.image {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  width: 100%;
+}
+
+/* Landscape: the hero's desktop suite shade, at full strength. */
+.shade {
+  background:
+    linear-gradient(90deg, rgb(18 12 8 / 88%) 0%, rgb(18 12 8 / 74%) 36%, rgb(18 12 8 / 18%) 64%, transparent 78%),
+    linear-gradient(0deg, rgb(18 12 8 / 70%), transparent 46%);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Phones and portrait screens get the portrait still, so they get the portrait shade too. */
+@media (max-width: 759px), (max-aspect-ratio: 4/5) {
+  .shade {
+    background: linear-gradient(0deg, rgb(18 12 8 / 94%) 0%, rgb(18 12 8 / 80%) 44%, transparent 72%);
+  }
+}
+
+.inner {
+  padding-bottom: calc(56px + env(safe-area-inset-bottom));
+  padding-top: calc(var(--mx-header) + 48px);
+  position: relative;
+  width: 100%;
+}
+
+.copy {
+  max-width: 620px;
+  text-shadow: 0 1px 24px rgb(0 0 0 / 28%);
+}
+
+.title {
+  color: var(--mx-ivory-on-dark);
+  font-family: var(--mx-display);
+  font-size: clamp(36px, 4.6vw, 68px);
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.02;
+  margin-top: 20px;
+  max-width: 16ch;
+}
+
+.lead {
+  color: rgb(243 235 221 / 88%);
+  font-size: clamp(17px, 1.25vw, 19px);
+  line-height: 1.65;
+  margin-top: 24px;
+  max-width: 44ch;
+}
+
+/* Phone: the primary is full width at 56px, the gift link sits on its own 44px row. */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+  text-shadow: none;
+}
+
+.book {
+  width: 100%;
+}
+
+.gift {
+  align-self: flex-start;
+}
+
+@media (min-width: 760px) {
+  section.closing {
+    min-height: max(600px, min(100vh, 880px));
+    min-height: max(600px, min(100svh, 880px));
+  }
+
+  .inner {
+    padding-bottom: 112px;
+  }
+
+  .actions {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+  }
+
+  .book {
+    width: auto;
+  }
+
+  .gift {
+    align-self: auto;
+  }
+}

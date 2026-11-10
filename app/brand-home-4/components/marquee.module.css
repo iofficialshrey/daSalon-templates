@@ -1,0 +1,246 @@
+/*
+ * Marquees. A static wrapper carries the rotation; inside it an aria-hidden
+ * window clips a track of two identical halves that slides −50 %. Each half ends
+ * with its own trailing gap, so the seam is invisible at any size.
+ */
+
+.band {
+  position: relative;
+}
+
+.window {
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+}
+
+.half {
+  align-items: center;
+  display: flex;
+  flex: none;
+  white-space: nowrap;
+}
+
+.diamond {
+  flex: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+  }
+
+  .trackTwo {
+    animation-direction: reverse;
+  }
+}
+
+/* Off-screen (set by the provider) and the global Pause motion. */
+.band[data-run="false"] .track,
+:global(html[data-p4-motion="paused"]) .track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- The shared 44 × 44 toggle ---------- */
+
+.toggle {
+  align-items: center;
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  transition: background-color var(--p4-fast) var(--p4-ease), color var(--p4-fast) var(--p4-ease);
+  width: 44px;
+}
+
+.toggle svg {
+  height: 18px;
+  width: 18px;
+}
+
+/* ---------- Ticker: cobalt, −1.5deg, directly under the cover ---------- */
+
+.ticker {
+  margin-block: -8px;
+  padding-block: 12px;
+  transform: rotate(-1.5deg) scale(1.02);
+  z-index: 2;
+}
+
+.tickerTrack {
+  --marquee-duration: 40s;
+}
+
+.ticker .half {
+  font-size: 13px;
+  font-weight: 800;
+  gap: 32px;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  padding-inline-end: 32px;
+  text-transform: uppercase;
+}
+
+.ticker .diamond {
+  color: var(--p4-wash);
+  height: 8px;
+  width: 8px;
+}
+
+.tickerToggle {
+  background: var(--p4-cobalt);
+  box-shadow: inset 0 0 0 1px var(--p4-wash-2);
+  color: var(--p4-porcelain);
+  position: absolute;
+  right: var(--p4-margin);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* The phrases fade out just before they pass under the toggle. */
+.tickerToggle::before {
+  background: linear-gradient(90deg, rgb(36 89 166 / 0%), var(--p4-cobalt));
+  bottom: 0;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: 32px;
+}
+
+@media (hover: hover) {
+  .tickerToggle:hover {
+    background: var(--p4-porcelain);
+    color: var(--p4-ink);
+  }
+}
+
+@media (min-width: 760px) {
+  .ticker {
+    padding-block: 16px;
+  }
+
+  .ticker .half {
+    font-size: 14px;
+  }
+}
+
+/* ---------- Interlude: two huge bands between rules ---------- */
+
+.interlude {
+  border-block: 1px solid var(--p4-ink);
+  overflow: clip;
+  padding-block: 40px;
+}
+
+.bandOne,
+.bandTwo {
+  position: relative;
+  z-index: 2;
+}
+
+.bandOne {
+  transform: rotate(-1.6deg);
+}
+
+/* The bands tilt toward each other at the left edge (and band 2 dips at the right), so the
+   gaps grow with the viewport: about 3vw of convergence at the widest screens. */
+.bandTwo {
+  margin-top: max(24px, 3.4vw);
+  transform: rotate(1.8deg) scale(1.02);
+}
+
+.bandOne .window {
+  padding-block: 0.08em;
+}
+
+.bandTwo .window {
+  padding-block: 0.16em;
+}
+
+.interlude .half {
+  gap: 0.42em;
+  padding-inline-end: 0.42em;
+}
+
+.interlude .diamond {
+  height: 0.3em;
+  width: 0.3em;
+}
+
+/* Ink on porcelain (never wash: 1.37:1). */
+.bandOne .diamond {
+  color: var(--p4-ink);
+}
+
+/* Wash on cobalt is display-size only (4.55:1): these words are 48px and up. */
+.bandTwo .diamond,
+.washWord {
+  color: var(--p4-wash);
+}
+
+.trackOne {
+  --marquee-duration: 36s;
+}
+
+.trackTwo {
+  --marquee-duration: 28s;
+}
+
+.interludeFoot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: max(24px, 2.4vw);
+  padding-inline: var(--p4-margin);
+  position: relative;
+  z-index: 2;
+}
+
+.interludeToggle {
+  box-shadow: inset 0 0 0 1px var(--p4-control);
+  color: var(--p4-ink);
+}
+
+@media (hover: hover) {
+  .interludeToggle:hover {
+    background: var(--p4-ink);
+    color: var(--p4-porcelain);
+  }
+}
+
+@media (min-width: 760px) {
+  .interlude {
+    padding-block: 48px;
+  }
+
+  .trackOne {
+    --marquee-duration: 52s;
+  }
+
+  .trackTwo {
+    --marquee-duration: 40s;
+  }
+}
+
+@media (min-width: 1100px) {
+  .interlude {
+    padding-block: 64px;
+  }
+
+  .trackOne {
+    --marquee-duration: 72s;
+  }
+
+  .trackTwo {
+    --marquee-duration: 56s;
+  }
+}

@@ -1,0 +1,467 @@
+/*
+ * The houses. Phones: a swipeable rail of arch cards. Tablet: two columns of cards.
+ * Desktop: a sticky arch on the left holds the current house's room while the four
+ * houses pass on the right (houses-live.tsx keeps the two in step).
+ */
+
+.root {
+  isolation: isolate;
+}
+
+/* Jumps land the section right under the header, so the end of the film never peeks through. */
+.root.root {
+  scroll-margin-top: var(--mx-header);
+}
+
+/* ---------- List: phones, a rail of arch cards ---------- */
+
+.list {
+  display: grid;
+  gap: 16px;
+  grid-auto-columns: min(82vw, 360px);
+  grid-auto-flow: column;
+  list-style: none;
+  margin: 0 calc(var(--mx-gutter) * -1);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0 var(--mx-gutter) 8px;
+  scroll-padding-inline: var(--mx-gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+  scroll-snap-align: start;
+}
+
+/* The arch from the film's mirrors, on a limestone placeholder. */
+.media {
+  aspect-ratio: 4 / 5;
+  background: var(--mx-limestone-200);
+  border-radius: var(--mx-r-arch);
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.media::after {
+  border: 1px solid rgb(247 242 234 / 42%);
+  border-radius: var(--mx-r-arch);
+  content: "";
+  inset: 10px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.mediaImg {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1200ms var(--mx-ease);
+  width: 100%;
+}
+
+.body {
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 20px;
+}
+
+.kind {
+  align-items: baseline;
+  color: var(--mx-muted);
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 12px;
+  line-height: 1.4;
+}
+
+.no {
+  color: var(--mx-bronze-600);
+  font-family: var(--mx-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.name {
+  font-family: var(--mx-display);
+  font-size: clamp(34px, 9vw, 40px);
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.02;
+  margin: 10px 0 12px;
+  max-width: 100%;
+}
+
+/* The name opens the house sheet; on phones and tablets it also covers the photograph. */
+.open {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-block;
+  font: inherit;
+  letter-spacing: inherit;
+  margin: -6px 0;
+  max-width: 100%;
+  padding: 6px 0;
+  text-align: left;
+}
+
+.open::after {
+  aspect-ratio: 4 / 5;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.nameText {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  padding-bottom: 2px;
+  transition: background-size 500ms var(--mx-ease);
+}
+
+.blurb {
+  color: var(--mx-muted);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+.facts {
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  width: 100%;
+}
+
+.where {
+  align-items: flex-start;
+  display: flex;
+  font-size: 14px;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.where svg {
+  color: var(--mx-bronze-600);
+  flex: none;
+  margin-top: 2px;
+}
+
+.area {
+  color: var(--mx-ink);
+  display: block;
+  font-weight: 600;
+}
+
+.address {
+  color: var(--mx-muted);
+  display: block;
+}
+
+.note {
+  color: var(--mx-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  padding-left: 26px;
+}
+
+.facts .status {
+  font-size: 14px;
+}
+
+.meta {
+  align-items: center;
+  display: flex;
+  min-height: 19px;
+}
+
+.metaSkeleton {
+  height: 14px;
+  width: 120px;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  margin-top: auto;
+  padding-top: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Desktop arch (hidden below 1100px) ---------- */
+
+.aside {
+  display: none;
+}
+
+/* ---------- Footnote ---------- */
+
+.footnote {
+  color: var(--mx-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 32px;
+}
+
+/* ---------- Tablet: two columns ---------- */
+
+@media (min-width: 760px) {
+  .list {
+    gap: 64px 24px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+
+  .name {
+    font-size: clamp(36px, 4.4vw, 48px);
+  }
+}
+
+/* ---------- Desktop: the sticky arch and the passing houses ---------- */
+
+@media (min-width: 1100px) {
+  .stage {
+    align-items: start;
+    column-gap: clamp(56px, 7vw, 128px);
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+
+  .aside {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: calc(100vh - var(--mx-header) - 64px);
+    max-height: 860px;
+    min-height: 520px;
+    position: sticky;
+    top: calc(var(--mx-header) + 32px);
+  }
+
+  .arch {
+    background: var(--mx-limestone-200);
+    border-radius: var(--mx-r-arch);
+    flex: 1;
+    isolation: isolate;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .archFrame {
+    inset: 0;
+    position: absolute;
+    visibility: hidden;
+    z-index: 1;
+  }
+
+  .archFrame[data-previous] {
+    visibility: visible;
+    z-index: 2;
+  }
+
+  .archFrame[data-current] {
+    visibility: visible;
+    z-index: 3;
+  }
+
+  .archImg {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  /* A hairline arch inside the frame, like the bronze mirrors in the film. */
+  .archLine {
+    border: 1px solid rgb(247 242 234 / 50%);
+    border-radius: var(--mx-r-arch);
+    inset: 16px;
+    pointer-events: none;
+    position: absolute;
+    z-index: 4;
+  }
+
+  .caption {
+    align-items: baseline;
+    display: flex;
+    gap: 24px;
+  }
+
+  .count {
+    color: var(--mx-ink);
+    flex: none;
+    font-family: var(--mx-display);
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .countSep {
+    color: var(--mx-muted);
+    margin: 0 6px;
+  }
+
+  .captionLines {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .captionLine {
+    color: var(--mx-muted);
+    font-family: var(--mx-display-italic);
+    font-size: 20px;
+    font-style: italic;
+    grid-area: 1 / 1;
+    line-height: 1.3;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms var(--mx-ease), transform 600ms var(--mx-ease);
+  }
+
+  .captionLine[data-current] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .list {
+    display: block;
+  }
+
+  .entry {
+    align-items: center;
+    border-top: 1px solid var(--mx-line);
+    flex-direction: row;
+    min-height: min(68vh, 680px);
+    padding-block: 56px;
+  }
+
+  .entry:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .media,
+  .open::after {
+    display: none;
+  }
+
+  .body {
+    padding-top: 0;
+  }
+
+  .kind {
+    font-size: 15px;
+  }
+
+  .no {
+    font-size: 24px;
+  }
+
+  .name {
+    font-size: clamp(52px, 4.8vw, 76px);
+    margin: 16px 0 20px;
+  }
+
+  .blurb {
+    font-size: 18px;
+    max-width: 36ch;
+  }
+
+  .facts {
+    margin-top: 28px;
+    max-width: 460px;
+    padding-top: 20px;
+  }
+
+  .actions {
+    margin-top: 0;
+    padding-top: 32px;
+  }
+
+  .footnote {
+    margin-top: 48px;
+  }
+}
+
+/* ---------- Hover and motion ---------- */
+
+@media (hover: hover) and (pointer: fine) {
+  .open:hover .nameText {
+    background-size: 100% 1px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .entry:has(.open:hover) .mediaImg,
+  .entry:has(.view:hover) .mediaImg {
+    transform: scale(1.04);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (min-width: 760px) and (prefers-reduced-motion: no-preference) {
+    .body {
+      animation: houses-rise linear both;
+      animation-range: entry 10% cover 30%;
+      animation-timeline: view();
+    }
+
+    .media {
+      animation: houses-settle linear both;
+      animation-range: entry 0% cover 40%;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes houses-rise {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+
+@keyframes houses-settle {
+  from {
+    clip-path: inset(18% 0 0 0 round 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mediaImg,
+  .nameText,
+  .captionLine {
+    transition: none;
+  }
+}

@@ -1,0 +1,173 @@
+/*
+ * 06 — Method. Desktop: the object study fills columns 1–6 to the viewport's
+ * left edge and the section's full height; the copy sits in columns 8–12.
+ * Tablet and phone: the image runs full-bleed on top, then the copy.
+ */
+
+.media {
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.picture {
+  inset: 0;
+  position: absolute;
+}
+
+.image {
+  height: 100%;
+  object-fit: cover;
+  object-position: 45% 50%;
+  width: 100%;
+}
+
+/* The photograph settles from 106 % as it enters: a scale on the img, so no gap ever shows. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .image {
+      animation: method-settle linear both;
+      animation-range: entry 0% cover 50%;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes method-settle {
+  from {
+    transform: scale(1.06);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+.caption {
+  background: var(--p4-porcelain);
+  bottom: 0;
+  color: var(--p4-ink);
+  left: var(--p4-margin);
+  padding: 12px 16px;
+  position: absolute;
+  z-index: 1;
+}
+
+.copy {
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* The kicker sits over the H2 at every width (the copy is a single column). */
+.section .copy .head > * {
+  grid-column: 1 / -1;
+}
+
+.section .copy .head {
+  margin-bottom: 48px;
+}
+
+.line {
+  display: block;
+}
+
+/* ---------- Steps: <ol> counters, never duplicated numerals ---------- */
+
+.steps {
+  counter-reset: step;
+}
+
+.step {
+  border-top: 1px solid var(--p4-rule-dark);
+  column-gap: 0;
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  padding: 24px 0;
+}
+
+.step::before {
+  color: var(--p4-wash);
+  content: counter(step, decimal-leading-zero);
+  /* The list already numbers each step for assistive tech. */
+  content: counter(step, decimal-leading-zero) / "";
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  grid-row: 1 / span 2;
+  letter-spacing: 0.14em;
+  line-height: 1.8;
+}
+
+.stepTitle {
+  color: var(--p4-porcelain);
+  font-size: 18px;
+  font-weight: 800;
+  grid-column: 2;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.stepText {
+  color: var(--p4-mist);
+  font-size: 15px;
+  grid-column: 2;
+  line-height: 1.55;
+  margin-top: 8px;
+  max-width: 46ch;
+}
+
+/* ---------- Phone: the image full-bleed at 3:2 on top ---------- */
+
+.section > .media {
+  aspect-ratio: 3 / 2;
+  grid-column: 1 / -1;
+  margin-inline: calc(-1 * var(--p4-margin));
+  margin-top: calc(-1 * var(--p4-section));
+}
+
+.section > .copy {
+  grid-column: 1 / -1;
+  margin-top: 48px;
+}
+
+/* ---------- Tablet: 16:10, at most 480px tall; copy in columns 1–6 ---------- */
+
+@media (min-width: 760px) {
+  .section > .media {
+    aspect-ratio: 16 / 10;
+    max-height: 480px;
+  }
+
+  .section > .copy {
+    grid-column: 1 / 7;
+    margin-top: 64px;
+  }
+}
+
+/* ---------- Desktop: the split ---------- */
+
+@media (min-width: 1100px) {
+  .section[data-chapter] {
+    align-items: center;
+    min-height: 760px;
+  }
+
+  .section > .media {
+    align-self: stretch;
+    aspect-ratio: auto;
+    grid-column: 1 / 7;
+    grid-row: 1;
+    margin-block: calc(-1 * var(--p4-section));
+    margin-inline: calc(-1 * var(--p4-margin)) 0;
+    max-height: none;
+  }
+
+  .section > .copy {
+    grid-column: 8 / -1;
+    grid-row: 1;
+    margin-top: 0;
+  }
+}

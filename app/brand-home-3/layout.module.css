@@ -1,0 +1,501 @@
+/*
+ * Serein House. Every token lives on .root with the --sr- prefix (spec §2).
+ * Brand hexes are the embed's own; every other colour is an exact mix of them
+ * (final-tools/tokens.py). Sections set data-tone, which sets the --tone-*
+ * variables that ui.module.css atoms read, so one atom is right on every band.
+ */
+
+.root {
+  /* ---------- Colour: brand ---------- */
+  --sr-paper: #f1eee5;
+  --sr-paper-soft: #f7f4ec;
+  --sr-mist: #dce5df;
+  --sr-sage: #a8b8aa;
+  --sr-sage-deep: #5d7165; /* never text on light */
+  --sr-pool: #b9d3d1; /* decoration only */
+  --sr-clay: #c98369; /* decoration only, never text */
+  --sr-blush: #e9dacf;
+  --sr-ink: #20312c;
+  --sr-ink-soft: #4f5f59;
+
+  /* ---------- Colour: derived ---------- */
+  --sr-sage-ink: #4b5e54; /* sage-deep 70 + ink 30 */
+  --sr-sage-band: #54675c; /* sage-deep 85 + ink 15 */
+  --sr-clay-deep: #8b513c;
+  --sr-deep: #3e5148; /* art map stop only */
+  --sr-clay-dark: #604436; /* art map stop only */
+  --sr-shade: #241913; /* film scrims only */
+  --sr-skeleton: rgb(32 49 44 / 8%);
+
+  /* ---------- Lines and scrims ---------- */
+  --sr-line: rgb(32 49 44 / 18%);
+  --sr-control: rgb(32 49 44 / 58%);
+  --sr-line-dark: rgb(247 244 236 / 22%);
+  --sr-control-dark: rgb(247 244 236 / 64%);
+  --sr-scrim: rgb(32 49 44 / 56%);
+
+  /* ---------- Type ---------- */
+  --sr-display: var(--sr-font-display), "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sr-italic: var(--sr-font-display-italic), var(--sr-display);
+  --sr-text: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+
+  /* Scale (phone values; tablet and desktop below). */
+  --sr-fs-display-xl: clamp(56px, 19vw, 80px);
+  --sr-fs-display-l: clamp(38px, 11.2vw, 46px);
+  --sr-fs-display-arrival: 40px;
+  --sr-fs-display-m: 32px;
+  --sr-fs-h3: 28px;
+  --sr-fs-title-s: 22px;
+  --sr-fs-figure: 36px;
+  --sr-fs-lead: 18px;
+  --sr-fs-body: 16px;
+  --sr-fs-wordmark: 18px;
+
+  /* ---------- Spacing ---------- */
+  --sr-section: 80px;
+  --sr-head-gap: 40px;
+  --sr-stack: 32px;
+  --sr-header: 64px;
+
+  /* ---------- Grid: 4 / 8 / 12 columns ---------- */
+  --sr-cols: 4;
+  --sr-gutter: 22px;
+  --sr-gap: 12px;
+  --sr-max: 1360px;
+  /* % resolves against the containing block where it is used (padding, margin, left, right). */
+  --sr-margin: max(var(--sr-gutter), calc((100% - var(--sr-max)) / 2));
+
+  /* ---------- Radii, shadows, layers ---------- */
+  --sr-pill: 999px;
+  --sr-dialog-radius: 32px;
+  --sr-shadow-orb: 0 0 90px rgb(185 211 209 / 45%);
+  --sr-shadow-sheet: 0 -24px 72px rgb(32 49 44 / 20%);
+  --sr-shadow-dialog: 0 40px 120px rgb(32 49 44 / 32%);
+  --sr-z-header: 50;
+  --sr-z-layer: 100;
+  --sr-z-booking: 1000;
+  --sr-z-toast: 1100;
+  --sr-z-skip: 1200;
+
+  /* ---------- Motion ---------- */
+  --sr-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sr-ease-breath: cubic-bezier(0.37, 0, 0.63, 1);
+  --sr-fast: 160ms;
+  --sr-ui: 240ms;
+  --sr-sheet-in: 320ms;
+  --sr-sheet-out: 200ms;
+  --sr-cross: 600ms;
+  --sr-reveal: 900ms;
+  --sr-exhale: 4800ms;
+
+  /* ---------- Tone defaults (paper) ---------- */
+  --tone-bg: var(--sr-paper);
+  --tone-text: var(--sr-ink);
+  --tone-muted: var(--sr-ink-soft);
+  --tone-label: var(--sr-sage-ink);
+  --tone-control: var(--sr-control);
+  --tone-line: var(--sr-line);
+  --tone-link: var(--sr-sage-ink);
+  --focus: var(--sr-sage-ink);
+
+  -webkit-font-smoothing: antialiased;
+  background: var(--sr-paper);
+  color: var(--sr-ink);
+  font-family: var(--sr-text);
+  font-kerning: normal;
+  font-size: 16px;
+  font-synthesis: none;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Clip, not hidden: sticky children keep working and <html> stays free for the scroll lock. */
+  overflow-x: clip;
+  position: relative;
+}
+
+@media (max-width: 359px) {
+  .root {
+    --sr-gutter: 16px;
+  }
+}
+
+@media (min-width: 760px) {
+  .root {
+    --sr-cols: 8;
+    --sr-gutter: 40px;
+    --sr-gap: 20px;
+    --sr-section: 112px;
+    --sr-head-gap: 56px;
+    --sr-stack: 40px;
+    --sr-header: 68px;
+    --sr-fs-display-xl: 112px;
+    --sr-fs-display-l: 64px;
+    --sr-fs-display-arrival: 52px;
+    --sr-fs-display-m: 44px;
+    --sr-fs-h3: 30px;
+    --sr-fs-title-s: 24px;
+    --sr-fs-figure: 40px;
+    --sr-fs-lead: 19px;
+    --sr-fs-body: 17px;
+    --sr-fs-wordmark: 21px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .root {
+    --sr-cols: 12;
+    --sr-gutter: clamp(56px, 6.2vw, 96px);
+    --sr-gap: 24px;
+    --sr-section: clamp(120px, 10vw, 160px);
+    --sr-head-gap: 72px;
+    --sr-stack: 48px;
+    --sr-header: 76px;
+    --sr-fs-display-xl: clamp(104px, 9vw, 150px);
+    --sr-fs-display-l: clamp(72px, 6.4vw, 104px);
+    --sr-fs-display-arrival: clamp(52px, 4.6vw, 76px);
+    --sr-fs-display-m: clamp(44px, 4vw, 64px);
+    --sr-fs-h3: clamp(28px, 2.2vw, 40px);
+    --sr-fs-figure: clamp(40px, 3.4vw, 52px);
+    --sr-fs-lead: 20px;
+  }
+}
+
+@media (min-width: 1100px) and (max-height: 820px) {
+  .root {
+    --sr-fs-display-arrival: clamp(48px, 7.4vh, 64px);
+  }
+}
+
+/* Short screens (phone landscape). */
+@media (max-height: 560px) {
+  .root {
+    --sr-fs-display-xl: clamp(40px, 11vh, 64px);
+    --sr-fs-display-l: clamp(34px, 8vh, 52px);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .root {
+    --sr-line: rgb(32 49 44 / 58%);
+    --sr-ink-soft: #20312c;
+    --sr-line-dark: rgb(247 244 236 / 64%);
+  }
+}
+
+/* ---------- Tones: every section sets data-tone ---------- */
+
+.root [data-tone] {
+  background: var(--tone-bg);
+  color: var(--tone-text);
+}
+
+.root [data-tone="paper"] {
+  --tone-bg: var(--sr-paper);
+  --tone-text: var(--sr-ink);
+  --tone-muted: var(--sr-ink-soft);
+  --tone-label: var(--sr-sage-ink);
+  --tone-control: var(--sr-control);
+  --tone-line: var(--sr-line);
+  --tone-link: var(--sr-sage-ink);
+  --focus: var(--sr-sage-ink);
+}
+
+.root [data-tone="paper-soft"] {
+  --tone-bg: var(--sr-paper-soft);
+  --tone-text: var(--sr-ink);
+  --tone-muted: var(--sr-ink-soft);
+  --tone-label: var(--sr-sage-ink);
+  --tone-control: var(--sr-control);
+  --tone-line: var(--sr-line);
+  --tone-link: var(--sr-sage-ink);
+  --focus: var(--sr-sage-ink);
+}
+
+.root [data-tone="mist"] {
+  --tone-bg: var(--sr-mist);
+  --tone-text: var(--sr-ink);
+  --tone-muted: var(--sr-ink-soft);
+  --tone-label: var(--sr-sage-ink);
+  --tone-control: var(--sr-control);
+  --tone-line: var(--sr-line);
+  --tone-link: var(--sr-sage-ink);
+  --focus: var(--sr-sage-ink);
+}
+
+.root [data-tone="blush"] {
+  --tone-bg: var(--sr-blush);
+  --tone-text: var(--sr-ink);
+  --tone-muted: var(--sr-ink-soft);
+  --tone-label: var(--sr-clay-deep);
+  --tone-control: var(--sr-control);
+  --tone-line: var(--sr-line);
+  --tone-link: var(--sr-sage-ink);
+  --focus: var(--sr-sage-ink);
+}
+
+.root [data-tone="band"] {
+  --tone-bg: var(--sr-sage-band);
+  --tone-text: var(--sr-paper-soft);
+  --tone-muted: var(--sr-mist);
+  --tone-label: var(--sr-mist);
+  --tone-control: var(--sr-control-dark);
+  --tone-line: var(--sr-line-dark);
+  --tone-link: var(--sr-paper-soft);
+  --focus: var(--sr-paper-soft);
+}
+
+.root [data-tone="ink"] {
+  --tone-bg: var(--sr-ink);
+  --tone-text: var(--sr-paper-soft);
+  --tone-muted: var(--sr-mist);
+  --tone-label: var(--sr-sage);
+  --tone-control: var(--sr-control-dark);
+  --tone-line: var(--sr-line-dark);
+  --tone-link: var(--sr-paper-soft);
+  --focus: var(--sr-paper-soft);
+}
+
+.root [data-tone="film"] {
+  --tone-bg: var(--sr-shade);
+  --tone-text: var(--sr-paper-soft);
+  --tone-muted: var(--sr-paper-soft);
+  --tone-label: var(--sr-paper-soft);
+  --tone-control: var(--sr-paper-soft);
+  --tone-line: rgb(247 244 236 / 32%);
+  --tone-link: var(--sr-paper-soft);
+  --focus: var(--sr-paper-soft);
+}
+
+/* ---------- Page-level hooks (the only global rules) ---------- */
+
+/* globals.css smooth scrolling would scrub the film on anchor jumps; jumpTo() decides when to glide. */
+:global(html):has(.root) {
+  scroll-behavior: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Overscroll above the dark film and below the ink footer is ink: no white flash. */
+:global(body):has(.root) {
+  background: #20312c;
+}
+
+/* ---------- Resets, at zero specificity (they neutralise globals.css h1, h2, footer and a) ---------- */
+
+:where(.root) :is(h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote, fieldset, legend) {
+  font: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+  text-transform: none;
+}
+
+:where(.root) :is(ul, ol) {
+  list-style: none;
+}
+
+:where(.root) fieldset {
+  border: 0;
+  min-width: 0;
+}
+
+:where(.root) button {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+}
+
+:where(.root) :is(input, select, textarea) {
+  color: inherit;
+  font: inherit;
+}
+
+:where(.root) a {
+  color: inherit;
+}
+
+:where(.root) footer {
+  background: transparent;
+  border: 0;
+  color: inherit;
+}
+
+:where(.root) :is(img, picture, video, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(.root) p {
+  text-wrap: pretty;
+}
+
+/* ---------- Focus and scroll offsets ---------- */
+
+.root :focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Over the film (header in its film state, beat C, Skip): one of the two rings clears 3:1 on any pixel. */
+.root [data-tone="film"] :focus-visible,
+.root .filmFocus:focus-visible,
+.root .filmFocus :focus-visible {
+  box-shadow: 0 0 0 6px rgb(36 25 19 / 90%);
+  outline: 2px solid #f7f4ec;
+  outline-offset: 2px;
+}
+
+/* Headings focused by jumpTo(). */
+.root [tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Sections and jump targets clear the fixed header; focusables (declared later, so they win) get 24px more. */
+:where(.root) :is(section, [id]) {
+  scroll-margin-top: var(--sr-header);
+}
+
+:where(.root) :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-bottom: 24px;
+  scroll-margin-top: calc(var(--sr-header) + 24px);
+}
+
+@media (forced-colors: active) {
+  .root :focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* ---------- Layout ---------- */
+
+.main {
+  display: block;
+}
+
+/* One grid for the header, every section, the film copy, the sheet interiors and the footer. */
+.frame {
+  column-gap: var(--sr-gap);
+  display: grid;
+  grid-template-columns: repeat(var(--sr-cols), minmax(0, 1fr));
+  padding-inline: var(--sr-margin);
+}
+
+.frame > * {
+  grid-column: 1 / -1;
+}
+
+/* A banded section (commerce included). */
+.section {
+  padding-block: var(--sr-section);
+  position: relative;
+}
+
+/*
+ * Section head: <div class="head"><div class="headMain">eyebrow + h2</div><p class="headNote">…</p></div>.
+ * Desktop: main in columns 1–8, note in 9–12 aligned to the end. Tablet: main 1–8, note 1–6 below.
+ */
+.head {
+  column-gap: var(--sr-gap);
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(var(--sr-cols), minmax(0, 1fr));
+  margin-bottom: var(--sr-head-gap);
+  row-gap: 24px;
+}
+
+.head > * {
+  grid-column: 1 / -1;
+}
+
+.headMain {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.headNote {
+  color: var(--tone-muted);
+  font-family: var(--sr-display);
+  font-size: var(--sr-fs-lead);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 36ch;
+}
+
+@media (min-width: 760px) {
+  .head > .headMain { grid-column: 1 / 9; }
+  .head > .headNote { grid-column: 1 / 7; }
+}
+
+@media (min-width: 1100px) {
+  /* 1–8, not 1–7: at about 1600+ "Don't book yourself" no longer fits seven columns at display-l. */
+  .head > .headMain { grid-column: 1 / 9; }
+
+  .head > .headNote {
+    align-self: end;
+    grid-column: 9 / 13;
+  }
+}
+
+/* ---------- Skip links: first focusable, off-screen until focused ---------- */
+
+.skip {
+  align-items: center;
+  background: var(--sr-paper-soft);
+  border-radius: var(--sr-pill);
+  box-shadow: 0 0 0 1px var(--sr-control);
+  color: var(--sr-ink);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-weight: 600;
+  gap: 10px;
+  left: 12px;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  min-height: 44px;
+  padding: 0 20px;
+  position: fixed;
+  text-decoration: none;
+  top: 12px;
+  transform: translateY(-200%);
+  white-space: nowrap;
+  z-index: 1200;
+}
+
+.skip:focus-visible {
+  outline-color: var(--sr-sage-ink);
+  transform: none;
+}
+
+/* ---------- Reveals: CSS only, visible by default, never on the film or above the fold ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: sr-reveal linear both;
+      animation-range: entry 0% entry 40%;
+      animation-timeline: view();
+    }
+
+    /* Staggers through ranges, never delays: data-step="1|2|3" (place cards). */
+    .reveal[data-step="1"] { animation-range: entry 6% entry 46%; }
+    .reveal[data-step="2"] { animation-range: entry 12% entry 52%; }
+    .reveal[data-step="3"] { animation-range: entry 18% entry 58%; }
+  }
+}
+
+@keyframes sr-reveal {
+  from {
+    opacity: 0.001;
+    translate: 0 24px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}

@@ -1,0 +1,165 @@
+/*
+ * The issue rail: a 56px porcelain column centred in the reserved right margin
+ * (96px from 1200px), so it never covers content. Only for wide, tall,
+ * hover-capable screens; hidden while the cover is on screen.
+ */
+
+.rail {
+  display: none;
+}
+
+@media (min-width: 1200px) and (hover: hover) and (pointer: fine) and (min-height: 640px) {
+  .rail {
+    background: var(--p4-porcelain);
+    box-shadow: 0 0 0 1px var(--p4-ink);
+    color: var(--p4-ink);
+    display: block;
+    opacity: 0;
+    position: fixed;
+    right: calc((var(--p4-margin) - 56px) / 2);
+    top: calc(var(--p4-nav-h) + (100vh - var(--p4-nav-h)) / 2);
+    transform: translateY(-50%);
+    transition: opacity 200ms var(--p4-ease), visibility 0s linear 200ms;
+    visibility: hidden;
+    width: 56px;
+    z-index: 40;
+  }
+
+  .rail[data-shown="true"] {
+    opacity: 1;
+    transition: opacity 200ms var(--p4-ease), visibility 0s;
+    visibility: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail,
+  .rail[data-shown="true"] {
+    transition: none;
+  }
+}
+
+/* ---------- Top cell: "Ch." over the current number ---------- */
+
+.cell {
+  align-items: center;
+  border-bottom: 1px solid var(--p4-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 56px;
+  justify-content: center;
+}
+
+.ch {
+  color: var(--p4-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.now {
+  color: var(--p4-cobalt);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* ---------- Ten links, 56 × 44 ---------- */
+
+.link {
+  align-items: center;
+  color: var(--p4-muted);
+  column-gap: 6px;
+  display: grid;
+  grid-template-columns: 24px auto;
+  height: 44px;
+  justify-content: center;
+  position: relative;
+  transition: color var(--p4-fast) var(--p4-ease);
+  width: 56px;
+}
+
+.link:focus-visible {
+  color: var(--p4-ink);
+  outline-offset: -4px;
+}
+
+.link[aria-current="location"] {
+  color: var(--p4-ink);
+}
+
+/* 12×1 at rest, 24×2 cobalt when current (a 24px bar scaled on X, so only transform animates). */
+.tick {
+  background: currentColor;
+  height: 1px;
+  justify-self: end;
+  transform: scaleX(0.5);
+  transform-origin: right center;
+  transition: transform var(--p4-fast) var(--p4-ease), background-color var(--p4-fast) var(--p4-ease);
+  width: 24px;
+}
+
+.link[aria-current="location"] .tick {
+  background: var(--p4-cobalt);
+  height: 2px;
+  transform: none;
+}
+
+.no {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* The label: screen-reader text inside the link, shown as a tooltip on hover or focus. */
+.tip {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* The rail only exists on hover-capable screens, so hover and focus share one rule. */
+@media (min-width: 1200px) and (hover: hover) and (pointer: fine) and (min-height: 640px) {
+  .link:hover {
+    color: var(--p4-ink);
+  }
+
+  .link:hover .tip,
+  .link:focus-visible .tip {
+    background: var(--p4-ink);
+    clip: auto;
+    color: var(--p4-porcelain);
+    font-size: 12px;
+    font-weight: 700;
+    height: auto;
+    letter-spacing: 0.12em;
+    line-height: 1.25;
+    margin: 0;
+    overflow: visible;
+    padding: 8px 12px;
+    pointer-events: none;
+    right: calc(100% + 8px);
+    text-transform: uppercase;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .tick {
+    transition: none;
+  }
+}

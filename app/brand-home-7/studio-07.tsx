@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
 } from "react";
 import SalonBooking from "../salon-booking";
@@ -75,9 +76,21 @@ type VenueCard = {
   live: boolean;
 };
 
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
 function prefersReducedMotion() {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return typeof window !== "undefined" && window.matchMedia(reducedMotionQuery).matches;
 }
+
+function subscribeReducedMotion(onChange: () => void) {
+  const query = window.matchMedia(reducedMotionQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+const subscribeNever = () => () => {};
+const clientTrue = () => true;
+const serverFalse = () => false;
 
 function markIntroSeen() {
   try {
@@ -163,6 +176,10 @@ export default function Studio07() {
   const [lookDirection, setLookDirection] = useState<LookDirection>("all");
   const [servicesExpanded, setServicesExpanded] = useState(false);
   const [venuePanelId, setVenuePanelId] = useState<string | null>(null);
+  // Motion classes go through className, not classList: React rewrites the page className
+  // as the intro advances and would drop them. Both stay off in the server render.
+  const motionReady = useSyncExternalStore(subscribeNever, clientTrue, serverFalse);
+  const reducedMotion = useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, serverFalse);
   const forceTrailerPlay = useRef(false);
 
   const feelingBeat = getTrailerBeat("feeling");
@@ -391,20 +408,24 @@ export default function Studio07() {
   useEffect(() => {
     const page = pageRef.current;
     if (!page) return;
-    page.classList.add("s7-motion-ready");
-    if (prefersReducedMotion()) page.classList.add("is-reduced");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-in-view");
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.18 },
-    );
-    page.querySelectorAll("[data-s7-reveal]").forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
+    const reveal: IntersectionObserverCallback = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in-view");
+        observer.unobserve(entry.target);
+      });
+    };
+    const observer = new IntersectionObserver(reveal, { threshold: 0.18 });
+    // 18% of a block several screens tall (commerce is ~2,900px on phones) is 500px+ of
+    // screen, so those reveal once their top clears the bottom fifth of the viewport.
+    const tallObserver = new IntersectionObserver(reveal, { rootMargin: "0px 0px -20% 0px" });
+    page.querySelectorAll<HTMLElement>("[data-s7-reveal]").forEach((node) => {
+      (node.dataset.s7Reveal === "tall" ? tallObserver : observer).observe(node);
+    });
+    return () => {
+      observer.disconnect();
+      tallObserver.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -619,7 +640,7 @@ export default function Studio07() {
   return (
     <div
       ref={pageRef}
-      className={`studio-07${introActive ? " is-intro" : ""}${apertureOpen ? " is-hero-ready" : ""}${heroCopyReady ? " is-hero-copy" : ""}`}
+      className={`studio-07${motionReady ? " s7-motion-ready" : ""}${reducedMotion ? " is-reduced" : ""}${introActive ? " is-intro" : ""}${apertureOpen ? " is-hero-ready" : ""}${heroCopyReady ? " is-hero-copy" : ""}`}
     >
       {introActive && (
         <div
@@ -1017,8 +1038,10 @@ export default function Studio07() {
           </button>
         </section>
 
-        {/* Commerce is browse-only: every offer ends in a details dialog, never in booking. */}
-        <div className="s7-commerce" data-s7-reveal>
+        {/* Commerce is browse-only: every offer ends in a details dialog, never in booking.
+            The dialog is position: fixed inside this wrapper, so the reveal moves the offer
+            sections, never the wrapper itself (see brand-home.css). */}
+        <div className="s7-commerce" data-s7-reveal="tall">
           <BrandCommerce
             theme="studio07"
             brandName={studioIdentity.brand}

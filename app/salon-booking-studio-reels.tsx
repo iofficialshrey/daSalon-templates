@@ -9,6 +9,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
+import { dateParts, formatTime } from "@/lib/dasalon/locale";
 import "./salon-booking-studio-reels.css";
 
 export const STUDIO_REEL_ROW = 52;
@@ -498,19 +499,11 @@ type StudioBookingReelsProps = {
 };
 
 function formatDateParts(value: string) {
-  const parsed = new Date(`${value}T00:00:00`);
-  return {
-    weekday: parsed.toLocaleDateString("en-IN", { weekday: "short" }),
-    day: parsed.toLocaleDateString("en-IN", { day: "2-digit" }),
-    month: parsed.toLocaleDateString("en-IN", { month: "short" }),
-  };
+  const parts = dateParts(value);
+  return { weekday: parts.weekday, day: parts.day.padStart(2, "0"), month: parts.month };
 }
 
-function formatTimeParts(value: string) {
-  const [hour, minute] = value.split(":").map(Number);
-  const parsed = new Date(2000, 0, 1, hour, minute);
-  return parsed.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
-}
+const formatTimeParts = formatTime;
 
 export default function StudioBookingReels({
   dates,

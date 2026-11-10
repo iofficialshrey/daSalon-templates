@@ -1,0 +1,19 @@
+/* Offers on an atelier page: a small head, then the shared offer cards. */
+
+.pieces {
+  overflow: clip;
+}
+
+.head {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+
+.lead {
+  color: var(--at-muted);
+  font-family: var(--at-serif);
+  font-size: 18px;
+  line-height: 1.55;
+  max-width: 54ch;
+}

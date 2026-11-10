@@ -1,0 +1,72 @@
+.root {
+  display: grid;
+  inset: 0;
+  position: fixed;
+  z-index: 100;
+}
+
+.backdrop {
+  animation: layer-fade var(--p4-layer-in) linear both;
+  background: var(--p4-scrim);
+  inset: 0;
+  position: absolute;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 0;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* ---------- Spread: a full-viewport porcelain page that rises 24px and fades in ---------- */
+
+.spread .panel {
+  animation: spread-in var(--p4-layer-in) var(--p4-ease) both;
+  background: var(--p4-porcelain);
+  color: var(--p4-ink);
+}
+
+/* ---------- Contents: a full-viewport ink sheet that rises from the bottom ---------- */
+
+.contents .panel {
+  animation: contents-in 320ms var(--p4-ease) both;
+  background: var(--p4-ink);
+  color: var(--p4-porcelain);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ---------- Closing ---------- */
+
+.root[data-state="closing"] .backdrop {
+  animation: layer-fade-out var(--p4-layer-out) linear both;
+}
+
+.spread[data-state="closing"] .panel {
+  animation: spread-out var(--p4-layer-out) var(--p4-ease) both;
+}
+
+.contents[data-state="closing"] .panel {
+  animation: contents-out var(--p4-layer-out) var(--p4-ease) both;
+}
+
+@keyframes layer-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes layer-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes spread-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes spread-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(24px); } }
+@keyframes contents-in { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes contents-out { from { clip-path: inset(0); } to { clip-path: inset(100% 0 0 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .root .panel,
+  .root[data-state="closing"] .backdrop,
+  .root[data-state="closing"] .panel {
+    animation: none;
+  }
+}

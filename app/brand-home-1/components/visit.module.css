@@ -1,0 +1,194 @@
+/* Before you visit: native exclusive accordion plus the addresses-and-hours directory. */
+
+.layout {
+  display: grid;
+  gap: 64px;
+}
+
+/* ---------- Accordion ---------- */
+
+.faq {
+  border-bottom: 1px solid var(--mx-line);
+  min-width: 0;
+}
+
+.item {
+  border-top: 1px solid var(--mx-line);
+}
+
+.summary {
+  align-items: center;
+  color: var(--mx-ink);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--mx-display);
+  font-size: 22px;
+  font-weight: 500;
+  gap: 24px;
+  justify-content: space-between;
+  line-height: 1.2;
+  list-style: none;
+  min-height: 72px;
+  padding-block: 16px;
+  transition: color var(--mx-fast) var(--mx-ease);
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary::marker {
+  content: "";
+}
+
+.question {
+  min-width: 0;
+  text-wrap: balance;
+}
+
+.icon {
+  flex: none;
+  height: 20px;
+  transition: transform var(--mx-ui) var(--mx-ease);
+  width: 20px;
+}
+
+.item[open] .icon {
+  transform: rotate(45deg);
+}
+
+.answer {
+  color: var(--mx-muted);
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 60ch;
+  padding-bottom: 24px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .summary:hover {
+    color: var(--mx-bronze-700);
+  }
+}
+
+/* ---------- Directory ---------- */
+
+.directory {
+  min-width: 0;
+}
+
+.directoryTitle {
+  color: var(--mx-ink);
+  font-family: var(--mx-display);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.directorySub {
+  color: var(--mx-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+.houses {
+  display: grid;
+  gap: 32px;
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+}
+
+.house {
+  border-top: 1px solid var(--mx-line);
+  min-width: 0;
+  padding-top: 24px;
+}
+
+.houseName {
+  color: var(--mx-ink);
+  font-family: var(--mx-display);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.specialty {
+  margin-top: 6px;
+}
+
+.line {
+  color: var(--mx-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.specialty + .line {
+  margin-top: 10px;
+}
+
+.line + .line {
+  margin-top: 2px;
+}
+
+.links {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 28px;
+  margin-top: 8px;
+}
+
+/* ---------- Tablet: accordion full width, directory as a 2 × 2 grid ---------- */
+
+@media (min-width: 760px) {
+  .summary {
+    font-size: 24px;
+  }
+
+  .houses {
+    column-gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 32px;
+  }
+}
+
+/* ---------- Desktop: accordion in columns 1–7, sticky directory in 9–12 ---------- */
+
+@media (min-width: 1100px) {
+  .layout {
+    column-gap: 24px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    /* The spec puts 64px (not the usual 80px) between this head and its content. */
+    margin-top: calc(64px - var(--mx-head-gap));
+  }
+
+  .faq {
+    grid-column: 1 / 8;
+  }
+
+  .directory {
+    align-self: start;
+    grid-column: 9 / 13;
+    position: sticky;
+    top: calc(var(--mx-header) + 32px);
+  }
+
+  .houses {
+    gap: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .house {
+    padding-block: 24px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon,
+  .summary {
+    transition: none;
+  }
+}

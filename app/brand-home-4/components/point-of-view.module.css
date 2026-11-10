@@ -1,0 +1,17 @@
+/* 01 — Point of view. The shared head does the layout; this adds the standfirst. */
+
+/* Nothing follows the head but the running foot, which brings its own 48px. */
+.section .head {
+  margin-bottom: 0;
+}
+
+.line {
+  display: block;
+}
+
+.standfirst {
+  border-top: 1px solid var(--p4-ink);
+  display: grid;
+  gap: 20px;
+  padding-top: 20px;
+}

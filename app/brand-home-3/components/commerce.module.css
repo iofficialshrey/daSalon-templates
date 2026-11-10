@@ -1,0 +1,416 @@
+/*
+ * Membership (blush), packages (paper-soft) and gift cards (mist): spec §4.7–4.9.
+ * Square hairline panels, pill buttons, text only on solid fills. Every value is
+ * a --sr- token or on the §2.3 spacing scale.
+ */
+
+/* ---------- Shared ---------- */
+
+/* Art that fills its (aspect-ratio) box: the <picture>/<img>, or the flat fallback before ART_READY. */
+.fill {
+  display: block;
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.fillImg {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.footnote {
+  margin-top: var(--sr-stack);
+  max-width: 60ch;
+}
+
+/*
+ * Bought this visit: PurchaseBadge renders "Yours · demonstration" just before the
+ * offer's own badge or chip, which then steps aside. Nothing renders before purchase.
+ */
+.yours + .offerBadge,
+.yours + .offerChip {
+  display: none;
+}
+
+/* ---------- Membership: art bleeds left, copy scrolls past it ---------- */
+
+/*
+ * The page grid plus a margin track on each side, so the art can run from the
+ * viewport edge to a column line. In track sizes, % resolves against this
+ * section's own width (never 100vw, which would include the scrollbar).
+ * Lines: 1 viewport edge · 2 content start · 2 + cols content end · -1 viewport edge.
+ */
+.membership {
+  column-gap: var(--sr-gap);
+  display: grid;
+  grid-template-columns:
+    calc(var(--sr-margin) - var(--sr-gap))
+    repeat(var(--sr-cols), minmax(0, 1fr))
+    calc(var(--sr-margin) - var(--sr-gap));
+  position: relative;
+}
+
+.memberArt {
+  aspect-ratio: 4 / 3;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.artChip {
+  bottom: 16px;
+  left: 16px;
+  max-width: calc(100% - 32px);
+  position: absolute;
+}
+
+.memberCopy {
+  grid-column: 2 / -2;
+  grid-row: 2;
+  padding-block: var(--sr-head-gap) var(--sr-section);
+}
+
+.memberHead {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  margin-bottom: var(--sr-head-gap);
+}
+
+.memberHead > :last-child {
+  margin-top: 8px;
+}
+
+/* Below about 368px the chip wraps: two balanced lines in a rounded block rather than a stretched pill. */
+@media (max-width: 367px) {
+  .artChip {
+    border-radius: 16px;
+    text-wrap: balance;
+  }
+}
+
+@media (min-width: 760px) {
+  .memberArt {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+@media (min-width: 1100px) {
+  /*
+   * From the viewport's left edge to the end of column 5; it holds still while the copy
+   * scrolls. On short or very wide screens the height caps at the viewport and the sky
+   * crops (the explicit width stops the cap shrinking the panel through its aspect ratio).
+   */
+  .memberArt {
+    align-self: start;
+    aspect-ratio: 4 / 5;
+    grid-column: 1 / 7;
+    max-height: calc(100svh - var(--sr-header) - 48px);
+    position: sticky;
+    top: calc(var(--sr-header) + 24px);
+    width: 100%;
+  }
+
+  /* Columns 7–12. */
+  .memberCopy {
+    grid-column: 8 / 14;
+    grid-row: 1;
+    padding-block: var(--sr-section);
+  }
+}
+
+/* Tier rows: numeral · body · action. The action's ::after makes the whole row its target. */
+.tier {
+  align-items: start;
+  border-top: 1px solid var(--sr-line);
+  column-gap: 24px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  margin-inline: -16px;
+  min-height: 104px;
+  padding: 24px 16px;
+  position: relative;
+  transition:
+    background-color var(--sr-fast) var(--sr-ease),
+    box-shadow var(--sr-fast) var(--sr-ease);
+}
+
+.tier:last-child {
+  border-bottom: 1px solid var(--sr-line);
+}
+
+.tierNumber {
+  padding-top: 4px;
+}
+
+.tierBody {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+.tierBody > h3 {
+  margin-bottom: 4px;
+}
+
+.badges {
+  display: flex;
+  margin-top: 8px;
+}
+
+.tierAction {
+  align-self: center;
+  white-space: nowrap;
+}
+
+.tierAction::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+/* A 2px clay-deep left rule and a paper-soft tint; nothing moves. */
+.tier:focus-within {
+  background-color: rgb(247 244 236 / 50%);
+  box-shadow: inset 2px 0 0 var(--sr-clay-deep);
+}
+
+@media (hover: hover) {
+  .tier:hover {
+    background-color: rgb(247 244 236 / 50%);
+    box-shadow: inset 2px 0 0 var(--sr-clay-deep);
+  }
+}
+
+@media (max-width: 759px) {
+  .tier {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 12px;
+  }
+
+  .tierAction {
+    align-self: start;
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ---------- Packages: three square cards ---------- */
+
+.packages {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.packages > li {
+  display: flex;
+}
+
+.pkg {
+  background: var(--sr-paper);
+  border: 1px solid var(--sr-line);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.pkgArt {
+  aspect-ratio: 3 / 2;
+  flex: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.artTag {
+  bottom: 16px;
+  display: flex;
+  left: 16px;
+  max-width: calc(100% - 32px);
+  position: absolute;
+}
+
+.pkgBody {
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+}
+
+.includes {
+  border-top: 1px solid var(--sr-line);
+  display: grid;
+  gap: 4px;
+  padding-top: 12px;
+  width: 100%;
+}
+
+/* Worth · You pay · Save · validity, aligned across the row of cards. */
+.figures {
+  border-top: 1px solid var(--sr-line);
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  margin-top: auto;
+  padding-top: 16px;
+  width: 100%;
+}
+
+.pay {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.save {
+  color: var(--sr-clay-deep);
+}
+
+.pkgAction {
+  margin-top: 8px;
+}
+
+/* Tablet: horizontal cards, art in 3 of 8 columns, body in 5. */
+@media (min-width: 760px) and (max-width: 1099px) {
+  .pkg {
+    column-gap: var(--sr-gap);
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .pkgArt {
+    align-self: start;
+    grid-column: 1 / 4;
+  }
+
+  .pkgBody {
+    grid-column: 4 / 9;
+    padding: 24px 24px 24px 4px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .packages {
+    column-gap: var(--sr-gap);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Gift cards ---------- */
+
+.giftGroup {
+  display: grid;
+  gap: 24px;
+}
+
+.gifts {
+  display: grid;
+  gap: var(--sr-gap);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gift {
+  display: flex;
+}
+
+.giftCard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.giftBody {
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.giftBody > h3 {
+  margin-bottom: 4px;
+}
+
+.giftBadge {
+  margin-top: 4px;
+}
+
+.giftActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.giftControls {
+  display: none;
+}
+
+/* Desktop: the middle card sits 48px lower. */
+@media (min-width: 1100px) {
+  .gift:nth-child(2) {
+    margin-top: 48px;
+  }
+}
+
+/* Phones: a scroll-snap track of 82vw cards from edge to edge, with arrows and a counter. */
+@media (max-width: 759px) {
+  .gifts {
+    grid-auto-columns: 82vw;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    margin-inline: calc(-1 * var(--sr-margin));
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* Room below for the buttons' focus rings (a scroller clips both axes); the margin keeps the 24px gap. */
+    margin-bottom: -8px;
+    padding-bottom: 8px;
+    padding-inline: var(--sr-margin);
+    scroll-padding-inline: var(--sr-margin);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .gifts::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gift {
+    scroll-snap-align: start;
+  }
+
+  .giftControls {
+    display: block;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tier {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .tier:focus-within,
+  .tier:hover {
+    box-shadow: none;
+    outline: 2px solid Highlight;
+  }
+
+  .pkg {
+    border-color: CanvasText;
+  }
+}

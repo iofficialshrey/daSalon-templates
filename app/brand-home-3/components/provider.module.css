@@ -1,0 +1,52 @@
+/* The toast: bottom-centre, above the booking window (1000), below the skip links (1200). */
+
+.toastHost {
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding-inline: 16px;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  z-index: 1100;
+}
+
+.toast {
+  animation: toast-in var(--sr-ui) var(--sr-ease) both;
+  background: var(--sr-ink);
+  border-radius: var(--sr-pill);
+  color: var(--sr-paper-soft);
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+  line-height: 1.45;
+  max-width: 100%;
+  padding: 12px 20px;
+  text-align: center;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .toast {
+    border: 1px solid CanvasText;
+  }
+}

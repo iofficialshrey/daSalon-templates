@@ -4,10 +4,8 @@ import {
   matchesLookDirection,
   resolveServiceMedia,
 } from "../app/brand-home-7/service-media.ts";
-import {
-  buildAppointmentIcs,
-  emptyBookingDraft,
-} from "../app/brand-home-7/booking-draft.ts";
+import { emptyBookingDraft } from "../app/brand-home-7/booking-draft.ts";
+import { buildAppointmentIcs } from "../lib/dasalon/calendar.ts";
 
 test("resolveServiceMedia never uses catalog index — haircut maps to craft photo", () => {
   const media = resolveServiceMedia({
@@ -69,7 +67,7 @@ test("empty booking draft has null appointment choices and blank guest fields", 
   assert.equal(draft.step, 1);
 });
 
-test("buildAppointmentIcs includes timezone and service title", () => {
+test("buildAppointmentIcs converts venue time to UTC and keeps the service title", () => {
   const ics = buildAppointmentIcs({
     title: "Classic Haircut · Studio 07",
     description: "Appointment at Sort Life.",
@@ -81,7 +79,22 @@ test("buildAppointmentIcs includes timezone and service title", () => {
     uid: "test-ref@studio07",
   });
   assert.match(ics, /BEGIN:VEVENT/);
-  assert.match(ics, /TZID=Asia\/Kolkata/);
+  assert.match(ics, /DTSTART:20260910T060000Z/);
+  assert.match(ics, /DTEND:20260910T064500Z/);
   assert.match(ics, /Classic Haircut/);
   assert.match(ics, /UID:test-ref@studio07/);
+});
+
+test("buildAppointmentIcs defaults to Singapore time", () => {
+  const ics = buildAppointmentIcs({
+    title: "Hair Spa · Oru Spa",
+    description: "Hair Spa at The Grooming Room.",
+    location: "The Grooming Room, Singapore",
+    date: "2026-10-12",
+    startTime: "13:00",
+    durationMinutes: 60,
+    uid: "sg-ref@dasalon-brand-home",
+  });
+  assert.match(ics, /DTSTART:20261012T050000Z/);
+  assert.match(ics, /DTEND:20261012T060000Z/);
 });

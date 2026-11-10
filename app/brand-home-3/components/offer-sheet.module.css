@@ -1,0 +1,480 @@
+/*
+ * The offer sheet's interior (spec §7.3) and the gift form (§7.4). The frame
+ * itself (width, bottom edge, 3px rule, shadow, enter/exit) is layer.module.css;
+ * the panel scrolls, and the head and footer stick to its edges.
+ */
+
+/* The 3px top rule in the kind's tone (layer.module.css reads --sheet-accent). */
+.membership {
+  --sheet-accent: var(--sr-sage-deep);
+}
+
+.package {
+  --sheet-accent: var(--sr-clay-deep);
+}
+
+.gift {
+  --sheet-accent: var(--sr-sage-ink);
+}
+
+.sheet {
+  color: var(--sr-ink);
+  /*
+   * The panel scrolls under its sticky head and footer, so scrolling into view
+   * (focus, a textarea's caret) stops short of both (WCAG 2.4.11). offer-sheet.tsx
+   * keeps --sheet-head and --sheet-foot at their live heights; the footer grows
+   * with the "bought" note and the safe area.
+   */
+  scroll-padding-block: var(--sheet-head, 0px) var(--sheet-foot, 0px);
+}
+
+/* ---------- Head ---------- */
+
+.head {
+  align-items: center;
+  background: var(--sr-paper-soft);
+  border-bottom: 1px solid var(--sr-line);
+  display: flex;
+  flex: none;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ---------- Body: details or receipt, crossfaded ---------- */
+
+.body {
+  animation: sheet-view var(--sr-ui) var(--sr-ease) both;
+  display: grid;
+  gap: 32px;
+  padding: 24px 32px 32px;
+}
+
+@keyframes sheet-view {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* A focused field keeps 24px from either bar (the page's header offset means nothing in here). */
+.body :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-block: 24px;
+}
+
+/*
+ * The bars' own controls are always in view: their scroll targets are moved just
+ * inside the open area (down by the head's height, up by the footer's), so
+ * focusing Close or Buy never scrolls the body.
+ */
+.head :is(a, button, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-block: calc(-1 * var(--sheet-head, 0px)) var(--sheet-head, 0px);
+}
+
+.footer :is(a, button, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-block: var(--sheet-foot, 0px) calc(-1 * var(--sheet-foot, 0px));
+}
+
+.face {
+  max-width: 100%;
+  width: 320px;
+}
+
+/* Package art: a 3:2 band, at most 200px tall. */
+.band {
+  display: block;
+  width: 100%;
+}
+
+.bandImg {
+  display: block;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.titleBlock {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.titleBlock > h2 {
+  margin-bottom: 4px;
+}
+
+.section {
+  display: grid;
+  gap: 12px;
+}
+
+/* The equation: three stacked rows, hairlines between them. */
+.equationBlock {
+  display: grid;
+  gap: 12px;
+}
+
+.equationRow {
+  align-items: baseline;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding-block: 12px;
+}
+
+.equationRow + .equationRow {
+  border-top: 1px solid var(--sr-line);
+}
+
+.equationRow > dd {
+  text-align: right;
+}
+
+.equationValue {
+  font-weight: 600;
+}
+
+.steps {
+  display: grid;
+  gap: 12px;
+}
+
+.steps > li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+}
+
+.stepNumber {
+  padding-top: 3px;
+}
+
+.includes {
+  display: grid;
+  gap: 4px;
+}
+
+/* Weekly Quiet: Treatment · Usual · With Weekly Quiet. */
+.worked {
+  border-collapse: collapse;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.worked caption {
+  caption-side: top;
+  padding-bottom: 8px;
+  text-align: left;
+}
+
+.worked th,
+.worked td {
+  border-top: 1px solid var(--sr-line);
+  font-weight: 500;
+  padding: 8px 0;
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.worked thead th {
+  border-top: 0;
+  color: var(--sr-ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.worked :is(td, thead th:not(:first-child)) {
+  padding-left: 16px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* The mini slow-hours timeline: a hairline at x = 6px, 8px pool dots. */
+.timeline {
+  display: grid;
+  gap: 16px;
+  padding-left: 28px;
+  position: relative;
+}
+
+.timeline::before {
+  background: var(--sr-line);
+  bottom: 8px;
+  content: "";
+  left: 6px;
+  position: absolute;
+  top: 8px;
+  width: 1px;
+}
+
+.moment {
+  display: grid;
+  gap: 4px;
+  position: relative;
+}
+
+.moment::before {
+  background: var(--sr-pool);
+  border-radius: 50%;
+  content: "";
+  height: 8px;
+  left: -26px;
+  position: absolute;
+  top: 4px;
+  width: 8px;
+}
+
+.momentValue {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Receipt: the ripple "S", Serein's legacy confirmation mark ---------- */
+
+.ripple {
+  align-items: center;
+  border: 1px solid var(--sr-sage-ink);
+  border-radius: 50%;
+  color: var(--sr-sage-ink);
+  display: inline-flex;
+  height: 96px;
+  justify-content: center;
+  justify-self: start;
+  margin-top: 24px;
+  position: relative;
+  width: 96px;
+}
+
+.rippleMark {
+  font-family: var(--sr-italic);
+  font-size: 33px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* Three rings spread once and come to rest; under reduced motion they are simply at rest. */
+.ripple i {
+  border: 1px solid var(--sr-sage-ink);
+  border-radius: 50%;
+  inset: -1px;
+  opacity: var(--rest-opacity);
+  position: absolute;
+  scale: var(--rest-scale);
+}
+
+.ripple i:nth-of-type(1) { --rest-opacity: 0.5; --rest-scale: 1.15; }
+.ripple i:nth-of-type(2) { --rest-opacity: 0.3; --rest-scale: 1.3; }
+.ripple i:nth-of-type(3) { --rest-opacity: 0.15; --rest-scale: 1.45; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ripple i {
+    animation: ripple-out 1.2s var(--sr-ease) both;
+  }
+
+  .ripple i:nth-of-type(2) { animation-delay: 200ms; }
+  .ripple i:nth-of-type(3) { animation-delay: 400ms; }
+}
+
+@keyframes ripple-out {
+  from {
+    opacity: 0.8;
+    scale: 1;
+  }
+
+  to {
+    opacity: var(--rest-opacity);
+    scale: var(--rest-scale);
+  }
+}
+
+/* ---------- Footer: the checkout, or the receipt's actions ---------- */
+
+.footer {
+  background: var(--sr-paper-soft);
+  border-top: 1px solid var(--sr-line);
+  bottom: 0;
+  display: grid;
+  flex: none;
+  gap: 12px;
+  margin-top: auto;
+  padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
+  position: sticky;
+  z-index: 1;
+}
+
+.checkout {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.sum {
+  display: grid;
+  gap: 4px;
+}
+
+.buyColumn {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  justify-content: flex-end;
+}
+
+/* ---------- Gift form ---------- */
+
+.form {
+  display: grid;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.fieldset {
+  display: grid;
+  gap: 12px;
+}
+
+.legend {
+  margin-bottom: 12px;
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* A segmented radio: the native input covers its 44px pill, so arrows, Space and clicks all work. */
+.segment {
+  align-items: center;
+  border: 1px solid var(--sr-control);
+  border-radius: var(--sr-pill);
+  color: var(--sr-ink);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-weight: 600;
+  justify-content: center;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  min-height: 44px;
+  padding: 0 20px;
+  position: relative;
+  transition:
+    background-color var(--sr-fast) var(--sr-ease),
+    color var(--sr-fast) var(--sr-ease);
+}
+
+.segment input {
+  appearance: none;
+  border-radius: inherit;
+  cursor: pointer;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+/* Selected: paper-soft on sage-deep (4.76). */
+.segment:has(input:checked) {
+  background: var(--sr-sage-deep);
+  border-color: var(--sr-sage-deep);
+  color: var(--sr-paper-soft);
+}
+
+.segment:has(input:focus-visible) {
+  outline: 2px solid var(--sr-sage-ink);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .segment:not(:has(input:checked)):hover {
+    background: rgb(32 49 44 / 6%);
+  }
+}
+
+.counter {
+  justify-self: end;
+}
+
+/* ---------- Phones: full width, a grabber, the Buy button across the bottom ---------- */
+
+@media (max-width: 759px) {
+  .head {
+    padding: 24px 20px 16px;
+  }
+
+  .body {
+    gap: 24px;
+    padding: 24px 20px 32px;
+  }
+
+  .face {
+    width: 100%;
+  }
+
+  .footer {
+    padding-inline: 20px;
+  }
+
+  .sum {
+    display: none;
+  }
+
+  .checkout,
+  .buyColumn {
+    justify-items: stretch;
+    width: 100%;
+  }
+
+  .buy {
+    width: 100%;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .action {
+    width: 100%;
+  }
+
+  .another {
+    align-self: center;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .body,
+  .segment {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .timeline::before,
+  .moment::before {
+    background: CanvasText;
+  }
+
+  .segment:has(input:checked) {
+    border-width: 2px;
+  }
+
+  .segment:has(input:focus-visible) {
+    outline-color: Highlight;
+  }
+}

@@ -1,0 +1,401 @@
+/*
+ * Fixed header. data-tone="film" is transparent over the hero with a soft walnut
+ * scrim; data-tone="solid" is frosted ivory once the film has passed beneath it.
+ */
+
+.header {
+  --nav-line: var(--mx-glow-300);
+
+  box-shadow: inset 0 -1px 0 transparent;
+  color: var(--mx-ivory-on-dark);
+  inset: 0 0 auto;
+  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  transition:
+    background-color var(--mx-ui) var(--mx-ease),
+    box-shadow var(--mx-ui) var(--mx-ease),
+    color var(--mx-ui) var(--mx-ease);
+  z-index: 50;
+}
+
+/* Legibility over the video; no backdrop-filter while the film plays underneath. */
+.header::before {
+  background: linear-gradient(180deg, rgb(18 12 8 / 55%), rgb(18 12 8 / 0%));
+  content: "";
+  height: 140px;
+  inset: 0 0 auto;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity var(--mx-ui) linear;
+  z-index: -1;
+}
+
+.header[data-tone="solid"] {
+  --nav-line: var(--mx-bronze-600);
+
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  backdrop-filter: blur(12px) saturate(1.1);
+  background: rgb(247 242 234 / 94%); /* --mx-ivory-50 at 94% */
+  box-shadow: inset 0 -1px 0 var(--mx-line);
+  color: var(--mx-ink);
+}
+
+.header[data-tone="solid"]::before {
+  opacity: 0;
+}
+
+.header[data-tone="film"] :focus-visible {
+  outline-color: var(--mx-glow-300);
+}
+
+/* Phone: wordmark | Book + menu icon. */
+.bar {
+  align-items: center;
+  column-gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  height: var(--mx-header);
+  padding-inline: max(var(--mx-gutter), env(safe-area-inset-left)) max(var(--mx-gutter), env(safe-area-inset-right));
+}
+
+.wordmark {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: inherit;
+  display: inline-flex;
+  font-family: var(--mx-display);
+  font-size: 17px;
+  font-weight: 500;
+  justify-self: start;
+  letter-spacing: .24em;
+  line-height: 1;
+  min-height: 44px;
+  padding: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- Desktop navigation ---------- */
+
+.nav {
+  display: none;
+}
+
+.navList {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  font-family: var(--mx-text);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  line-height: 1;
+  min-height: 44px;
+  position: relative;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* 1px underline 8px below the text: bronze on ivory, glow over the film. */
+.navLink::after {
+  background: currentColor;
+  bottom: 6px;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 400ms var(--mx-ease);
+}
+
+.navLink[aria-current="true"]::after {
+  background: var(--nav-line);
+  transform: none;
+}
+
+/* ---------- Actions ---------- */
+
+.actions {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+  justify-self: end;
+}
+
+.actions .book {
+  display: none;
+}
+
+.actions .phoneBook {
+  min-width: 44px;
+  padding-inline: 6px;
+  transition:
+    opacity var(--mx-fast) linear,
+    visibility var(--mx-fast) linear,
+    transform var(--mx-fast) var(--mx-ease);
+}
+
+/* The phone Book bar carries the action while it is on screen, so it is never shown twice. */
+:global(html[data-bookbar="on"]) .actions .phoneBook {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.menuToggle {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-radius: var(--mx-r-xs);
+  color: inherit;
+  display: inline-flex;
+  flex: none;
+  font-family: var(--mx-text);
+  font-size: 13px;
+  font-weight: 600;
+  gap: 10px;
+  height: 44px;
+  justify-content: center;
+  letter-spacing: .14em;
+  line-height: 1;
+  min-width: 44px;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.menuToggle svg {
+  flex: none;
+  height: 20px;
+  width: 20px;
+}
+
+.menuText {
+  display: none;
+}
+
+/* Tablet: wordmark | Book a visit + MENU. */
+@media (min-width: 760px) {
+  .bar {
+    column-gap: 24px;
+  }
+
+  .wordmark {
+    font-size: 18px;
+    letter-spacing: .28em;
+  }
+
+  .actions {
+    gap: 16px;
+  }
+
+  .actions .book {
+    display: inline-flex;
+  }
+
+  .actions .phoneBook {
+    display: none;
+  }
+
+  .menuToggle {
+    padding-inline: 4px;
+  }
+
+  .menuText {
+    display: inline;
+  }
+}
+
+/* Desktop: wordmark | nav | Book a visit. */
+@media (min-width: 1100px) {
+  .bar {
+    column-gap: 32px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .wordmark {
+    font-size: 20px;
+    letter-spacing: .3em;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: center;
+  }
+
+  .menuToggle {
+    display: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:hover::after {
+    transform: none;
+  }
+
+  .menuLink:hover svg {
+    transform: translateX(4px);
+  }
+
+  .menuHouse:hover .menuHouseName {
+    color: var(--mx-glow-300);
+  }
+}
+
+/* ---------- Phone and tablet menu (walnut, full screen) ---------- */
+
+/* The title is visually hidden, so the close button keeps to the right of the top row. */
+.menuPanel > header {
+  justify-content: flex-end;
+}
+
+.menu {
+  padding:
+    8px
+    max(var(--mx-gutter), env(safe-area-inset-right))
+    calc(32px + env(safe-area-inset-bottom))
+    max(var(--mx-gutter), env(safe-area-inset-left));
+}
+
+/*
+ * The wordmark sits in the layer's top row, opposite the close button. Its containing
+ * block is the panel, so it stays put while the menu body scrolls.
+ */
+.menuMark {
+  align-items: center;
+  display: flex;
+  font-family: var(--mx-display);
+  font-size: 17px;
+  font-weight: 500;
+  height: 44px;
+  left: max(var(--mx-gutter), env(safe-area-inset-left));
+  letter-spacing: .24em;
+  line-height: 1;
+  pointer-events: none;
+  position: absolute;
+  text-transform: uppercase;
+  top: max(10px, env(safe-area-inset-top));
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuLink {
+  align-items: center;
+  border-bottom: 1px solid var(--mx-line-dark);
+  color: inherit;
+  display: flex;
+  font-family: var(--mx-display);
+  font-size: 32px;
+  font-weight: 400;
+  gap: 16px;
+  justify-content: space-between;
+  line-height: 1.1;
+  min-height: 60px;
+  padding-block: 8px;
+  text-decoration: none;
+}
+
+.menuLink svg {
+  color: var(--mx-glow-300);
+  flex: none;
+  height: 20px;
+  transition: transform var(--mx-ui) var(--mx-ease);
+  width: 20px;
+}
+
+.menuBook {
+  margin-block: 32px;
+}
+
+.menuHousesTitle {
+  margin-bottom: 8px;
+}
+
+.menuHouses {
+  border-top: 1px solid var(--mx-line-dark);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuHouse {
+  align-content: center;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--mx-line-dark);
+  color: inherit;
+  display: grid;
+  gap: 2px;
+  min-height: 64px;
+  padding: 12px 0;
+  text-align: left;
+  width: 100%;
+}
+
+.menuHouseName {
+  font-family: var(--mx-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  transition: color var(--mx-fast) var(--mx-ease);
+}
+
+.menuHouseMeta {
+  color: var(--mx-muted-on-dark);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.powered {
+  color: var(--mx-muted-on-dark);
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 32px;
+}
+
+@media (min-width: 760px) {
+  .menuMark {
+    font-size: 18px;
+    letter-spacing: .28em;
+  }
+}
+
+/* Rows follow the panel in, 40ms apart. */
+@media (prefers-reduced-motion: no-preference) {
+  .menuItem {
+    animation: menu-row 280ms var(--mx-ease) both;
+    animation-delay: calc(60ms + var(--i, 0) * 40ms);
+  }
+}
+
+@keyframes menu-row {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .header::before,
+  .navLink::after,
+  .actions .phoneBook,
+  .menuLink svg {
+    transition: none;
+  }
+}

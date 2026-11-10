@@ -1,0 +1,491 @@
+/*
+ * Rituals (spec §4.3): the square hairline ritual browser and "05 · The whole
+ * menu" under it. Tokens come from layout.module.css, atoms from
+ * ui.module.css; nothing here adds a colour, size, tracking or radius.
+ */
+
+/* ---------- Ritual browser ---------- */
+
+.browser {
+  background: var(--sr-paper-soft);
+  border: 1px solid var(--sr-line);
+  display: grid;
+}
+
+/* Phone 4:3, tablet 3:2, desktop 4:5 (sticky beside the list). */
+.visual {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Four stacked skies; the active one fades in (and settles from 1.04 when motion is allowed). */
+.art {
+  height: 100%;
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+  transition: opacity var(--sr-cross) var(--sr-ease);
+  width: 100%;
+}
+
+.artImg {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.artActive {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .art {
+    scale: 1.04;
+    transition:
+      opacity var(--sr-cross) var(--sr-ease),
+      scale 1.2s var(--sr-ease);
+  }
+
+  .artActive {
+    scale: 1;
+  }
+}
+
+.caption {
+  bottom: 16px;
+  left: 16px;
+  position: absolute;
+}
+
+.list {
+  min-width: 0;
+  padding: 0 20px;
+}
+
+@media (min-width: 760px) {
+  .visual {
+    aspect-ratio: 3 / 2;
+  }
+
+  .list {
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .browser {
+    align-items: start;
+    column-gap: var(--sr-gap);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .visual {
+    aspect-ratio: 4 / 5;
+    grid-column: 1 / 6;
+    position: sticky;
+    top: calc(var(--sr-header) + 24px);
+  }
+
+  .list {
+    grid-column: 6 / 13;
+    padding: 0 40px;
+  }
+}
+
+/* ---------- Rows ---------- */
+
+.row:not(:last-child) {
+  border-bottom: 1px solid var(--sr-line);
+}
+
+/* Shared by the ritual rows and the whole-menu header. */
+.rowButton {
+  align-items: first baseline;
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 16px;
+  min-height: 72px;
+  padding-block: 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.rowButton[aria-disabled="true"] {
+  cursor: default;
+}
+
+/* The numeral is always clay-deep (ui.label reads --tone-label). */
+.numeral {
+  --tone-label: var(--sr-clay-deep);
+}
+
+.rowText {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.name {
+  transition: color var(--sr-fast) var(--sr-ease);
+}
+
+.rowButton[aria-expanded="true"] .name {
+  color: var(--sr-clay-deep);
+}
+
+/* Inline, not flex: the " · Changi" suffix keeps its leading space. */
+.rowMeta {
+  display: block;
+}
+
+.icon {
+  align-self: center;
+  height: 16px;
+  width: 16px;
+}
+
+@media (min-width: 760px) {
+  .rowButton {
+    grid-template-columns: 40px minmax(0, 1fr) 16px;
+    min-height: 88px;
+  }
+
+  /* The meta sits at the right, or drops under the name when the row is too narrow. */
+  .rowText {
+    align-items: baseline;
+    column-gap: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .rowMeta {
+    flex: none;
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Panels: grid rows 0fr → 1fr, inert while closed ---------- */
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 450ms var(--sr-ease);
+}
+
+.panel[data-open] {
+  grid-template-rows: 1fr;
+}
+
+/* Clips the closing panel; 8px of inline room keeps focus rings at the edges visible. */
+.clip {
+  margin-inline: -8px;
+  min-height: 0;
+  overflow: hidden;
+  padding-inline: 8px;
+}
+
+.panelBody {
+  display: grid;
+  justify-items: start;
+  padding: 8px 0 32px;
+}
+
+.panelBody > * {
+  max-width: 100%;
+}
+
+.note {
+  margin-top: 12px;
+}
+
+.group {
+  margin-top: 24px;
+  width: 100%;
+}
+
+.groupHead {
+  margin-bottom: 8px;
+}
+
+.service {
+  align-items: center;
+  border-top: 1px solid var(--sr-line);
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 56px;
+  padding-block: 8px;
+}
+
+.service:last-child {
+  border-bottom: 1px solid var(--sr-line);
+}
+
+.serviceText {
+  align-items: center;
+  column-gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  row-gap: 4px;
+}
+
+.serviceName {
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.serviceMeta {
+  flex-basis: 100%;
+}
+
+.serviceBook {
+  min-width: 64px;
+}
+
+.groupMissing {
+  align-items: center;
+  border-block: 1px solid var(--sr-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-block: 12px;
+}
+
+.cross {
+  margin-top: 24px;
+}
+
+.cross > button {
+  vertical-align: middle;
+}
+
+/* The journey's "See every … treatment" opens a row without motion, so its jump lands true. */
+.browser[data-instant] :is(.panel, .art, .name) {
+  transition: none;
+}
+
+/* ---------- 05 · The whole menu ---------- */
+
+.menu {
+  background: var(--sr-paper-soft);
+  border: 1px solid var(--sr-line);
+  margin-top: 24px;
+}
+
+.rowButton.menuButton {
+  min-height: 88px;
+  padding-inline: 20px;
+}
+
+.menuMeta {
+  display: none;
+}
+
+.menuBody {
+  border-top: 1px solid var(--sr-line);
+  padding: 24px 20px 32px;
+}
+
+@media (min-width: 760px) {
+  .rowButton.menuButton {
+    padding-inline: 40px;
+  }
+
+  .menuMeta {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  .menuBody {
+    padding: 32px 40px 40px;
+  }
+}
+
+/* Place tabs: native radios styled as underlined text tabs. */
+.tabs {
+  display: grid;
+  gap: 12px;
+}
+
+.tabRow {
+  display: grid;
+  gap: 8px 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 760px) {
+  .tabRow {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.tab {
+  align-content: center;
+  box-shadow: inset 0 -1px var(--sr-line);
+  color: var(--sr-ink-soft);
+  cursor: pointer;
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding-block: 8px 10px;
+  position: relative;
+}
+
+.tab:has(input:checked) {
+  box-shadow: inset 0 -2px var(--sr-sage-ink);
+  color: var(--sr-ink);
+}
+
+/* The radio is visually hidden; its focus ring moves to the tab. */
+.tab:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.tabName {
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tabSub {
+  color: var(--sr-ink-soft);
+}
+
+.placeLine {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 24px;
+}
+
+.placeLine > p {
+  flex-basis: 100%;
+}
+
+.groups {
+  margin-top: 32px;
+}
+
+@media (min-width: 1100px) {
+  .groups {
+    column-gap: 48px;
+    columns: 2;
+  }
+}
+
+.menuGroup {
+  break-inside: avoid;
+  padding-bottom: 32px;
+}
+
+.menuGroupTitle {
+  margin-bottom: 8px;
+}
+
+.item {
+  align-items: center;
+  border-top: 1px solid var(--sr-line);
+  column-gap: 16px;
+  display: grid;
+  grid-template-areas:
+    "name book"
+    "meta book";
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 56px;
+  padding-block: 8px;
+}
+
+.item > .serviceName {
+  grid-area: name;
+}
+
+.itemMeta {
+  grid-area: meta;
+}
+
+.itemBook {
+  grid-area: book;
+  min-width: 64px;
+}
+
+.skeletons {
+  margin-top: 32px;
+}
+
+.skeletonRow {
+  border-top: 1px solid var(--sr-line);
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding-block: 12px;
+}
+
+.skelName {
+  height: 16px;
+  width: 160px;
+}
+
+.skelMeta {
+  height: 14px;
+  width: 96px;
+}
+
+.state {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  margin-top: 32px;
+}
+
+.stateActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.menuFoot {
+  align-items: center;
+  border-top: 1px solid var(--sr-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 8px;
+  padding-top: 24px;
+}
+
+/* Under 360 "Book at The Grooming Room" drops its arrow to fit the body; the ring still shows while it waits. */
+@media (max-width: 359px) {
+  .menuFoot [data-book]:not([data-waiting]) > svg {
+    display: none;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .art,
+  .panel,
+  .name {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .browser,
+  .menu {
+    border-color: CanvasText;
+  }
+
+  /* Forced colours drop box shadows, so the checked tab's 2px underline becomes a border (2px less padding keeps its height). */
+  .tab:has(input:checked) {
+    border-bottom: 2px solid CanvasText;
+    padding-bottom: 8px;
+  }
+}

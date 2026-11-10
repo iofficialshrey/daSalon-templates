@@ -1,0 +1,749 @@
+/* Services: the live menu, house by house. Tokens live on .page (page.module.css). */
+
+.menu {
+  background: var(--mx-ivory-50);
+}
+
+@media (min-width: 1100px) {
+  .menu .head {
+    margin-bottom: 64px;
+  }
+}
+
+/* ---------- Layout ---------- */
+
+.layout {
+  position: relative;
+}
+
+.list {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .layout {
+    align-items: start;
+    column-gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .list {
+    grid-column: 5 / 13;
+  }
+}
+
+/* ---------- Desktop rail ---------- */
+
+.rail {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .rail {
+    display: block;
+    grid-column: 1 / 4;
+    max-height: calc(100vh - var(--mx-header) - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    position: sticky;
+    scrollbar-width: thin;
+    top: calc(var(--mx-header) + 32px);
+  }
+}
+
+.railLabel {
+  color: var(--mx-muted);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.railHouses {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.railHouse {
+  align-content: center;
+  color: var(--mx-muted);
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  min-height: 64px;
+  padding: 12px 0 12px 16px;
+  position: relative;
+  transition: color var(--mx-fast) var(--mx-ease), box-shadow var(--mx-fast) var(--mx-ease);
+}
+
+.railHouse input {
+  appearance: none;
+  cursor: pointer;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+/* Checked: ink text and a 2px ink bar on the left, drawn inset so nothing shifts. */
+.railHouse:has(input:checked) {
+  box-shadow: inset 2px 0 0 var(--mx-ink);
+  color: var(--mx-ink);
+}
+
+.railHouse:has(input:focus-visible) {
+  outline: 2px solid var(--mx-bronze-600);
+  outline-offset: -2px;
+}
+
+.railName {
+  font-family: var(--mx-display);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.railSpec {
+  color: var(--mx-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.railInfo {
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.railJump {
+  margin-top: 32px;
+}
+
+.railLinks {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.railLink {
+  align-items: center;
+  color: var(--mx-ink);
+  display: flex;
+  font-size: 15px;
+  gap: 16px;
+  justify-content: space-between;
+  line-height: 1.4;
+  min-height: 44px;
+  text-decoration: none;
+  transition: color var(--mx-fast) var(--mx-ease);
+}
+
+.rail .railLink:focus-visible {
+  outline-offset: -2px;
+}
+
+.railCount {
+  color: var(--mx-muted);
+  flex: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.railSkel {
+  height: 14px;
+  margin-block: 15px;
+  width: 60%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .railHouse:hover {
+    color: var(--mx-ink);
+  }
+
+  .railLink:hover {
+    color: var(--mx-bronze-600);
+  }
+}
+
+/* ---------- Phone and tablet control bar ---------- */
+
+/* Sits one header-height above the bar: once it leaves the viewport, the bar is stuck. */
+.sentinel {
+  display: block;
+  height: 1px;
+  margin-bottom: -1px;
+  pointer-events: none;
+  position: relative;
+  top: calc((var(--mx-header) + env(safe-area-inset-top, 0px)) * -1);
+  visibility: hidden;
+}
+
+/* 5 + 50 (house chips) + 2 + 46 (category chips) + 5 = 108px. */
+.bar {
+  background: var(--mx-ivory-50);
+  display: grid;
+  gap: 2px;
+  margin-bottom: 24px;
+  margin-inline: calc(var(--mx-gutter) * -1);
+  padding-block: 5px;
+  transition: box-shadow var(--mx-fast) linear;
+  z-index: 20;
+}
+
+/* Phones stop sticking under a 720px-tall viewport; tablets always stick. */
+@media (min-height: 720px), (min-width: 760px) {
+  .bar {
+    position: sticky;
+    top: calc(var(--mx-header) + env(safe-area-inset-top, 0px));
+  }
+
+  .bar[data-stuck] {
+    box-shadow: 0 1px 0 var(--mx-line);
+  }
+}
+
+@media (min-width: 1100px) {
+  .bar,
+  .sentinel {
+    display: none;
+  }
+}
+
+.chipField {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.chipRow {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 3px var(--mx-gutter);
+  position: relative;
+  scroll-padding-inline: var(--mx-gutter);
+  scrollbar-width: none;
+}
+
+.chipRow::-webkit-scrollbar {
+  display: none;
+}
+
+/* Keep the focus ring inside the scroller's clip. */
+.chipRow > label:has(input:focus-visible) {
+  outline-offset: 1px;
+}
+
+.categoryRow {
+  min-height: 46px;
+}
+
+.bar .categoryChip {
+  color: var(--mx-ink);
+  min-height: 40px;
+  padding: 0 14px;
+  text-decoration: none;
+}
+
+/* 40px visual, 44px hit area. */
+.categoryChip::after {
+  content: "";
+  inset: -2px;
+  position: absolute;
+}
+
+.categoryRow .categoryChip:focus-visible {
+  outline-offset: 1px;
+}
+
+.chipSkel {
+  flex: none;
+  height: 40px;
+  width: 96px;
+}
+
+/* ---------- Category groups ---------- */
+
+.group {
+  scroll-margin-top: calc(var(--mx-header) + 124px);
+}
+
+.group + .group {
+  margin-top: 40px;
+}
+
+@media (max-width: 759px) and (max-height: 719px) {
+  .group {
+    scroll-margin-top: calc(var(--mx-header) + 16px);
+  }
+}
+
+.groupHead {
+  align-items: baseline;
+  border-bottom: 1px solid var(--mx-line);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding-bottom: 14px;
+}
+
+.groupTitle {
+  min-width: 0;
+}
+
+/* Focus lands here after a category jump; the heading itself needs no ring. */
+.group .groupTitle:focus-visible {
+  outline: none;
+}
+
+.groupCount {
+  flex: none;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.more {
+  margin-top: 8px;
+}
+
+/* Long category names wrap instead of overflowing a phone. */
+.group .more {
+  line-height: 1.3;
+  text-align: left;
+  white-space: normal;
+}
+
+@media (min-width: 760px) {
+  .group + .group {
+    margin-top: 48px;
+  }
+
+  .groupHead {
+    padding-inline: 12px;
+  }
+
+  .more {
+    margin-inline-start: 12px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .group {
+    scroll-margin-top: calc(var(--mx-header) + 32px);
+  }
+
+  .groupHead {
+    padding-inline: 16px;
+  }
+
+  .more {
+    margin-inline-start: 16px;
+  }
+}
+
+/* ---------- Service row ---------- */
+
+/* Phone: name and price, then the description, then "1 hr · + GST 9%" and Book. */
+.row {
+  align-items: baseline;
+  border-bottom: 1px solid var(--mx-line);
+  column-gap: 16px;
+  display: grid;
+  grid-template-areas:
+    "name amount"
+    "desc desc"
+    "meta book";
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 88px;
+  padding: 20px 0;
+  position: relative;
+  transition: background-color var(--mx-fast) var(--mx-ease);
+}
+
+.name {
+  background: none;
+  border: 0;
+  color: var(--mx-ink);
+  cursor: pointer;
+  font-family: var(--mx-display);
+  font-size: 22px;
+  font-weight: 500;
+  grid-area: name;
+  justify-self: start;
+  line-height: 1.15;
+  padding: 0;
+  text-align: left;
+  text-wrap: balance;
+}
+
+/* The name button covers the whole row. */
+.name::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.row .name:focus-visible {
+  outline: none;
+}
+
+.name:focus-visible::after {
+  outline: 2px solid var(--mx-bronze-600);
+  outline-offset: -2px;
+}
+
+.desc {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--mx-muted);
+  display: -webkit-box;
+  font-size: 14px;
+  grid-area: desc;
+  line-height: 1.5;
+  margin-top: 6px;
+  max-width: 56ch;
+  overflow: hidden;
+}
+
+.dur {
+  color: var(--mx-muted);
+  display: none;
+  font-size: 14px;
+  grid-area: dur;
+  line-height: 1.5;
+}
+
+.price {
+  display: contents;
+}
+
+.amount {
+  color: var(--mx-ink);
+  font-size: 16px;
+  font-weight: 600;
+  grid-area: amount;
+  justify-self: end;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.tax {
+  color: var(--mx-muted);
+  display: none;
+  font-size: 12px;
+  grid-area: tax;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.phoneMeta {
+  color: var(--mx-muted);
+  font-size: 13px;
+  font-weight: 500;
+  grid-area: meta;
+  line-height: 1.45;
+  margin-top: 10px;
+}
+
+.book {
+  align-items: center;
+  color: var(--mx-bronze-600);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 8px;
+  grid-area: book;
+  justify-self: end;
+  letter-spacing: .14em;
+  line-height: 1;
+  margin-top: 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bookArrow {
+  flex: none;
+  transition: transform var(--mx-ui) var(--mx-ease);
+}
+
+.row:has(.name:active),
+.row:has(.name:focus-visible) {
+  background: var(--mx-ivory-100);
+}
+
+/* Tablet: duration over "S$45 · + GST 9%" in one 160px column. */
+@media (min-width: 760px) {
+  .row {
+    column-gap: 24px;
+    grid-template-areas:
+      "name dur book"
+      "desc price .";
+    grid-template-columns: minmax(0, 1fr) 160px 80px;
+    min-height: 96px;
+    padding: 24px 12px;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .desc {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .dur {
+    display: block;
+  }
+
+  .price {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 6px;
+    grid-area: price;
+    margin-top: 6px;
+  }
+
+  .amount {
+    font-size: 17px;
+  }
+
+  .tax {
+    display: inline;
+  }
+
+  .tax::before {
+    content: "· ";
+  }
+
+  .phoneMeta {
+    display: none;
+  }
+
+  .book {
+    margin-top: 0;
+  }
+}
+
+/* Desktop: name and description | duration | price over tax | Book. */
+@media (min-width: 1100px) {
+  .row {
+    column-gap: 16px;
+    grid-template-areas:
+      "name dur amount book"
+      "desc . tax .";
+    grid-template-columns: minmax(0, 1fr) 112px 136px 96px;
+    padding: 28px 16px;
+  }
+
+  .name {
+    font-size: 26px;
+  }
+
+  .price {
+    display: contents;
+  }
+
+  .tax {
+    justify-self: end;
+    margin-top: 6px;
+  }
+
+  .tax::before {
+    content: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    background: var(--mx-ivory-100);
+  }
+
+  .row:hover .bookArrow {
+    transform: translateX(4px);
+  }
+}
+
+/* ---------- Loading, error and empty ---------- */
+
+.skelHead {
+  height: 26px;
+  width: 30%;
+}
+
+.skelRow {
+  align-items: center;
+  border-bottom: 1px solid var(--mx-line);
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px;
+  min-height: 88px;
+  padding: 20px 0;
+  row-gap: 10px;
+}
+
+.skelTitle {
+  height: 22px;
+  width: 40%;
+}
+
+.skelMeta {
+  grid-column: 1;
+  height: 14px;
+  width: 25%;
+}
+
+.skelPrice {
+  grid-column: 2;
+  grid-row: 1;
+  height: 18px;
+  width: 56px;
+}
+
+@media (min-width: 760px) {
+  .skelRow {
+    min-height: 96px;
+    padding: 24px 12px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .skelRow {
+    padding: 28px 16px;
+  }
+}
+
+.state {
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+  padding-top: 32px;
+}
+
+.stateText {
+  max-width: 32ch;
+}
+
+/* The unavailable menu: a quiet card with an arch, never a bare error. */
+.stateCard {
+  background: var(--mx-paper);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--mx-r-card);
+  gap: 20px;
+  padding: 28px;
+}
+
+.stateArch {
+  border: 1px solid var(--mx-brass-400);
+  border-radius: 999px 999px 2px 2px;
+  display: block;
+  height: 44px;
+  position: relative;
+  width: 30px;
+}
+
+.stateArch::after {
+  border: 1px solid rgb(184 145 95 / 45%);
+  border-radius: 999px 999px 1px 1px;
+  content: "";
+  inset: 5px 5px 0;
+  position: absolute;
+}
+
+.stateCopy {
+  display: grid;
+  gap: 8px;
+}
+
+.stateHint {
+  color: var(--mx-muted);
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 46ch;
+}
+
+.stateActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (min-width: 760px) {
+  .stateCard {
+    align-items: center;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 32px 36px;
+  }
+
+  .stateCard .stateActions {
+    grid-column: 2;
+  }
+}
+
+/* ---------- List footer ---------- */
+
+.listFoot {
+  border-top: 1px solid var(--mx-line);
+  display: grid;
+  gap: 16px;
+  margin-top: 48px;
+  padding-top: 24px;
+}
+
+.note {
+  max-width: 56ch;
+}
+
+.footBtn {
+  width: 100%;
+}
+
+.listFoot .footBtn {
+  line-height: 1.3;
+  white-space: normal;
+}
+
+@media (min-width: 760px) {
+  .listFoot {
+    align-items: center;
+    display: flex;
+    gap: 32px;
+    justify-content: space-between;
+  }
+
+  .footBtn {
+    flex: none;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .bookArrow,
+  .railHouse,
+  .railLink,
+  .row {
+    transition: none;
+  }
+
+  .row:hover .bookArrow {
+    transform: none;
+  }
+}

@@ -1,0 +1,74 @@
+/*
+ * Redemption chips (in the checkout): numbered session squares, value cells
+ * joined in one bar from stone to champagne, or 60-minute time cells. The
+ * caption carries the meaning; the chips are decoration.
+ */
+
+.redeem {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.chips {
+  display: flex;
+  gap: 4px;
+}
+
+.session,
+.timeCell {
+  align-items: center;
+  border: 1px solid var(--at-line-strong);
+  color: var(--at-ink);
+  display: inline-flex;
+  font-family: var(--at-serif);
+  font-size: 14px;
+  font-variant-numeric: lining-nums;
+  height: 28px;
+  justify-content: center;
+  min-width: 28px;
+}
+
+.timeCell {
+  font-family: var(--at-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0 8px;
+}
+
+.chips[data-type="value"] {
+  gap: 2px;
+}
+
+.valueCell {
+  background: color-mix(in srgb, var(--at-champagne) var(--mix, 0%), var(--at-stone));
+  height: 12px;
+  width: 28px;
+}
+
+.chipCaption {
+  color: var(--at-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.chipsLg .session,
+.chipsLg .timeCell {
+  height: 36px;
+  min-width: 36px;
+}
+
+.chipsLg .valueCell {
+  height: 14px;
+  width: 36px;
+}
+
+.redeemLg .chipCaption {
+  font-size: 14px;
+}
+
+.chipsAnimate {
+  display: flex;
+}

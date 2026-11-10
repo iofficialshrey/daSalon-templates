@@ -1,0 +1,243 @@
+.root {
+  display: grid;
+  inset: 0;
+  position: fixed;
+  z-index: 800;
+}
+
+.backdrop {
+  animation: layer-fade var(--mx-ui) linear both;
+  background: var(--mx-scrim);
+  inset: 0;
+  position: absolute;
+}
+
+.panel {
+  /* Layers keep a compact gutter whatever the page gutter is. */
+  --mx-gutter: 20px;
+  background: var(--mx-ivory-50);
+  box-shadow: 0 40px 120px rgb(18 12 8 / 30%);
+  color: var(--mx-ink);
+  display: flex;
+  flex-direction: column;
+  max-height: 100dvh;
+  min-height: 0;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.header {
+  align-items: center;
+  border-bottom: 1px solid var(--mx-line);
+  display: flex;
+  flex: none;
+  gap: 16px;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: max(10px, env(safe-area-inset-top)) var(--mx-gutter) 10px;
+}
+
+.title {
+  font-family: var(--mx-display);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.15;
+  outline: none;
+}
+
+.headerExtra {
+  align-items: center;
+  display: flex;
+  flex: none;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.footer {
+  align-items: center;
+  background: var(--mx-ivory-50);
+  border-top: 1px solid var(--mx-line);
+  display: flex;
+  flex: none;
+  gap: 12px;
+  min-height: 80px;
+  padding: 12px var(--mx-gutter) max(12px, env(safe-area-inset-bottom));
+}
+
+/* Phones: every dialog and drawer is a full-screen layer. */
+.dialog .panel,
+.drawer .panel {
+  animation: layer-rise var(--mx-sheet) var(--mx-ease) both;
+  height: 100dvh;
+  width: 100%;
+}
+
+@media (min-width: 760px) {
+  .panel {
+    --mx-gutter: 32px;
+  }
+
+  .backdrop {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  .dialog {
+    align-items: center;
+    justify-items: center;
+    padding: 32px;
+  }
+
+  .dialog .panel {
+    border-radius: var(--mx-r-sm);
+    height: auto;
+    max-height: calc(100dvh - 64px);
+    width: min(560px, 100%);
+  }
+
+  .dialog .wide {
+    width: min(920px, 100%);
+  }
+
+  .drawer {
+    justify-items: end;
+  }
+
+  .drawer .panel {
+    animation-name: layer-slide;
+    height: 100dvh;
+    width: min(600px, 86vw);
+  }
+}
+
+/* Bottom sheet (house chooser). */
+.sheet {
+  align-items: end;
+}
+
+.sheet .panel {
+  animation: layer-up var(--mx-sheet) var(--mx-ease) both;
+  border-radius: var(--mx-r-card) var(--mx-r-card) 0 0;
+  max-height: 80dvh;
+  width: 100%;
+}
+
+@media (min-width: 760px) {
+  .sheet {
+    align-items: center;
+    justify-items: center;
+  }
+
+  .sheet .panel {
+    border-radius: var(--mx-r-sm);
+    width: min(480px, calc(100% - 48px));
+  }
+}
+
+/* Full-screen walnut menu. */
+.menu {
+  z-index: 900;
+}
+
+.menu .backdrop {
+  display: none;
+}
+
+.menu .panel {
+  animation: layer-menu 280ms var(--mx-ease) both;
+  background: var(--mx-walnut-950);
+  color: var(--mx-ivory-on-dark);
+  height: 100dvh;
+  width: 100%;
+}
+
+.menu .header {
+  border-bottom-color: var(--mx-line-dark);
+}
+
+.menu .header :focus-visible,
+.menu .body :focus-visible {
+  outline-color: var(--mx-glow-300);
+}
+
+.menu .header button {
+  border-color: rgb(243 235 221 / 40%);
+}
+
+/* Closing. */
+.root[data-state="closing"] .backdrop {
+  animation: layer-fade-out var(--mx-ui) linear both;
+}
+
+.root[data-state="closing"] .panel {
+  animation: layer-fade-out 200ms linear both;
+}
+
+@keyframes layer-fade {
+  from { opacity: 0; }
+}
+
+@keyframes layer-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes layer-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes layer-slide {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+}
+
+@keyframes layer-up {
+  from { transform: translateY(100%); }
+}
+
+@keyframes layer-menu {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (min-width: 760px) {
+  .dialog .panel {
+    animation-name: layer-dialog;
+  }
+}
+
+@keyframes layer-dialog {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .panel,
+  .root[data-state="closing"] .panel,
+  .root[data-state="closing"] .backdrop {
+    animation-duration: 120ms !important;
+    animation-name: layer-fade !important;
+  }
+
+  .root[data-state="closing"] .panel,
+  .root[data-state="closing"] .backdrop {
+    animation-name: layer-fade-out !important;
+  }
+}

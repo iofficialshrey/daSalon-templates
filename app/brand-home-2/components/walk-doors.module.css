@@ -1,0 +1,140 @@
+/*
+ * The doors over the threshold film (z6) and the static-mode band, drawn as
+ * on the production site: two black fluted leaves, a champagne hairline
+ * inset on each, slim outlined pulls either side of the seam, and the house
+ * name in spaced capitals across the middle. The leaves slide apart.
+ */
+
+.doors {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 6;
+}
+
+/* ---------- The leaves ---------- */
+
+.leaf,
+.bandLeaf {
+  --leaf-sheen: 90deg;
+
+  background:
+    linear-gradient(var(--leaf-sheen), rgb(255 255 255 / 2.5%), transparent 22%, rgb(0 0 0 / 20%)),
+    repeating-linear-gradient(90deg, #14110e 0, #181410 10px, #0d0b09 12px, #15110e 24px);
+  bottom: 0;
+  box-shadow: 0 0 70px rgb(0 0 0 / 50%);
+  position: absolute;
+  top: 0;
+  width: 50.5%;
+}
+
+/* A champagne hairline inset on each leaf. */
+.leaf::after,
+.bandLeaf::after {
+  border: 1px solid rgb(210 184 144 / 19%);
+  content: "";
+  inset: 5vh 4vw;
+  pointer-events: none;
+  position: absolute;
+}
+
+.leafLeft {
+  left: 0;
+}
+
+/* Mirrored, so both leaves darken towards the seam. */
+.leafRight {
+  --leaf-sheen: 270deg;
+  right: 0;
+}
+
+[data-active="on"]:not([data-doors="open"]) .leaf {
+  will-change: transform;
+}
+
+[data-doors="open"] .leaf {
+  visibility: hidden;
+}
+
+/* A slim outlined pull either side of the seam, just below the house name. */
+.pull {
+  border: 1px solid #bda277;
+  border-radius: 999px;
+  height: 74px;
+  position: absolute;
+  top: var(--pull-top, calc(50% + 64px));
+  width: 8px;
+}
+
+.leafLeft .pull {
+  right: 24px;
+}
+
+.leafRight .pull {
+  left: 24px;
+}
+
+/* ---------- The house name ---------- */
+
+.sign {
+  align-items: center;
+  color: var(--at-ivory);
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  justify-content: center;
+  position: absolute;
+  text-align: center;
+  z-index: 2;
+}
+
+.signWord {
+  font-family: var(--at-serif);
+  font-size: clamp(26px, 3vw, 48px);
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  line-height: 1;
+  /* The tracking after the last letter, given back so the word sits on the seam. */
+  margin-right: -0.26em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.signHint {
+  font-family: var(--at-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  margin-right: -0.22em;
+  margin-top: 17px;
+  text-transform: uppercase;
+}
+
+/* ---------- Static mode: the closed doors as a band ---------- */
+
+.band {
+  --pull-top: calc(50% + 44px);
+
+  height: clamp(260px, 46vh, 520px);
+  overflow: hidden;
+  position: relative;
+}
+
+.bandLeaf::after {
+  inset: 24px 4vw;
+}
+
+.bandWord {
+  color: var(--at-ivory);
+  font-family: var(--at-serif);
+  font-size: clamp(26px, 3vw, 48px);
+  left: 50%;
+  letter-spacing: 0.26em;
+  line-height: 1;
+  position: absolute;
+  text-transform: uppercase;
+  top: 50%;
+  transform: translate(calc(-50% + 0.13em), -50%);
+  white-space: nowrap;
+}

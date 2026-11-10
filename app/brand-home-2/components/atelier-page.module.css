@@ -1,0 +1,523 @@
+/*
+ * An atelier's own page. The cover (copy beside the house's photograph in a
+ * hairline frame), the menu on stone, the details, the offers, then the
+ * neighbouring ateliers.
+ */
+
+/* ---------- 1. Cover ---------- */
+
+.cover {
+  padding-bottom: var(--at-section);
+  padding-top: var(--at-header);
+  scroll-margin-top: 0;
+}
+
+.coverGrid {
+  display: flex;
+  flex-direction: column;
+}
+
+.copy {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+  min-width: 0;
+}
+
+.crumb {
+  margin-left: -1px;
+}
+
+.title {
+  font-family: var(--at-serif);
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  margin-top: 24px;
+  overflow-wrap: anywhere;
+}
+
+/* The H1 takes focus on arrival and from jumps; it is not a control. */
+.copy .title:focus,
+.copy .title:focus-visible {
+  outline: none;
+}
+
+.subLine {
+  color: var(--at-bronze);
+  font-family: var(--at-serif);
+  font-size: 21px;
+  font-style: italic;
+  line-height: 1.4;
+  margin-top: 14px;
+}
+
+.blurb {
+  margin-top: 20px;
+}
+
+.facts {
+  color: var(--at-ink);
+  display: grid;
+  font-size: 14px;
+  gap: 4px;
+  line-height: 1.5;
+  margin-top: 24px;
+}
+
+.fact {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.factDot {
+  color: #5d7a4f;
+}
+
+.meta {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-top: 8px;
+  min-height: 1.4em;
+}
+
+.unavailable {
+  color: var(--at-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.placeholder {
+  animation: placeholder 1.2s ease-in-out infinite alternate;
+  background: rgb(23 20 15 / 9%);
+  display: inline-block;
+  height: 12px;
+  vertical-align: middle;
+  width: 120px;
+}
+
+.placeholderWide {
+  width: 168px;
+}
+
+@keyframes placeholder {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+.ctas {
+  margin-top: 28px;
+}
+
+/* Art: on phones the photograph leads, full bleed, under the header. */
+.art {
+  margin-inline: calc(-1 * var(--at-gutter));
+  order: -1;
+  position: relative;
+}
+
+.photo {
+  aspect-ratio: 5 / 4;
+  background: var(--at-stone);
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.photoImg {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* A hairline frame inside the photograph, like a pane of glass before it. */
+.photoFrame {
+  border: 1px solid rgb(247 240 228 / 42%);
+  inset: 14px;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.photoCredit {
+  bottom: 22px;
+  color: rgb(247 240 228 / 80%);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  position: absolute;
+  right: 26px;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 40%);
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+@media (max-width: 759px) {
+  .ctas {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .book {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .ctas .directions {
+    min-height: 48px;
+    padding-inline: 12px;
+    width: 100%;
+  }
+
+  .ctas .share {
+    font-size: 14px;
+    font-weight: 500;
+    gap: 10px;
+    height: 48px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    width: 100%;
+  }
+}
+
+@media (min-width: 760px) {
+  .cover {
+    padding-top: calc(var(--at-header) + 48px);
+  }
+
+  .coverGrid {
+    align-items: start;
+    column-gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .copy {
+    grid-column: 1 / 6;
+    margin-top: 0;
+    /* The photo overlaps the art column's left edge by 40px; text stays clear of it. */
+    padding-right: 28px;
+  }
+
+  .title {
+    font-size: clamp(44px, 6vw, 96px);
+  }
+
+  .facts {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 0;
+  }
+
+  .fact + .fact::before {
+    background: var(--at-line-strong);
+    border-radius: 50%;
+    content: "";
+    flex: none;
+    height: 3px;
+    margin: 0 12px;
+    width: 3px;
+  }
+
+  .ctas {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .book {
+    max-width: 100%;
+  }
+
+  /* Share is a 44px square icon button here; its word is for screen readers. */
+  .shareText {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .art {
+    grid-column: 6 / 9;
+    justify-self: end;
+    margin: 0;
+    order: 0;
+    width: 100%;
+  }
+
+  .photo {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+@media (min-width: 1100px) {
+  .cover {
+    padding-top: calc(var(--at-header) + 56px);
+  }
+
+  .coverGrid {
+    column-gap: 24px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .copy {
+    grid-column: 1 / 7;
+    padding-right: 48px;
+  }
+
+  .art {
+    grid-column: 7 / 13;
+    width: min(100%, 620px);
+  }
+}
+
+/* ---------- 3. Details ---------- */
+
+.details {
+  scroll-margin-top: var(--at-header);
+}
+
+.sectionHead {
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+  margin-bottom: 40px;
+}
+
+.dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.dlRow {
+  align-content: start;
+  display: grid;
+  gap: 10px;
+  padding: 22px 0 26px;
+  position: relative;
+}
+
+.dlRow::before {
+  background: var(--at-line);
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.dd {
+  color: var(--at-ink);
+  display: grid;
+  font-size: 16px;
+  gap: 6px;
+  justify-items: start;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.hours {
+  border-collapse: collapse;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.5;
+}
+
+.hoursCaption {
+  caption-side: top;
+  color: var(--at-muted);
+  font-size: 13px;
+  padding-bottom: 6px;
+  text-align: left;
+}
+
+.hours th {
+  font-weight: 400;
+  padding: 2px 24px 2px 0;
+  text-align: left;
+}
+
+.hours td {
+  padding: 2px 0;
+}
+
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.amenity {
+  align-items: center;
+  border: 1px dashed rgb(163 32 44 / 55%);
+  display: inline-flex;
+  font-size: 14px;
+  line-height: 1.2;
+  min-height: 32px;
+  padding: 0 12px;
+}
+
+.sisterLink {
+  margin-top: 2px;
+}
+
+.detailsNote {
+  color: var(--at-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 32px;
+  max-width: 62ch;
+}
+
+@media (min-width: 760px) {
+  .sectionHead {
+    margin-bottom: 48px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .dl {
+    column-gap: clamp(48px, 6vw, 96px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- 5. Next spread ---------- */
+
+.next {
+  scroll-margin-top: var(--at-header);
+}
+
+.nextLinks {
+  display: grid;
+  gap: 0 24px;
+}
+
+.nextLink {
+  align-items: center;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 64px minmax(0, 1fr);
+  min-height: 128px;
+  padding: 24px 0;
+  position: relative;
+}
+
+.nextLink::before {
+  background: var(--at-line);
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.nextThumb {
+  background: var(--at-stone);
+  display: block;
+  height: 80px;
+  overflow: hidden;
+  width: 64px;
+}
+
+.nextThumbImg {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.nextText {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.nextLabel {
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nextLabel svg {
+  flex: none;
+  transition: transform var(--at-ui) var(--at-ease);
+}
+
+.nextName {
+  font-family: var(--at-serif);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  transition: color var(--at-fast) linear;
+}
+
+@media (hover: hover) {
+  .nextLink:hover .nextName {
+    color: var(--at-bronze);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .nextLink:hover .nextLabel svg:first-child {
+    transform: translateX(-4px);
+  }
+
+  .nextLinkForward:hover .nextLabel svg {
+    transform: translateX(4px);
+  }
+}
+
+.back {
+  margin-top: 32px;
+}
+
+@media (min-width: 760px) {
+  .nextLinks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nextLinkForward {
+    grid-template-columns: minmax(0, 1fr) 64px;
+    text-align: right;
+  }
+
+  .nextLinkForward .nextThumb {
+    order: 2;
+  }
+
+  .nextLinkForward .nextLabel {
+    justify-content: flex-end;
+  }
+
+  .nextName {
+    font-size: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placeholder {
+    animation: none;
+  }
+}

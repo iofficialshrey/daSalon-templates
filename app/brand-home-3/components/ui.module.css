@@ -1,0 +1,588 @@
+/*
+ * Serein's shared atoms (spec §11.4) and its one type scale (§2.2). Compose
+ * with template literals: className={`${ui.btn} ${ui.sm} ${ui.primary}`}.
+ * Colours read the --tone-* variables set by [data-tone], so an atom is right
+ * on paper, mist, blush, the sage band and the ink footer alike. Sizes come
+ * from the --sr-fs-* tokens on .root (layout.module.css).
+ */
+
+/* ---------- Type ---------- */
+
+.displayXl,
+.displayL,
+.displayArrival,
+.displayM,
+.h3,
+.figure {
+  font-family: var(--sr-display);
+  font-weight: 300;
+}
+
+.displayXl {
+  font-size: var(--sr-fs-display-xl);
+  letter-spacing: -0.05em;
+  line-height: 0.86;
+}
+
+.displayL {
+  font-size: var(--sr-fs-display-l);
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.displayArrival {
+  font-size: var(--sr-fs-display-arrival);
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+
+.displayM {
+  font-size: var(--sr-fs-display-m);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.h3 {
+  font-size: var(--sr-fs-h3);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.titleS {
+  font-family: var(--sr-display);
+  font-size: var(--sr-fs-title-s);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.figure {
+  font-size: var(--sr-fs-figure);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.lead {
+  font-family: var(--sr-display);
+  font-size: var(--sr-fs-lead);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 34ch;
+}
+
+.body {
+  font-family: var(--sr-display);
+  font-size: var(--sr-fs-body);
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+.bodyS {
+  font-family: var(--sr-display);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+/* Newsreader 400 in any size the caller sets (service names, the wordmark). */
+.serif {
+  font-family: var(--sr-display);
+  font-weight: 400;
+}
+
+/* Every em and i inside serif text is the real italic, never a faux slant. */
+:is(.displayXl, .displayL, .displayArrival, .displayM, .h3, .titleS, .figure, .lead, .body, .bodyS, .serif) :is(em, i) {
+  font-family: var(--sr-italic);
+  font-style: italic;
+}
+
+.ui {
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* The floor for any sentence. */
+.small {
+  font-family: var(--sr-text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.nav {
+  font-family: var(--sr-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* The only caps style on the page: 12px, Manrope 600, .14em. */
+.label {
+  color: var(--tone-label);
+  font-family: var(--sr-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.muted {
+  color: var(--tone-muted);
+}
+
+/* Authored headline breaks: block from 760px, inline (natural wrapping) below. */
+.line {
+  display: inline;
+}
+
+@media (min-width: 760px) {
+  .line {
+    display: block;
+  }
+}
+
+/* ---------- Visually hidden ---------- */
+
+.srOnly {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* Hidden on phones, inline from 760 ("Book<span> a ritual</span>"). */
+@media (max-width: 759px) {
+  .srOnlyPhone {
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+}
+
+/* ---------- Buttons (sentence case, always) ---------- */
+
+.btn {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--sr-pill);
+  display: inline-flex;
+  flex: none;
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-weight: 600;
+  gap: 10px;
+  justify-content: center;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  min-height: 48px;
+  padding: 0 24px;
+  text-align: center;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    color var(--sr-fast) var(--sr-ease),
+    background-color var(--sr-fast) var(--sr-ease),
+    border-color var(--sr-fast) var(--sr-ease);
+}
+
+.btn svg,
+.text svg {
+  flex: none;
+  height: 16px;
+  width: 16px;
+}
+
+.sm {
+  font-size: 14px;
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+.lg {
+  min-height: 56px;
+  padding: 0 28px;
+}
+
+.block {
+  width: 100%;
+}
+
+/* Sage-deep fill, paper-soft text (4.76); clay-deep on hover (5.72). */
+.primary {
+  background: var(--sr-sage-deep);
+  color: var(--sr-paper-soft);
+}
+
+/* Paper-soft fill, ink text (12.43); mist on hover (10.61). For the band, ink and film. */
+.onDark {
+  background: var(--sr-paper-soft);
+  color: var(--sr-ink);
+}
+
+/* Outline on light tones. */
+.secondary {
+  background: transparent;
+  border-color: var(--tone-control);
+  color: var(--tone-text);
+}
+
+/* Outline over the film. */
+.outlineOnDark {
+  background: transparent;
+  border-color: var(--sr-paper-soft);
+  color: var(--sr-paper-soft);
+}
+
+/* Text button: 44px target, underline at a 5px offset; colour follows the tone. */
+.text {
+  align-items: center;
+  color: var(--tone-link);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-weight: 600;
+  gap: 8px;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  min-height: 44px;
+  padding: 0 2px;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .primary:hover { background: var(--sr-clay-deep); }
+  .onDark:hover { background: var(--sr-mist); }
+  .secondary:hover { background: rgb(32 49 44 / 6%); }
+  .outlineOnDark:hover { background: rgb(247 244 236 / 12%); }
+  .text:hover { text-decoration-thickness: 2px; }
+}
+
+.primary:focus-visible { background: var(--sr-clay-deep); }
+.onDark:focus-visible { background: var(--sr-mist); }
+.secondary:focus-visible { background: rgb(32 49 44 / 6%); }
+.outlineOnDark:focus-visible { background: rgb(247 244 236 / 12%); }
+.text:focus-visible { text-decoration-thickness: 2px; }
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  background: transparent;
+  border-color: var(--tone-line);
+  color: var(--tone-muted);
+  cursor: default;
+}
+
+/* While a Book waits for the booking window: Ring replaces the trailing icon and breathes. */
+.iconBusy {
+  display: none;
+}
+
+:is(.btn, .text, .iconBtn)[data-waiting] {
+  cursor: progress;
+}
+
+[data-waiting] > .iconIdle {
+  display: none;
+}
+
+[data-waiting] > .iconBusy {
+  animation: sr-busy 1.2s var(--sr-ease-breath) infinite alternate;
+  display: block;
+}
+
+@keyframes sr-busy {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+/* 44px circle: close buttons, carousel arrows, the menu button. */
+.iconBtn {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--tone-control);
+  border-radius: 50%;
+  color: var(--tone-text);
+  display: inline-flex;
+  flex: none;
+  height: 44px;
+  justify-content: center;
+  touch-action: manipulation;
+  transition: background-color var(--sr-fast) var(--sr-ease), border-color var(--sr-fast) var(--sr-ease);
+  width: 44px;
+}
+
+.iconBtn svg {
+  height: 20px;
+  width: 20px;
+}
+
+@media (hover: hover) {
+  .iconBtn:hover { background: rgb(32 49 44 / 6%); }
+}
+
+.iconBtn:focus-visible {
+  background: rgb(32 49 44 / 6%);
+}
+
+.iconBtn:disabled,
+.iconBtn[aria-disabled="true"] {
+  background: transparent;
+  border-color: var(--tone-line);
+  color: var(--tone-muted);
+  cursor: default;
+}
+
+/* ---------- Chips, badges, pick ---------- */
+
+/* On art: a solid paper-soft pill with ink caps. */
+.chip {
+  align-items: center;
+  background: var(--sr-paper-soft);
+  border-radius: var(--sr-pill);
+  color: var(--sr-ink);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  padding: 6px 12px;
+  text-transform: uppercase;
+}
+
+.badge {
+  align-items: center;
+  background: var(--sr-paper-soft);
+  border: 1px solid var(--sr-ink);
+  border-radius: var(--sr-pill);
+  color: var(--sr-ink);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+/* "Yours · demonstration": sage-ink fill, paper-soft text (6.31). */
+.badgeYours {
+  background: var(--sr-sage-ink);
+  border-color: var(--sr-sage-ink);
+  color: var(--sr-paper-soft);
+}
+
+/* "Our pick": mist fill, sage-ink text (5.39). */
+.pick {
+  align-items: center;
+  background: var(--sr-mist);
+  border-radius: var(--sr-pill);
+  color: var(--sr-sage-ink);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+/* ---------- Loading ---------- */
+
+.skeleton {
+  animation: sr-skeleton 1.4s ease-in-out infinite alternate;
+  background: var(--sr-skeleton);
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+[data-tone="band"] .skeleton,
+[data-tone="ink"] .skeleton,
+[data-tone="film"] .skeleton {
+  background: rgb(247 244 236 / 16%);
+}
+
+@keyframes sr-skeleton {
+  from { opacity: 1; }
+  to { opacity: 0.55; }
+}
+
+/* ---------- Live status ---------- */
+
+.status {
+  align-items: baseline;
+  color: var(--tone-text);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 13px;
+  font-weight: 500;
+  gap: 8px;
+  line-height: 1.45;
+}
+
+.dotOpen,
+.dotNext,
+.dotNone {
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+  height: 8px;
+  transform: translateY(-1px);
+  width: 8px;
+}
+
+.dotOpen {
+  background: var(--sr-sage-deep);
+}
+
+.dotNext {
+  box-shadow: inset 0 0 0 1.5px var(--sr-clay-deep);
+}
+
+.dotNone {
+  box-shadow: inset 0 0 0 1.5px var(--sr-control);
+}
+
+.statusDark .dotOpen {
+  background: var(--sr-pool);
+}
+
+.statusDark .dotNext {
+  box-shadow: inset 0 0 0 1.5px var(--sr-clay);
+}
+
+.statusDark .dotNone {
+  box-shadow: inset 0 0 0 1.5px var(--sr-control-dark);
+}
+
+/* ---------- Fields ---------- */
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-family: var(--sr-text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.input,
+.textarea {
+  appearance: none;
+  background: var(--sr-paper);
+  border: 1px solid var(--sr-control);
+  border-radius: 0;
+  color: var(--sr-ink);
+  font-family: var(--sr-text);
+  font-size: 16px;
+  font-weight: 500;
+  min-height: 48px;
+  padding: 0 14px;
+  width: 100%;
+}
+
+.textarea {
+  line-height: 1.5;
+  min-height: 96px;
+  padding-block: 12px;
+  resize: vertical;
+}
+
+/* Ink-soft at full strength (5.81 on paper), never the browser's dimmed default. */
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--sr-ink-soft);
+  opacity: 1;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: 2px solid var(--sr-sage-ink);
+  outline-offset: 0;
+}
+
+/* ---------- Art fallback (ArtPicture before the approved exports land) ---------- */
+
+.artFallback {
+  display: block;
+  width: 100%;
+}
+
+/* ---------- Carousel controls (shown below 760 by the parent) ---------- */
+
+.carousel {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.carouselCount {
+  margin-left: 4px;
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  [data-waiting] > .iconBusy {
+    animation: none;
+  }
+
+  .btn,
+  .iconBtn {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .btn,
+  .iconBtn {
+    border: 1px solid ButtonText;
+  }
+
+  .dotOpen,
+  .dotNext,
+  .dotNone {
+    background: CanvasText;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+
+  .chip,
+  .badge,
+  .pick {
+    forced-color-adjust: none;
+  }
+}

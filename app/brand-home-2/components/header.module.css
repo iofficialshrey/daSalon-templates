@@ -1,0 +1,265 @@
+/*
+ * Header: fixed, z 50. Wordmark left, the sections centred, a quiet Book
+ * right (desktop); Menu, wordmark, Book (tablet); wordmark and Menu (phone).
+ * Its surface follows the band under its centre (data-surface: cover | dark |
+ * light); it slides away while the film stage is pinned and comes back
+ * whenever it holds keyboard focus.
+ */
+
+.header {
+  --focus: var(--at-champagne-light);
+  --tone-text: var(--at-ivory);
+  --tone-accent: var(--at-champagne-light);
+  --tone-line-strong: var(--at-line-dark-strong);
+  --header-fill: transparent;
+  --header-rule: rgb(247 240 228 / 18%);
+
+  background-color: var(--header-fill);
+  color: var(--tone-text);
+  inset: 0 0 auto;
+  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  transition: transform var(--at-ui) var(--at-ease);
+  z-index: 50;
+}
+
+/* A hairline under the bar, inset to the gutters. */
+.header::after {
+  background: var(--header-rule);
+  bottom: 0;
+  content: "";
+  height: 1px;
+  left: var(--at-gutter);
+  position: absolute;
+  right: var(--at-gutter);
+}
+
+/* Surfaces cross-fade only once this page's bands have reported, never on arrival. */
+.header[data-settled] {
+  transition:
+    background-color var(--at-ui) var(--at-ease),
+    color var(--at-ui) var(--at-ease),
+    transform var(--at-ui) var(--at-ease);
+}
+
+.header[data-surface="cover"] {
+  --header-fill: transparent;
+}
+
+.header[data-surface="dark"] {
+  --header-fill: var(--at-noir);
+  --header-rule: rgb(247 240 228 / 12%);
+}
+
+.header[data-surface="light"] {
+  --focus: var(--at-bronze);
+  --tone-text: var(--at-ink);
+  --tone-accent: var(--at-bronze);
+  --tone-line-strong: var(--at-line-strong);
+  --header-fill: var(--at-paper);
+  --header-rule: var(--at-line);
+}
+
+/*
+ * The pinned film owns the screen. The header stays in the accessibility tree
+ * and the tab order, so a keyboard user who tabs into it brings it back.
+ */
+:global(html[data-at-film="pinned"]) .header:not(:has(:focus-visible)) {
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
+/* ---------- Bar: phone [wordmark | menu] ---------- */
+
+.bar {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-areas: "mark menu";
+  grid-template-columns: minmax(0, 1fr) auto;
+  height: var(--at-header);
+  padding-inline: max(var(--at-gutter), env(safe-area-inset-left)) max(var(--at-gutter), env(safe-area-inset-right));
+}
+
+.nav {
+  display: none;
+  grid-area: nav;
+}
+
+.navList {
+  align-items: center;
+  display: flex;
+  gap: clamp(24px, 2.6vw, 44px);
+}
+
+.navWide {
+  display: none;
+}
+
+.navLink {
+  align-items: center;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  min-height: 44px;
+  position: relative;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.navLink::after {
+  background: currentColor;
+  bottom: 8px;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 500ms var(--at-ease);
+  width: 100%;
+}
+
+.navLink[aria-current="true"]::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navLink:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.menuToggle {
+  align-items: center;
+  color: var(--tone-text);
+  display: inline-flex;
+  gap: 10px;
+  grid-area: menu;
+  justify-content: center;
+  justify-self: end;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.menuText {
+  display: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* The wordmark, in the house serif. */
+.mark {
+  align-items: center;
+  display: inline-flex;
+  font-family: var(--at-serif);
+  font-size: 22px;
+  font-weight: 400;
+  grid-area: mark;
+  justify-self: start;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+/* Book: an underlined label, never a loud button. */
+.book.book {
+  background: transparent;
+  border-bottom: 1px solid currentColor;
+  color: var(--tone-text);
+  display: none;
+  grid-area: book;
+  justify-self: end;
+  min-height: 0;
+  padding: 8px 0 7px;
+  transition: color var(--at-ui) var(--at-ease), border-color var(--at-ui) var(--at-ease);
+}
+
+@media (hover: hover) {
+  .book.book:hover {
+    background: transparent;
+    border-color: var(--tone-accent);
+    color: var(--tone-accent);
+  }
+}
+
+.bookLong {
+  display: none;
+}
+
+/* ---------- Tablet: [Menu | wordmark | Book] ---------- */
+
+@media (min-width: 760px) {
+  .bar {
+    gap: 24px;
+    grid-template-areas: "menu mark book";
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .menuToggle {
+    justify-self: start;
+    padding-right: 4px;
+  }
+
+  .menuText {
+    display: inline;
+  }
+
+  .mark {
+    font-size: 24px;
+    justify-self: center;
+  }
+
+  .book.book {
+    display: inline-flex;
+  }
+}
+
+/* ---------- Desktop: [wordmark | sections | Book an appointment] ---------- */
+
+@media (min-width: 1100px) {
+  .bar {
+    grid-template-areas: "mark nav book";
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .nav {
+    display: block;
+  }
+
+  .menuToggle {
+    display: none;
+  }
+
+  .mark {
+    justify-self: start;
+  }
+
+  .bookLong {
+    display: inline;
+  }
+
+  .bookShort {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .navWide {
+    display: list-item;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .navLink::after {
+    transition: none;
+  }
+}

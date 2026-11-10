@@ -1,0 +1,370 @@
+/*
+ * Contents: the ink sheet. Its top row matches the masthead height and stays
+ * pinned while the sheet scrolls. One column on phones; two (00–04, 05–09)
+ * from 760px; on desktop the list takes columns 1–8 and "Book at" 9–12.
+ */
+
+.sheet {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ---------- Top row ---------- */
+
+.top {
+  align-items: center;
+  background: var(--p4-ink);
+  border-bottom: 1px solid var(--p4-rule-dark);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  min-height: calc(var(--p4-nav-h) + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) var(--p4-margin) 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.titleGroup {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  color: var(--p4-porcelain);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.issue {
+  color: var(--p4-mist);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.close {
+  align-items: center;
+  box-shadow: inset 0 0 0 1px var(--p4-control-dark);
+  color: var(--p4-porcelain);
+  display: inline-flex;
+  flex: none;
+  height: 44px;
+  justify-content: center;
+  transition: background-color var(--p4-fast) var(--p4-ease), color var(--p4-fast) var(--p4-ease);
+  width: 44px;
+}
+
+.closeIcon {
+  height: 20px;
+  width: 20px;
+}
+
+@media (hover: hover) {
+  .close:hover {
+    background: var(--p4-porcelain);
+    color: var(--p4-ink);
+  }
+}
+
+.close:focus-visible {
+  background: var(--p4-porcelain);
+  color: var(--p4-ink);
+}
+
+@media (min-width: 760px) {
+  .title {
+    font-size: 24px;
+  }
+}
+
+/* ---------- Body ---------- */
+
+.body {
+  align-content: start;
+  flex: 1 0 auto;
+  padding-block: 24px 48px;
+  row-gap: 40px;
+}
+
+@media (min-width: 760px) {
+  .body {
+    padding-block: 40px 56px;
+    row-gap: 48px;
+  }
+}
+
+/* ---------- The ten chapters ---------- */
+
+.list {
+  border-top: 1px solid var(--p4-rule-dark);
+  display: grid;
+}
+
+.item {
+  border-bottom: 1px solid var(--p4-rule-dark);
+}
+
+.row {
+  align-items: baseline;
+  color: var(--p4-porcelain);
+  column-gap: 12px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-height: 64px;
+  padding: 14px 0 14px 16px;
+  position: relative;
+}
+
+/* The current chapter: a 4px wash bar on the left. */
+.row[aria-current="location"]::before {
+  background: var(--p4-wash);
+  bottom: 12px;
+  content: "";
+  left: 0;
+  position: absolute;
+  top: 12px;
+  width: 4px;
+}
+
+.row:focus-visible {
+  outline-offset: -3px;
+}
+
+.no {
+  color: var(--p4-wash);
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.text {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+  transition: color var(--p4-fast) var(--p4-ease);
+}
+
+.dek {
+  color: var(--p4-mist);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+@media (hover: hover) {
+  .row:hover .name {
+    color: var(--p4-wash);
+  }
+}
+
+.row:focus-visible .name {
+  color: var(--p4-wash);
+}
+
+@media (min-width: 760px) {
+  .list {
+    column-gap: var(--p4-gap);
+    grid-auto-flow: column;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(5, auto);
+  }
+
+  .name {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .chapters {
+    grid-column: 1 / 9;
+  }
+
+  .row {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .name {
+    font-size: 32px;
+  }
+}
+
+/* ---------- Book at ---------- */
+
+.bookLabel {
+  color: var(--p4-mist);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.studios {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studioItem {
+  display: flex;
+}
+
+.studio {
+  align-content: start;
+  box-shadow: inset 0 0 0 1px var(--p4-control-dark);
+  color: var(--p4-porcelain);
+  display: grid;
+  gap: 4px;
+  min-height: 64px;
+  padding: 12px 40px 14px 14px;
+  position: relative;
+  text-align: left;
+  transition: background-color var(--p4-fast) var(--p4-ease), box-shadow var(--p4-fast) var(--p4-ease);
+  width: 100%;
+}
+
+.studioNo {
+  color: var(--p4-wash);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+}
+
+.studioName {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.studioArea {
+  color: var(--p4-mist);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.studioArrow {
+  height: 16px;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 16px;
+}
+
+/* Cobalt fill: the secondary lines move to porcelain and wash-2 (mist on cobalt is 3.03). */
+@media (hover: hover) {
+  .studio:hover {
+    background: var(--p4-cobalt);
+    box-shadow: inset 0 0 0 1px var(--p4-cobalt);
+  }
+
+  .studio:hover .studioNo {
+    color: var(--p4-porcelain);
+  }
+
+  .studio:hover .studioArea {
+    color: var(--p4-wash-2);
+  }
+}
+
+.studio:focus-visible {
+  background: var(--p4-cobalt);
+  box-shadow: inset 0 0 0 1px var(--p4-cobalt);
+}
+
+.studio:focus-visible .studioNo {
+  color: var(--p4-porcelain);
+}
+
+.studio:focus-visible .studioArea {
+  color: var(--p4-wash-2);
+}
+
+@media (min-width: 760px) {
+  .book {
+    grid-column: 1 / 7;
+  }
+}
+
+@media (min-width: 1100px) {
+  .book {
+    align-self: start;
+    grid-column: 9 / 13;
+  }
+}
+
+/* ---------- Foot ---------- */
+
+.foot {
+  align-items: center;
+  border-top: 1px solid var(--p4-rule-dark);
+  display: flex;
+  gap: 16px;
+  padding: 16px var(--p4-margin);
+}
+
+.motion {
+  align-items: center;
+  box-shadow: inset 0 0 0 1px var(--p4-control-dark);
+  color: var(--p4-porcelain);
+  display: inline-flex;
+  flex: none;
+  font-size: 20px;
+  height: 44px;
+  justify-content: center;
+  transition: background-color var(--p4-fast) var(--p4-ease), color var(--p4-fast) var(--p4-ease);
+  width: 44px;
+}
+
+@media (hover: hover) {
+  .motion:hover {
+    background: var(--p4-porcelain);
+    color: var(--p4-ink);
+  }
+}
+
+.motion:focus-visible {
+  background: var(--p4-porcelain);
+  color: var(--p4-ink);
+}
+
+.note {
+  color: var(--p4-mist);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .close,
+  .name,
+  .studio,
+  .motion {
+    transition: none;
+  }
+}

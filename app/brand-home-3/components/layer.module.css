@@ -1,0 +1,130 @@
+/*
+ * The two layer frames (spec §4.0, §7.3). The layer host sits inside .root, so
+ * every --sr- token resolves. Only opacity and transform animate.
+ */
+
+.root {
+  inset: 0;
+  position: fixed;
+  z-index: 100;
+}
+
+.backdrop {
+  inset: 0;
+  position: absolute;
+}
+
+.panel {
+  min-height: 0;
+  outline: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ---------- Menu: a full-viewport paper sheet that drops 12px into place ---------- */
+
+.menu .panel {
+  animation: menu-in var(--sr-sheet-in) var(--sr-ease) both;
+  height: 100dvh;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.menu[data-state="closing"] .panel {
+  animation: menu-out var(--sr-sheet-out) var(--sr-ease) both;
+}
+
+/* ---------- Sheet: square, rising from the bottom edge ---------- */
+
+.sheet .backdrop {
+  animation: fade-in var(--sr-sheet-in) linear both;
+  background: var(--sr-scrim);
+}
+
+.sheet[data-state="closing"] .backdrop {
+  animation: fade-out var(--sr-sheet-out) linear both;
+}
+
+/*
+ * The kind's tone is the 3px top rule: set --sheet-accent on the panel's className
+ * (membership --sr-sage-deep, package --sr-clay-deep, gift --sr-sage-ink).
+ * The body scrolls inside the panel; the sheet's head and footer are position: sticky.
+ * Phones: the footer carries env(safe-area-inset-bottom) itself.
+ */
+.sheet .panel {
+  animation: sheet-in var(--sr-sheet-in) var(--sr-ease) both;
+  border-top: 3px solid var(--sheet-accent, var(--sr-sage-deep));
+  bottom: 0;
+  box-shadow: var(--sr-shadow-sheet);
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  max-height: 92dvh;
+  position: absolute;
+  right: 0;
+  width: 100%;
+}
+
+.sheet[data-state="closing"] .panel {
+  animation: sheet-out var(--sr-sheet-out) var(--sr-ease) both;
+}
+
+/* Decorative only: the sheet is not draggable. */
+.grabber {
+  display: none;
+}
+
+@media (max-width: 759px) {
+  .grabber {
+    background: var(--sr-control);
+    border-radius: var(--sr-pill);
+    display: block;
+    flex: none;
+    height: 4px;
+    left: 50%;
+    position: absolute;
+    top: 8px;
+    transform: translateX(-50%);
+    width: 36px;
+    z-index: 2;
+  }
+}
+
+@media (min-width: 760px) {
+  .sheet .panel {
+    border-bottom: 1px solid var(--sr-line);
+    border-left: 1px solid var(--sr-line);
+    border-right: 1px solid var(--sr-line);
+    bottom: 24px;
+    margin-inline: auto;
+    max-height: calc(100dvh - 96px);
+    width: min(640px, calc(100% - 48px));
+  }
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+@keyframes menu-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-12px); } }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+@keyframes sheet-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(32px); } }
+
+/* Reduced motion: a 120ms fade, no slide (the exit is instant). */
+@media (prefers-reduced-motion: reduce) {
+  .root .backdrop,
+  .root .panel {
+    animation: fade-in 120ms linear both;
+  }
+
+  .root[data-state="closing"] .backdrop,
+  .root[data-state="closing"] .panel {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .panel {
+    border: 1px solid CanvasText;
+  }
+}

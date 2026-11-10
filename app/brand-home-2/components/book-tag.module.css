@@ -1,0 +1,80 @@
+/*
+ * Floating Book (phones only): a 52px button in the thumb zone. It slides in
+ * and out and takes the band underneath: ivory on noir, ink on paper.
+ */
+
+.tag {
+  display: none;
+}
+
+@media (max-width: 759px) {
+  .tag {
+    --focus: var(--at-champagne-light);
+    --tag-fill: var(--at-ivory);
+    --tag-ink: var(--at-ink);
+
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    display: block;
+    filter: drop-shadow(0 10px 18px rgb(14 11 8 / 28%));
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom)));
+    transition:
+      transform var(--at-ui) var(--at-ease),
+      visibility 0s linear var(--at-ui);
+    visibility: hidden;
+    z-index: 60;
+  }
+
+  .tag[data-state="shown"] {
+    transform: none;
+    transition:
+      transform var(--at-ui) var(--at-ease),
+      visibility 0s;
+    visibility: visible;
+  }
+
+  .tag[data-shade="light"] {
+    --focus: var(--at-bronze);
+    --tag-fill: var(--at-ink);
+    --tag-ink: var(--at-ivory);
+  }
+}
+
+.button {
+  align-items: center;
+  background: var(--tag-fill);
+  color: var(--tag-ink);
+  display: inline-flex;
+  font-family: var(--at-sans);
+  font-size: 11px;
+  font-weight: 700;
+  gap: 12px;
+  height: 52px;
+  justify-content: center;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  min-width: 120px;
+  padding: 0 22px;
+  text-transform: uppercase;
+  transition: background-color var(--at-ui) linear, color var(--at-ui) linear;
+  white-space: nowrap;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* Reduced motion: a 120ms cross-fade in place of the slide. */
+@media (max-width: 759px) and (prefers-reduced-motion: reduce) {
+  .tag {
+    opacity: 0;
+    transform: none;
+    transition: opacity 120ms linear, visibility 0s linear 120ms;
+  }
+
+  .tag[data-state="shown"] {
+    opacity: 1;
+    transition: opacity 120ms linear, visibility 0s;
+  }
+}

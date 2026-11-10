@@ -1,0 +1,691 @@
+/*
+ * The entrance film (spec §5). Desktop landscape first, then the landscape
+ * tablet band, then the portrait layout (phones and portrait tablets), which
+ * comes later so it wins. The engine writes only opacity and transform; every
+ * shade is a static gradient in --sr-shade (rgb 36 25 19) and only its opacity
+ * changes. No mix-blend-mode, no SVG filter, no backdrop-filter.
+ *
+ * Shade alphas are the ones final-tools/scrim_accept.py measured (≥ 4.5:1 for
+ * ivory copy at ten viewports). Re-run it if any of them changes.
+ */
+
+.film,
+.static {
+  --a-top: 0.6;
+  --a-base: 0.6;
+  --a-vignette: 0.22;
+  --a-rail: 0.58;
+  --a-a: 0.46;
+  --a-b: 0.42;
+  --a-c: 0.4;
+}
+
+.film {
+  /* Bottom-anchored copy always clears the iOS toolbar. */
+  --film-bottom: calc(100lvh - 100svh + max(96px, 11svh));
+  background: var(--sr-shade);
+  height: 320vh;
+  height: 320svh;
+  position: relative;
+}
+
+.stage {
+  contain: layout paint;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+}
+
+/*
+ * The sentinel the header watches (the stage is sticky, so not in flow order). It sits one stage
+ * height less the header above the section's bottom, so it meets the header's bottom edge exactly
+ * when the pin releases: the header turns solid as the film starts to scroll away, not after.
+ */
+.end {
+  bottom: calc(100vh - var(--sr-header));
+  bottom: calc(100lvh - var(--sr-header));
+  height: 0;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+/* ---------- Media: posters under the video, all cover-cropped on the centre axis ---------- */
+
+.media {
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+}
+
+.media picture,
+.media video {
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.media img,
+.media video {
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  width: 100%;
+}
+
+/* Author display rules would otherwise beat the UA [hidden] rule and load the lazy poster. */
+.media [hidden] {
+  display: none;
+}
+
+.posterLast {
+  opacity: 0;
+  transition: opacity 400ms var(--sr-ease);
+}
+
+.posterLast[data-show] {
+  opacity: 1;
+}
+
+.video {
+  opacity: 0;
+  transition: opacity var(--sr-ui) var(--sr-ease);
+}
+
+.film[data-film="ready"] .video {
+  opacity: 1;
+}
+
+/* ---------- Shades (z 1), linen (z 2) ---------- */
+
+.grain,
+.shadeTop,
+.shadeBase,
+.vignette,
+.shadeRail,
+.shadeA,
+.shadeB,
+.shadeC,
+.linen {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.grain {
+  background: url("/brand-home-3/film/grain.v1.png") 0 0 / 128px 128px repeat;
+  opacity: 0.05;
+}
+
+.shadeTop {
+  background: linear-gradient(
+    180deg,
+    rgb(36 25 19 / var(--a-top)) 0,
+    rgb(36 25 19 / var(--a-top)) var(--sr-header),
+    rgb(36 25 19 / 0) 34%
+  );
+}
+
+.shadeBase {
+  background: linear-gradient(0deg, rgb(36 25 19 / var(--a-base)) 0, rgb(36 25 19 / var(--a-base)) 8%, rgb(36 25 19 / 0) 36%);
+}
+
+.vignette {
+  background: radial-gradient(ellipse at 50% 45%, rgb(36 25 19 / 0) 55%, rgb(36 25 19 / var(--a-vignette)) 100%);
+}
+
+.shadeRail {
+  background: linear-gradient(270deg, rgb(36 25 19 / var(--a-rail)) 0, rgb(36 25 19 / var(--a-rail)) 120px, rgb(36 25 19 / 0) 220px);
+}
+
+.shadeA {
+  background: radial-gradient(62% 62% at 0% 100%, rgb(36 25 19 / var(--a-a)) 0, rgb(36 25 19 / var(--a-a)) 55%, rgb(36 25 19 / 0) 100%);
+}
+
+.shadeB {
+  background: linear-gradient(0deg, rgb(36 25 19 / var(--a-b)) 0, rgb(36 25 19 / var(--a-b)) 30%, rgb(36 25 19 / 0) 46%);
+  opacity: 0;
+}
+
+.shadeC {
+  background: linear-gradient(
+    180deg,
+    rgb(36 25 19 / 0) 6%,
+    rgb(36 25 19 / var(--a-c)) 14%,
+    rgb(36 25 19 / var(--a-c)) 48%,
+    rgb(36 25 19 / 0) 60%
+  );
+  opacity: 0;
+}
+
+/* The duvet hands off to the intro's paper: the bottom 28% over p .94–1. Beat C sits above y .44. */
+.linen {
+  background: linear-gradient(180deg, rgb(241 238 229 / 0) 72%, var(--sr-paper) 100%);
+  opacity: 0;
+  z-index: 2;
+}
+
+/* ---------- Beats (z 3): paper-soft on the measured shades ---------- */
+
+.beat {
+  color: var(--sr-paper-soft);
+  position: absolute;
+  z-index: 3;
+}
+
+/* A: low-left on the closed doors, 7 of 12 columns. */
+.beatA {
+  bottom: var(--film-bottom);
+  left: var(--sr-margin);
+  max-width: calc((100% - 2 * var(--sr-margin) - 11 * var(--sr-gap)) / 12 * 7 + 6 * var(--sr-gap));
+}
+
+.titleA {
+  margin-top: 16px;
+  text-wrap: balance;
+}
+
+.leadA {
+  margin-top: 24px;
+  max-width: 30ch;
+}
+
+/* B: centred on the slate threshold floor; one line from 1100. */
+/* Centred by auto margins, not translate: the engine owns transform (and the CSS pipeline folds translate into it). */
+.beatB {
+  bottom: calc(100lvh - 100svh + 8svh);
+  left: var(--sr-margin);
+  margin-inline: auto;
+  opacity: 0;
+  right: var(--sr-margin);
+  text-align: center;
+  transform: translateY(16px);
+  white-space: nowrap;
+  width: max-content;
+}
+
+.lineB {
+  margin-top: 16px;
+}
+
+.brNarrow {
+  display: none;
+}
+
+/* C: high-left on the plaster wall; the block ends above y .44. */
+.beatC {
+  left: var(--sr-margin);
+  max-width: calc((100% - 2 * var(--sr-margin) - 11 * var(--sr-gap)) / 12 * 6 + 5 * var(--sr-gap));
+  opacity: 0;
+  top: calc(var(--sr-header) + 24px);
+  transform: translateY(20px);
+}
+
+/* Safety net: whatever holds focus is never invisible. */
+.beatC:focus-within {
+  opacity: 1 !important;
+}
+
+.titleC {
+  margin-top: 16px;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 24px;
+}
+
+.status {
+  margin-top: 12px;
+}
+
+/* ---------- Rail (z 4): Serein's own "Enter 00–100" hairline, not a chapter rail ---------- */
+
+.rail {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  position: absolute;
+  right: max(24px, calc(var(--sr-margin) / 2 - 12px));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+}
+
+.track {
+  background: rgb(247 244 236 / 32%);
+  display: block;
+  height: 120px;
+  position: relative;
+  width: 1px;
+}
+
+.fill {
+  background: var(--sr-paper-soft);
+  display: block;
+  inset: 0;
+  position: absolute;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.count {
+  min-width: 3ch;
+  text-align: center;
+}
+
+/* Until the film is ready: a paper-soft dot at the top of the track that breathes, three cycles at most. */
+.rail[data-loading] .track::before {
+  background: var(--sr-paper-soft);
+  border-radius: 50%;
+  content: "";
+  height: 3px;
+  left: -1px;
+  position: absolute;
+  top: 0;
+  width: 3px;
+}
+
+/* ---------- Cue and Skip (z 4) ---------- */
+
+.cue {
+  align-items: center;
+  bottom: calc(100lvh - 100svh + 24px);
+  display: flex;
+  gap: 12px;
+  left: calc(var(--sr-margin) + 168px);
+  min-height: 44px;
+  pointer-events: none;
+  position: absolute;
+  z-index: 4;
+}
+
+.cue i {
+  background: var(--sr-paper-soft);
+  display: block;
+  height: 1px;
+  transform-origin: left center;
+  width: 24px;
+}
+
+.skip {
+  align-items: center;
+  bottom: calc(100lvh - 100svh + 24px);
+  color: var(--sr-paper-soft);
+  display: inline-flex;
+  font-family: var(--sr-text);
+  font-size: 14px;
+  font-weight: 600;
+  gap: 8px;
+  left: var(--sr-margin);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  min-height: 44px;
+  position: absolute;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  touch-action: manipulation;
+  z-index: 4;
+}
+
+.skip svg {
+  flex: none;
+  height: 16px;
+  width: 16px;
+}
+
+.skip:focus-visible {
+  opacity: 1 !important;
+  text-decoration-thickness: 2px;
+}
+
+@media (hover: hover) {
+  .skip:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+/* ---------- Landscape tablet (760–1099) ---------- */
+
+@media (max-width: 1099px) {
+  /* The 112px h1 needs 6 of the 8 columns ("Come back" is 472px). */
+  .beatA {
+    max-width: calc((100% - 2 * var(--sr-margin) - 7 * var(--sr-gap)) / 8 * 6 + 5 * var(--sr-gap));
+  }
+
+  /* Two lines. */
+  .beatB {
+    bottom: calc(100lvh - 100svh + 7svh);
+    white-space: normal;
+  }
+
+  .brNarrow {
+    display: inline;
+  }
+
+  /* Columns 1–5. */
+  .beatC {
+    max-width: calc((100% - 2 * var(--sr-margin) - 7 * var(--sr-gap)) / 8 * 5 + 4 * var(--sr-gap));
+  }
+}
+
+/* ---------- Portrait: phones and portrait tablets ---------- */
+
+@media (max-width: 759px), (max-aspect-ratio: 4/5) and (max-width: 1099px) {
+  .film {
+    height: 280svh;
+  }
+
+  .shadeTop {
+    background: linear-gradient(
+      180deg,
+      rgb(36 25 19 / var(--a-top)) 0,
+      rgb(36 25 19 / var(--a-top)) calc(var(--sr-header) + 56px),
+      rgb(36 25 19 / 0) 30%
+    );
+  }
+
+  .shadeB {
+    background: linear-gradient(0deg, rgb(36 25 19 / var(--a-b)) 0, rgb(36 25 19 / var(--a-b)) 40%, rgb(36 25 19 / 0) 56%);
+  }
+
+  .beatA {
+    max-width: none;
+    right: var(--sr-margin);
+  }
+
+  .beatB {
+    bottom: calc(100lvh - 100svh + 9svh);
+    width: auto;
+  }
+
+  .beatC {
+    max-width: none;
+    right: var(--sr-margin);
+  }
+
+  .cue {
+    left: var(--sr-margin);
+  }
+
+  /* Top-right under the header, in the extended top shade. */
+  .skip {
+    bottom: auto;
+    left: auto;
+    right: var(--sr-margin);
+    top: calc(var(--sr-header) + 8px);
+  }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 759px) {
+  .film {
+    --film-bottom: calc(100lvh - 100svh + 112px);
+  }
+
+  /* "Book a ritual" and "See the rituals" share one row from 360 (166 + 12 + 134 ≤ 316). */
+  .actions {
+    gap: 12px;
+  }
+
+  .rail,
+  .shadeRail {
+    display: none;
+  }
+}
+
+/* Under 360 the 16px gutter leaves 288px: Book drops its arrow (140 + 12 + 134), so both stay on the wall. The ring still shows while it waits. */
+@media (max-width: 359px) {
+  .beatC .actions [data-book]:not([data-waiting]) > svg {
+    display: none;
+  }
+}
+
+/* ---------- Short screens ---------- */
+
+@media (max-height: 500px) {
+  .film {
+    height: 260svh;
+  }
+}
+
+/* Desktop under 820px tall: the arrival h2 shrinks (tokens) and the status line goes, so C ends at y ≤ .44. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .statusC {
+    display: none;
+  }
+}
+
+@media (max-width: 759px) and (max-height: 700px), (max-aspect-ratio: 4/5) and (max-width: 1099px) and (max-height: 700px) {
+  .statusC {
+    display: none;
+  }
+}
+
+/* Phone landscape and other short landscapes. */
+@media (max-height: 560px) {
+  .leadA,
+  .labelB,
+  .rail,
+  .shadeRail,
+  .statusC {
+    display: none;
+  }
+
+  .labelB + .lineB {
+    margin-top: 0;
+  }
+
+  .beatC .actions {
+    flex-wrap: nowrap;
+  }
+
+  /*
+   * Beat C runs to y ≈ .75 here (844×390), over the pillows and the nightstand candles, so the wall
+   * band reaches past its actions at the top shade's strength (.55 left "restored." at 4.1:1).
+   * With scrim_accept.py's layers and this band, every beat C line measured ≥ 4.6:1 at 844×390,
+   * 932×430, 1280×540, 667×375 and 740×360.
+   */
+  .shadeC {
+    background: linear-gradient(
+      180deg,
+      rgb(36 25 19 / 0) 6%,
+      rgb(36 25 19 / var(--a-top)) 14%,
+      rgb(36 25 19 / var(--a-top)) 82%,
+      rgb(36 25 19 / 0) 94%
+    );
+  }
+}
+
+/* ---------- Static layout (lite and top-of-page failure): door panel, #film-end, arrival split ---------- */
+
+.static {
+  background: var(--sr-paper-soft);
+  position: relative;
+}
+
+.endStatic {
+  display: block;
+  height: 0;
+}
+
+.door {
+  /* The panel is 100svh tall, so no toolbar allowance is needed. */
+  --film-bottom: max(96px, 11svh);
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 759px) {
+  .door {
+    --film-bottom: 112px;
+  }
+}
+
+/* The same grid as .frame, with the margins as tracks so the art can bleed to the viewport edge. */
+.arrival {
+  column-gap: var(--sr-gap);
+  display: grid;
+  grid-template-columns:
+    calc(var(--sr-margin) - var(--sr-gap))
+    repeat(var(--sr-cols), minmax(0, 1fr))
+    calc(var(--sr-margin) - var(--sr-gap));
+  padding-block: var(--sr-section);
+  row-gap: var(--sr-stack);
+}
+
+.arrivalArt {
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--sr-line);
+  grid-column: 2 / -2;
+  max-height: 100svh;
+  overflow: hidden;
+}
+
+.arrivalArt picture,
+.arrivalArt img {
+  height: 100%;
+  width: 100%;
+}
+
+.arrivalArt img {
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+.arrivalCopy {
+  grid-column: 2 / -2;
+}
+
+.arrivalTitle {
+  margin-top: 16px;
+}
+
+.arrivalLead {
+  margin-top: 24px;
+}
+
+.arrivalCopy .actions {
+  margin-top: 32px;
+}
+
+.arrivalCopy .status {
+  margin-top: 16px;
+}
+
+@media (min-width: 1100px) {
+  /* Columns 1–6, bleeding to the left viewport edge; the copy in columns 8–12. */
+  .arrivalArt {
+    aspect-ratio: 3 / 4;
+    border-left: 0;
+    grid-column: 1 / 8;
+  }
+
+  .arrivalCopy {
+    align-self: center;
+    grid-column: 9 / 14;
+  }
+}
+
+/* ---------- Motion (only under no-preference) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .cue i {
+    animation: film-cue 1.2s var(--sr-ease) both;
+  }
+
+  .rail[data-loading] .track::before {
+    animation: film-dot 2.4s var(--sr-ease-breath) 3 both;
+  }
+}
+
+@keyframes film-cue {
+  from { transform: scaleX(0.4); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes film-dot {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Before hydration with reduced motion: a still door panel, no motion flash. FilmStatic replaces it on hydration. */
+@media (prefers-reduced-motion: reduce) {
+  .film {
+    height: auto;
+  }
+
+  .stage {
+    height: 100svh;
+    min-height: 560px;
+    position: relative;
+  }
+
+  /* Unpinned, so the header stays transparent until the still door itself has passed under it. */
+  .end {
+    bottom: 0;
+  }
+
+  .beatB,
+  .beatC,
+  .rail,
+  .cue,
+  .skip,
+  .linen {
+    display: none;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-contrast: more) {
+  .film,
+  .static {
+    --a-top: 0.7;
+    --a-base: 0.7;
+    --a-a: 0.56;
+    --a-b: 0.52;
+    --a-c: 0.5;
+  }
+}
+
+@media (forced-colors: active) {
+  .grain,
+  .shadeTop,
+  .shadeBase,
+  .vignette,
+  .shadeRail,
+  .shadeA,
+  .shadeB,
+  .shadeC,
+  .linen {
+    display: none;
+  }
+
+  .skip {
+    border: 1px solid ButtonText;
+    padding-inline: 12px;
+  }
+}

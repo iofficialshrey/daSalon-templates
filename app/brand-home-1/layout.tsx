@@ -1,15 +1,35 @@
 import type { Metadata } from "next";
-import "./brand-home.css";
-import "./scroll-lab.css";
+import { Cormorant_Garamond } from "next/font/google";
+
+const display = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal"],
+  display: "swap",
+  variable: "--mx-font-display",
+  fallback: ["Georgia", "Times New Roman", "serif"],
+  adjustFontFallback: true,
+});
+
+/** Italic is used for two lines of the page only, so it is not preloaded. */
+const displayItalic = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+  display: "swap",
+  preload: false,
+  variable: "--mx-font-display-italic",
+  fallback: ["Georgia", "serif"],
+});
 
 export const metadata: Metadata = {
-  title: "Maison Élan — Private Hair Atelier",
+  title: "Maison Élan — Four Houses of Care in Singapore",
   description:
-    "A scroll-driven private hair atelier with cinematic arrival, services, memberships, packages, gift cards and online booking.",
+    "Grooming, aesthetics, spa and bridal care across four Singapore houses, with live menus, online booking, memberships and gift cards.",
 };
 
 export default function BrandHomeOneLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return <div className={`${display.variable} ${displayItalic.variable}`}>{children}</div>;
 }
