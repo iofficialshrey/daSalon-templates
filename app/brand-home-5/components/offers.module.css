@@ -1,0 +1,225 @@
+/*
+ * Membership, journeys and gift cards: a lavender band, one pill switch,
+ * three cards per panel. Phones: the cards ride a snapping rail.
+ */
+
+.offers {
+  background: var(--oru-mist);
+}
+
+.head {
+  display: grid;
+  gap: 28px;
+  margin-bottom: 20px;
+}
+
+/* ---------- The switch ---------- */
+
+.tabs {
+  background: rgb(255 253 248 / 55%);
+  border-radius: 999px;
+  display: inline-flex;
+  gap: 4px;
+  justify-self: start;
+  max-width: 100%;
+  padding: 5px;
+}
+
+.tab {
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  min-height: 44px;
+  padding: 0 clamp(14px, 3.6vw, 24px);
+  transition: background-color var(--oru-ui) var(--oru-ease), color var(--oru-ui) var(--oru-ease);
+  white-space: nowrap;
+}
+
+.tab[aria-selected="true"] {
+  background: var(--oru-aubergine);
+  color: var(--oru-chalk);
+}
+
+@media (hover: hover) {
+  .tab[aria-selected="false"]:hover {
+    background: rgb(45 32 48 / 8%);
+  }
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.panelLine {
+  color: var(--oru-plum);
+  font-size: clamp(17px, 1.35vw, 20px);
+  line-height: 1.5;
+  margin-bottom: 36px;
+  max-width: 44ch;
+}
+
+/* ---------- Cards ---------- */
+
+.list {
+  display: grid;
+  gap: 16px;
+  grid-auto-columns: min(74vw, 300px);
+  grid-auto-flow: column;
+  margin-inline: calc(var(--oru-gutter) * -1);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 12px var(--oru-gutter) 20px;
+  scroll-padding-inline: var(--oru-gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.card {
+  display: grid;
+  gap: 24px;
+  text-align: left;
+  width: 100%;
+}
+
+.text {
+  display: grid;
+  gap: 8px;
+}
+
+.line {
+  color: var(--oru-plum);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 3em;
+}
+
+.foot {
+  align-items: baseline;
+  border-top: 1px solid var(--oru-line-strong);
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 14px;
+}
+
+.pay {
+  font-family: var(--oru-serif);
+  font-size: 26px;
+  font-variant-numeric: lining-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.worth {
+  color: var(--oru-plum);
+  font-size: 14px;
+}
+
+.go,
+.bought {
+  align-self: center;
+  margin-left: auto;
+}
+
+.go {
+  align-items: center;
+  border: 1px solid var(--oru-line-strong);
+  border-radius: 50%;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  transition: background-color var(--oru-ui) var(--oru-ease), color var(--oru-ui) var(--oru-ease), border-color var(--oru-ui) var(--oru-ease);
+  width: 36px;
+}
+
+.bought {
+  align-items: center;
+  background: var(--oru-aubergine);
+  border-radius: 999px;
+  color: var(--oru-chalk);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 6px;
+  line-height: 1;
+  padding: 8px 12px;
+}
+
+@media (hover: hover) {
+  .card:hover .go {
+    background: var(--oru-aubergine);
+    border-color: var(--oru-aubergine);
+    color: var(--oru-chalk);
+  }
+}
+
+.note {
+  color: var(--oru-plum);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 28px;
+}
+
+@media (min-width: 760px) {
+  .list {
+    gap: 28px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-inline: 0;
+    overflow: visible;
+    padding: 12px 0 0;
+    scroll-snap-type: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  .head {
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-bottom: 28px;
+  }
+
+  .tabs {
+    justify-self: end;
+  }
+
+  .list {
+    gap: clamp(32px, 4vw, 64px);
+    margin-inline: auto;
+    max-width: 1120px;
+  }
+
+  .panelLine {
+    margin-bottom: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel:not([hidden]) .item {
+    animation: offers-in 800ms var(--oru-ease) both;
+  }
+
+  .panel:not([hidden]) .item:nth-child(2) { animation-delay: 80ms; }
+  .panel:not([hidden]) .item:nth-child(3) { animation-delay: 160ms; }
+}
+
+@keyframes offers-in {
+  from { opacity: 0; transform: translateY(18px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab,
+  .go {
+    transition: none;
+  }
+}

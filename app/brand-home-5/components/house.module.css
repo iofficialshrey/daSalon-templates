@@ -1,0 +1,99 @@
+/*
+ * The house: an aubergine band. Copy on one side; on the other a tall frame
+ * in which the wide photograph walks from the pool to the daybeds, and a
+ * small arch (the oil being poured) that overlaps its lower corner.
+ */
+
+.house {
+  background: var(--oru-aubergine);
+  border-radius: var(--oru-radius);
+}
+
+.grid {
+  display: grid;
+  gap: 48px;
+}
+
+.copy {
+  align-content: center;
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+}
+
+.link {
+  color: var(--oru-chalk);
+}
+
+.frames {
+  padding-bottom: 12%;
+  padding-left: 14%;
+  position: relative;
+}
+
+.wide {
+  aspect-ratio: 4 / 5;
+  border-radius: var(--oru-radius);
+  overflow: hidden;
+  position: relative;
+}
+
+.walk {
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* An arch, like the niches in the house. */
+.arch {
+  aspect-ratio: 3 / 4.4;
+  border: 6px solid var(--oru-aubergine);
+  border-radius: 999px 999px 20px 20px;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 40%;
+}
+
+.pour {
+  object-fit: cover;
+  object-position: 60% 62%;
+}
+
+@media (min-width: 1000px) {
+  .grid {
+    align-items: center;
+    column-gap: clamp(56px, 7vw, 120px);
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  }
+
+  .wide {
+    aspect-ratio: 5 / 6;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .walk {
+      animation: house-walk linear both;
+      animation-range: entry 20% exit 80%;
+      animation-timeline: view();
+    }
+
+    .arch {
+      animation: house-arch linear both;
+      animation-range: entry 0% exit 100%;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes house-walk {
+  from { object-position: 4% 50%; }
+  to { object-position: 96% 50%; }
+}
+
+@keyframes house-arch {
+  from { transform: translateY(36px); }
+  to { transform: translateY(-36px); }
+}

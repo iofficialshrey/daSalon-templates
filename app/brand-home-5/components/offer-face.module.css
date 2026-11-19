@@ -1,0 +1,331 @@
+/*
+ * The three faces. Sizes are in container units so a face reads the same on
+ * a card and, larger, in the checkout window.
+ */
+
+.face {
+  container-type: inline-size;
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.aubergine {
+  --paper: var(--oru-aubergine);
+  --paper-2: #45324a;
+  --on: var(--oru-chalk);
+  --soft: rgb(255 253 248 / 64%);
+  --hair: rgb(255 253 248 / 22%);
+  --pop: #f39a88;
+}
+
+.mist {
+  --paper: #cfc4dc;
+  --paper-2: #e3dcec;
+  --on: var(--oru-aubergine);
+  --soft: rgb(45 32 48 / 68%);
+  --hair: rgb(45 32 48 / 22%);
+  --pop: var(--oru-vermilion-deep);
+}
+
+.vermilion {
+  --paper: #d9553f;
+  --paper-2: #ee7a63;
+  --on: var(--oru-chalk);
+  --soft: rgb(255 253 248 / 78%);
+  --hair: rgb(255 253 248 / 30%);
+  --pop: var(--oru-aubergine);
+}
+
+/* ---------- Membership: an arch ---------- */
+
+.key {
+  align-items: center;
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(170deg, var(--paper-2), var(--paper) 58%);
+  border-radius: 999px 999px 7cqw 7cqw;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 18%) inset, 0 24px 44px -22px rgb(45 32 48 / 55%);
+  color: var(--on);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20cqw 9cqw 9cqw;
+  text-align: center;
+}
+
+/* Two rings, like the mark, large behind the name. */
+.rings {
+  inset: 0;
+  position: absolute;
+}
+
+.rings i {
+  aspect-ratio: 1;
+  border: 1px solid var(--hair);
+  border-radius: 50%;
+  left: 6%;
+  position: absolute;
+  top: 14%;
+  transition: transform 1.6s var(--oru-ease);
+  width: 66%;
+}
+
+.rings i + i {
+  left: 28%;
+}
+
+.mark {
+  color: var(--pop);
+  position: relative;
+}
+
+.keyName {
+  font-family: var(--oru-serif);
+  font-size: 11.5cqw;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-top: 9cqw;
+  position: relative;
+}
+
+.keyTerm {
+  color: var(--soft);
+  font-size: max(13px, 4.6cqw);
+  font-weight: 600;
+  margin-top: 3cqw;
+  position: relative;
+}
+
+.keyCredit {
+  border-top: 1px solid var(--hair);
+  display: grid;
+  gap: 1cqw;
+  margin-top: auto;
+  padding-top: 6cqw;
+  position: relative;
+  width: 100%;
+}
+
+.keyCredit b {
+  font-family: var(--oru-serif);
+  font-size: 13cqw;
+  font-variant-numeric: lining-nums;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.keyCredit small {
+  color: var(--soft);
+  font-size: max(13px, 4.4cqw);
+}
+
+/* ---------- Journey: an itinerary ---------- */
+
+.route {
+  align-items: stretch;
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(170deg, var(--paper-2), var(--paper) 58%);
+  border-radius: 7cqw;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 18%) inset, 0 24px 44px -22px rgb(45 32 48 / 55%);
+  color: var(--on);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 9cqw;
+}
+
+.routeName {
+  font-family: var(--oru-serif);
+  font-size: 10.5cqw;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.length {
+  align-items: baseline;
+  display: flex;
+  gap: 3cqw;
+}
+
+.length b {
+  font-family: var(--oru-serif);
+  font-size: 30cqw;
+  font-variant-numeric: lining-nums;
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+}
+
+.length small {
+  color: var(--soft);
+  font-size: max(13px, 4.6cqw);
+  font-weight: 600;
+}
+
+/* The stops, strung on one line from first to last. */
+.stops {
+  display: grid;
+  gap: 5cqw;
+  position: relative;
+}
+
+.stops::before {
+  background: var(--hair);
+  bottom: 2.6cqw;
+  content: "";
+  left: calc(1.7cqw - 0.5px);
+  position: absolute;
+  top: 2.6cqw;
+  width: 1px;
+}
+
+.stop {
+  align-items: center;
+  display: flex;
+  font-size: max(14px, 5.4cqw);
+  font-weight: 600;
+  gap: 4cqw;
+  line-height: 1.2;
+  position: relative;
+}
+
+.stop::before {
+  background: var(--paper);
+  border: 1px solid var(--on);
+  border-radius: 50%;
+  content: "";
+  flex: none;
+  height: 3.4cqw;
+  transition: background-color 500ms var(--oru-ease);
+  width: 3.4cqw;
+}
+
+.stop:last-child::before {
+  background: var(--pop);
+  border-color: var(--pop);
+}
+
+/* ---------- Gift card: a card in its envelope ---------- */
+
+.gift {
+  aspect-ratio: 3 / 4;
+  display: block;
+  position: relative;
+}
+
+.slip {
+  align-items: center;
+  background: var(--oru-chalk);
+  border-radius: 5cqw;
+  box-shadow: 0 10px 24px -14px rgb(45 32 48 / 50%);
+  color: var(--oru-aubergine);
+  display: flex;
+  flex-direction: column;
+  height: 62%;
+  left: 9%;
+  padding-top: 8cqw;
+  position: absolute;
+  right: 9%;
+  top: 4%;
+  transition: transform 900ms var(--oru-ease);
+}
+
+.slipMark {
+  color: var(--oru-vermilion);
+}
+
+.slip b {
+  font-family: var(--oru-serif);
+  font-size: 15cqw;
+  font-variant-numeric: lining-nums;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-top: 4cqw;
+}
+
+.slip small {
+  color: var(--oru-muted);
+  font-size: max(13px, 4.4cqw);
+  margin-top: 1.5cqw;
+}
+
+.envelope {
+  align-items: flex-end;
+  background: linear-gradient(175deg, var(--paper-2), var(--paper) 62%);
+  border-radius: 7cqw;
+  bottom: 0;
+  box-shadow: 0 24px 44px -22px rgb(45 32 48 / 55%);
+  color: var(--on);
+  display: flex;
+  height: 56%;
+  justify-content: center;
+  left: 0;
+  overflow: hidden;
+  padding: 0 8cqw 8cqw;
+  position: absolute;
+  right: 0;
+}
+
+/* The flap: a half-round cut, open. */
+.flap {
+  background: rgb(0 0 0 / 10%);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  box-shadow: 0 1px 0 var(--hair);
+  height: 34%;
+  inset: 0 0 auto;
+  position: absolute;
+}
+
+.to {
+  font-family: var(--oru-serif);
+  font-size: 9.5cqw;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  position: relative;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rings i,
+  .slip,
+  .stop::before {
+    transition: none;
+  }
+}
+
+/* ---------- Hover, from the card that holds the face ---------- */
+
+.key,
+.route,
+.envelope {
+  transition: transform 700ms var(--oru-ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  [data-offer-card]:hover :is(.key, .route) {
+    transform: translateY(-8px);
+  }
+
+  [data-offer-card]:hover .rings i {
+    transform: translateX(-5%) scale(1.08);
+  }
+
+  [data-offer-card]:hover .rings i + i {
+    transform: translateX(5%) scale(1.08);
+  }
+
+  [data-offer-card]:hover .slip {
+    transform: translateY(-11%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .key,
+  .route,
+  .envelope {
+    transition: none;
+  }
+}

@@ -1,0 +1,219 @@
+/*
+ * The arrival. A full-bleed photograph washed to porcelain where the copy
+ * sits. The section is sticky: the page rises over it (page.module.css), and
+ * the photograph darkens and drifts as it is covered (scroll-driven; still
+ * where unsupported).
+ */
+
+.hero {
+  display: flex;
+  height: 100vh;
+  height: 100svh;
+  isolation: isolate;
+  min-height: 600px;
+  overflow: clip;
+  position: sticky;
+  top: 0;
+  z-index: 0;
+}
+
+.media {
+  inset: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.img {
+  animation: hero-settle 2.4s var(--oru-ease) both;
+  object-fit: cover;
+  object-position: 74% 30%;
+}
+
+/* Porcelain under the copy, clearing towards the guest. */
+.wash {
+  background:
+    linear-gradient(0deg, rgb(243 240 237 / 96%) 0%, rgb(243 240 237 / 88%) 34%, rgb(243 240 237 / 0%) 66%),
+    linear-gradient(180deg, rgb(243 240 237 / 70%) 0%, rgb(243 240 237 / 0%) 18%);
+  inset: 0;
+  position: absolute;
+}
+
+.dusk {
+  background: var(--oru-aubergine);
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.inner {
+  align-items: flex-end;
+  display: flex;
+  padding-bottom: 40px;
+  padding-top: calc(var(--oru-header) + 24px);
+}
+
+.copy {
+  max-width: 720px;
+}
+
+.line {
+  display: inline-block;
+}
+
+.second {
+  padding-right: 0.08em;
+}
+
+.lead {
+  color: var(--oru-aubergine);
+  margin-top: 20px;
+  max-width: 30ch;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 36px;
+  margin-top: 28px;
+}
+
+.window {
+  display: grid;
+  gap: 8px;
+}
+
+.windowLabel {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  background: rgb(255 253 248 / 62%);
+  border: 1px solid var(--oru-line-strong);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  min-height: 44px;
+  padding: 0 18px;
+  transition: background-color var(--oru-ui) var(--oru-ease), color var(--oru-ui) var(--oru-ease), border-color var(--oru-ui) var(--oru-ease);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--oru-aubergine);
+    border-color: var(--oru-aubergine);
+    color: var(--oru-chalk);
+  }
+}
+
+/* ---------- Desktop: the copy on the porcelain side, the guest on the other ---------- */
+
+@media (min-width: 760px) and (min-aspect-ratio: 1/1) {
+  .img {
+    object-position: 60% 30%;
+  }
+
+  .wash {
+    background:
+      linear-gradient(90deg, rgb(243 240 237 / 97%) 0%, rgb(243 240 237 / 90%) 30%, rgb(243 240 237 / 0%) 64%),
+      linear-gradient(0deg, rgb(243 240 237 / 55%) 0%, rgb(243 240 237 / 0%) 30%);
+  }
+
+  .inner {
+    align-items: center;
+    padding-bottom: 48px;
+  }
+
+  .lead {
+    margin-top: 28px;
+  }
+
+  .actions {
+    margin-top: 40px;
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .line {
+    animation: hero-line 1.3s var(--oru-ease) both;
+  }
+
+  .second {
+    animation-delay: 140ms;
+  }
+
+  .lead {
+    animation: hero-fade 1.3s var(--oru-ease) 300ms both;
+  }
+
+  .actions {
+    animation: hero-fade 1.3s var(--oru-ease) 440ms both;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .media {
+      animation: hero-drift linear both;
+      animation-range: 0 100vh;
+      animation-timeline: scroll(root);
+    }
+
+    .dusk {
+      animation: hero-dusk linear both;
+      animation-range: 0 100vh;
+      animation-timeline: scroll(root);
+    }
+
+    .copy {
+      animation: hero-lift linear both;
+      animation-range: 0 70vh;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img {
+    animation: none;
+  }
+
+  .chip {
+    transition: none;
+  }
+}
+
+@keyframes hero-settle {
+  from { transform: scale(1.08); }
+  to { transform: none; }
+}
+
+@keyframes hero-line {
+  from { filter: blur(8px); opacity: 0; transform: translateY(0.3em); }
+  to { filter: none; opacity: 1; transform: none; }
+}
+
+@keyframes hero-fade {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes hero-drift {
+  to { transform: translateY(8%) scale(1.06); }
+}
+
+@keyframes hero-dusk {
+  to { opacity: 0.55; }
+}
+
+@keyframes hero-lift {
+  to { opacity: 0; transform: translateY(-60px); }
+}

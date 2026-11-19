@@ -50,7 +50,7 @@ test("prerenders all standalone salon Brand Homes", async () => {
   assert.match(brandHomeFour, /<title>Paloma — Hair, Form and Colour<\/title>/i);
   assert.match(brandHomeFour, /Form<\/span>(?:\s|<!-- -->)*<span[^>]*>follows<\/span>(?:\s|<!-- -->)*<span[^>]*>feeling\./);
   assert.match(brandHomeFive, /<title>Oru Spa \| The Art of Exhale<\/title>/i);
-  assert.match(brandHomeFive, /Choose what you need, not what you should/);
+  assert.match(brandHomeFive, /Choose what you need,(?:\s|<!-- -->|<[^>]+>)*not what you should/);
   assert.match(brandHomeFive, /The art of/);
   assert.match(brandHomeSix, /<title>Néroli House \| Water, Warmth, Return<\/title>/i);
   assert.match(brandHomeSix, /Come back/);

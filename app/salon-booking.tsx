@@ -124,11 +124,12 @@ const bookingThemes: Record<BookingTheme, {
     notePlaceholder: "Hair history, skin concerns, the occasion — anything we should know",
   },
   oru: {
-    eyebrow: "A ritual in your rhythm", title: "Let the day soften.", atmosphereTitle: "A slower hour\nstarts here.",
-    atmosphereCopy: "Select a treatment, follow the warmth and leave the rest of the preparation to us.",
-    steps: ["Choose", "Unfold", "Belong"], servicePrompt: "Choose what calls to you", datePrompt: "Choose your day",
-    timePrompt: "Follow the light", nextService: "Choose your hour", nextDetails: "Tell us about you",
-    confirm: "Begin the ritual", success: "Your ritual awaits.",
+    eyebrow: "Your appointment", title: "Book a treatment.", atmosphereTitle: "A slower hour\nstarts here.",
+    atmosphereCopy: "Choose the treatment, the day and the time from the room's live diary. You pay at Oru, after your visit.",
+    steps: ["Treatment", "Day & time", "Your details"], servicePrompt: "Choose a treatment", datePrompt: "Choose a day",
+    timePrompt: "Choose a time (SGT)", nextService: "Choose a time", nextDetails: "Add your details",
+    confirm: "Confirm appointment", success: "You're booked in.",
+    serviceHint: "Choose a treatment to continue",
   },
   neroli: {
     eyebrow: "The water path", title: "Follow the calm.", atmosphereTitle: "From first ripple\nto still water.",

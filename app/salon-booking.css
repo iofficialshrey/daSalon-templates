@@ -2778,61 +2778,188 @@
   }
 }
 
-/* 05 · Oru — warm botanical forms and an unhurried cadence. */
+/*
+ * 05 · Oru: porcelain and aubergine, Bodoni Moda for the display type, soft
+ * pills and rounded panels. The left panel holds the round bath from the
+ * hero photograph. Labels are sentence case at a readable size.
+ */
 .salon-booking-overlay.booking-experience-overlay.booking-overlay-oru {
-  background: rgb(45 32 48 / 76%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: rgb(45 32 48 / 66%);
 }
 
 .salon-booking-overlay.booking-experience-overlay .booking-theme-oru {
-  --booking-paper: #f2eeea;
-  --booking-ink: #342538;
-  --booking-scene: #8e3d31;
-  --booking-scene-ink: #fff8ef;
-  --booking-accent: #b0412e;
-  --booking-accent-ink: #fff;
-  --booking-scene-accent: #f0a48f;
-  --booking-line: rgb(52 37 56 / 18%);
-  --booking-option: rgb(255 255 255 / 40%);
-  --booking-selected: #38263d;
-  --booking-selected-ink: #fff;
-  --booking-summary: #e4dceb;
-  --booking-display: Didot, "Bodoni 72", Georgia, serif;
-  --booking-service-display: Didot, "Bodoni 72", Georgia, serif;
-  --booking-service-size: 1.15rem;
-  --booking-service-weight: 400;
-  --booking-button-radius: 50% 50% 18px 18px / 30px 30px 18px 18px;
-  --booking-chip-radius: 50% 50% 12px 12px / 20px 20px 12px 12px;
-  --booking-option-radius: 28px 8px 28px 8px;
-  --booking-summary-radius: 36px 10px 36px 10px;
-  border-radius: 110px 18px 64px 18px;
+  --booking-paper: #f3f0ed;
+  --booking-ink: #2d2030;
+  --booking-scene: #2d2030;
+  --booking-scene-ink: #fffdf8;
+  --booking-accent: #c2452f;
+  --booking-accent-ink: #fffdf8;
+  --booking-label: #6b5f6e;
+  --booking-scene-accent: #f39a88;
+  --booking-line: rgb(45 32 48 / 14%);
+  --booking-option: #fffdf8;
+  --booking-selected: #2d2030;
+  --booking-selected-ink: #fffdf8;
+  --booking-summary: #e6e0ec;
+  --booking-field: #fffdf8;
+  --booking-error: #a5371f;
+  --booking-display: var(--oru-font-serif, "Bodoni Moda"), Didot, "Times New Roman", serif;
+  --booking-service-display: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+  --booking-display-weight: 400;
+  --booking-tracking: -.025em;
+  --booking-transform: none;
+  --booking-service-size: 1.0625rem;
+  --booking-service-weight: 600;
+  --booking-button-radius: 999px;
+  --booking-chip-radius: 999px;
+  --booking-option-radius: 18px;
+  --booking-summary-radius: 22px;
+  --booking-close-radius: 50%;
+  --booking-confirm-radius: 50%;
+  --booking-control-line: rgb(45 32 48 / 46%);
+  border-radius: 32px;
+  font-family: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
   max-width: 1140px;
 }
 
 .salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-atmosphere {
-  background: radial-gradient(circle at 50% 26%, #d96a4f 0 15%, transparent 15.5%), radial-gradient(circle at 22% 56%, #6f5d3c 0 14%, transparent 14.5%), #422b45;
-  border-radius: 110px 0 0 18px;
-}
-
-.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-footer .salon-booker-back {
-  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgb(45 32 48 / 12%) 0%, rgb(45 32 48 / 74%) 52%, #2d2030 100%),
+    #2d2030 url("/brand-home-5/oru-booking.v1.webp") center 20% / cover no-repeat;
+  border-radius: 32px 0 0 32px;
 }
 
 .salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament {
-  height: 300px;
-  right: -90px;
-  top: 60px;
-  width: 300px;
+  display: none;
 }
 
-.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament i {
-  background: rgb(247 233 213 / 12%);
-  border-radius: 72% 28% 70% 30%;
-  inset: 0;
-  transform: rotate(32deg);
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-atmosphere h2 {
+  font-size: clamp(2.5rem, 3.5vw, 3.6rem);
+  font-weight: 400;
+  line-height: .96;
 }
 
-.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament i:nth-child(2) { inset: 40px; transform: rotate(72deg); }
-.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-ornament i:nth-child(3) { inset: 80px; transform: rotate(112deg); }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-atmosphere > p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Labels: sentence case, 13px, never tracked-out capitals. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-atmosphere > small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-confirmation-details dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-secondary {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-progress i,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-itinerary b {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-service-group h3 {
+  color: #6b5f6e;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-service-meta small {
+  font-size: 13px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-service-meta b {
+  font-family: var(--booking-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-itinerary b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-periods span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-dates span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-footer-summary small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-status button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-phone-prefix {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-periods span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-footer-summary small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-review button {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-dates span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-times button {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-field input,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-field textarea,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-field select,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-venue select {
+  border-radius: 14px;
+}
+
+/* The primary move: an aubergine pill, as on the page. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-next {
+  background: #2d2030;
+  border-radius: 999px;
+  color: #fffdf8;
+  filter: none;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+  min-height: 54px;
+  padding: 0 28px;
+  text-transform: none;
+  transition: background-color 220ms ease, opacity 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-next:hover:not(:disabled) {
+  background: #c2452f;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-oru .salon-booker-footer .salon-booker-back {
+  border-radius: 999px;
+}
+
+@media (max-width: 760px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-oru {
+    border-radius: 24px 24px 0 0;
+  }
+}
 
 /* 06 · Néroli — a soft water path with lotus geometry. */
 .salon-booking-overlay.booking-experience-overlay.booking-overlay-neroli {
