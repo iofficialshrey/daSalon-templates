@@ -1,0 +1,96 @@
+/*
+ * The drop's fixed layer (z 30: above the page, below the header and every
+ * window) and the resting places it lands in. The layer itself never takes
+ * opacity or filters, so its backdrop keeps seeing the page.
+ */
+
+.layer {
+  --drop-0: rgb(255 255 255 / 78%);
+  --drop-1: rgb(255 255 255 / 8%);
+  --drop-2: rgb(110 170 165 / 46%);
+  --drop-3: rgb(24 48 46 / 72%);
+  --drop-edge: rgb(255 255 255 / 85%);
+  --drop-shadow: rgb(24 48 46 / 36%);
+
+  height: 360px;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  visibility: hidden;
+  width: 360px;
+  will-change: transform;
+  z-index: 30;
+}
+
+.layer[data-visible="on"] {
+  visibility: visible;
+}
+
+.layer[data-tone="dark"] {
+  --drop-0: rgb(255 255 255 / 46%);
+  --drop-1: rgb(185 210 202 / 8%);
+  --drop-2: rgb(134 185 181 / 26%);
+  --drop-3: rgb(220 240 235 / 62%);
+  --drop-edge: rgb(220 240 235 / 70%);
+  --drop-shadow: rgb(0 0 0 / 60%);
+}
+
+/* What lies behind the drop, softened and brightened: the water lens. */
+.glass {
+  -webkit-backdrop-filter: blur(1.6px) saturate(1.5) brightness(1.08);
+  backdrop-filter: blur(1.6px) saturate(1.5) brightness(1.08);
+  inset: 0;
+  position: absolute;
+}
+
+.svg {
+  inset: 0;
+  overflow: visible;
+  position: absolute;
+}
+
+.body {
+  stroke: var(--drop-edge);
+  stroke-width: 1;
+}
+
+.stop0 { stop-color: var(--drop-0); }
+.stop1 { stop-color: var(--drop-1); }
+.stop2 { stop-color: var(--drop-2); }
+.stop3 { stop-color: var(--drop-3); }
+.shadow0 { stop-color: var(--drop-shadow); }
+.shadow1 { stop-color: transparent; }
+
+.glint { fill: rgb(255 255 255 / 92%); }
+.caustic { fill: rgb(255 255 255 / 48%); }
+.spark { fill: rgb(255 255 255 / 85%); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .layer[data-visible="on"] .svg,
+  .layer[data-visible="on"] .glass {
+    animation: drop-in 700ms var(--nh-ease, ease) both;
+  }
+}
+
+@keyframes drop-in {
+  from { opacity: 0; }
+}
+
+/* ---------- Resting places ---------- */
+
+.slot {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+  pointer-events: none;
+  position: relative;
+}
+
+/* Without the travelling drop (reduced motion, or before it starts), a still drop sits in each place. */
+:global(html:not([data-nh-drop="live"])) .slot[data-drop-slot="on"] {
+  background:
+    radial-gradient(circle at 36% 30%, rgb(255 255 255 / 85%) 0 9%, rgb(255 255 255 / 12%) 34%, rgb(134 185 181 / 32%) 76%, rgb(24 48 46 / 46%) 100%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 75%), 0 6px 10px -6px rgb(24 48 46 / 40%);
+}

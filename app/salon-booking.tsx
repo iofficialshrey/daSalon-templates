@@ -132,11 +132,12 @@ const bookingThemes: Record<BookingTheme, {
     serviceHint: "Choose a treatment to continue",
   },
   neroli: {
-    eyebrow: "The water path", title: "Follow the calm.", atmosphereTitle: "From first ripple\nto still water.",
-    atmosphereCopy: "Move gently through treatment, tide and guest details. Your time will be waiting at the house.",
-    steps: ["Ripple", "Tide", "Stillness"], servicePrompt: "Choose your first ripple", datePrompt: "Meet the right tide",
-    timePrompt: "Choose when the water settles", nextService: "Follow the tide", nextDetails: "Complete the journey",
-    confirm: "Reserve this ritual", success: "Stillness is reserved.",
+    eyebrow: "Your visit", title: "Book a visit.", atmosphereTitle: "Come back\nto your senses.",
+    atmosphereCopy: "Choose the treatment, the day and the time from the house's live diary. You pay at Néroli, after your visit.",
+    steps: ["Treatment", "Day & time", "Your details"], servicePrompt: "Choose a treatment", datePrompt: "Choose a day",
+    timePrompt: "Choose a time (SGT)", nextService: "Choose a time", nextDetails: "Add your details",
+    confirm: "Confirm visit", success: "You're booked in.",
+    serviceHint: "Choose a treatment to continue",
   },
   studio: {
     eyebrow: "The booking instrument", title: "Make an entrance.", atmosphereTitle: "Look like\nyou mean it.",

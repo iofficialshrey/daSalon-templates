@@ -1,0 +1,160 @@
+/*
+ * Néroli House: come back to your senses.
+ * Every token for template 6 lives on .root. Mineral and mist at the surface,
+ * celadon in the middle, deep green-black at the end: the page descends like
+ * water. Coral is the one warm accent. Fraunces (soft) sets the display type;
+ * Manrope everything else. Circles and soft rectangles.
+ */
+
+.root {
+  --nh-mineral: #eef3f0;
+  --nh-mist: #dce8e5;
+  --nh-celadon: #b9d2ca;
+  --nh-pool: #86b9b5;
+  --nh-deep: #18302e;
+  --nh-abyss: #0f2321;
+  --nh-coral: #e56f61;
+  --nh-coral-ink: #b94a3c;
+  --nh-white: #fbfdfc;
+  --nh-muted: #4f6663;
+  --nh-muted-dark: #a9c2bd;
+  --nh-line: rgb(24 48 46 / 14%);
+  --nh-line-strong: rgb(24 48 46 / 40%);
+  --nh-line-dark: rgb(238 243 240 / 16%);
+
+  --nh-serif: var(--nh-font-serif), "Iowan Old Style", Georgia, serif;
+  --nh-sans: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+
+  --nh-max: 1280px;
+  --nh-gutter: 20px;
+  --nh-header: 64px;
+  --nh-section: 88px;
+  --nh-radius: 24px;
+  --nh-button: 14px;
+
+  --nh-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+  --nh-ui: 240ms;
+
+  --focus: var(--nh-coral-ink);
+
+  -webkit-font-smoothing: antialiased;
+  background: var(--nh-mineral);
+  color: var(--nh-deep);
+  font-family: var(--nh-sans);
+  font-kerning: normal;
+  font-size: 16px;
+  font-synthesis: none;
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: clip;
+  position: relative;
+}
+
+@media (min-width: 760px) {
+  .root {
+    --nh-gutter: 40px;
+    --nh-header: 76px;
+    --nh-section: 120px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .root {
+    --nh-gutter: clamp(48px, 5vw, 88px);
+    --nh-section: clamp(128px, 10vw, 160px);
+    --nh-radius: 28px;
+  }
+}
+
+:global(html):has(.root) {
+  scroll-behavior: auto;
+  scrollbar-gutter: stable;
+}
+
+:global(body):has(.root) {
+  background: #0f2321;
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+:where(.root) :is(a, button, summary, input, select, textarea, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-top: calc(var(--nh-header) + 24px);
+}
+
+/* Neutralise the collection page's bare element rules without outranking component classes. */
+:where(.root) :is(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul) {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+}
+
+:where(.root) :is(h1, h2, h3, h4) {
+  color: inherit;
+  font-family: inherit;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+:where(.root) p {
+  text-wrap: pretty;
+}
+
+:where(.root) :is(ol, ul) {
+  list-style: none;
+}
+
+:where(.root) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.root) :is(button, input, select, textarea) {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+:where(.root) button {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+:where(.root) :is(img, picture, video, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(.root) footer {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.skip {
+  background: var(--nh-white);
+  border-radius: var(--nh-button);
+  color: var(--nh-deep);
+  font-size: 14px;
+  font-weight: 600;
+  left: 12px;
+  padding: 12px 18px;
+  position: fixed;
+  top: 12px;
+  transform: translateY(-200%);
+  z-index: 100;
+}
+
+.skip:focus-visible {
+  transform: none;
+}

@@ -1,0 +1,206 @@
+/*
+ * A day at Néroli. Phones and portrait screens: the heading, then three
+ * panels in turn, the waterline hidden. Wide landscape screens: a 300vh
+ * section whose stage holds still while the track of panels slides left and
+ * the drop rolls along the waterline from Settle to Return.
+ */
+
+.day {
+  background: linear-gradient(180deg, var(--nh-mist), #d3e3de);
+  padding-block: var(--nh-section);
+  position: relative;
+}
+
+.head {
+  margin-bottom: 40px;
+}
+
+.title {
+  max-width: 18ch;
+}
+
+.track {
+  display: grid;
+  gap: 48px;
+  padding-inline: var(--nh-gutter);
+}
+
+.panel {
+  display: grid;
+  gap: 20px;
+}
+
+.photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--nh-radius);
+  overflow: hidden;
+  position: relative;
+}
+
+.img {
+  object-fit: cover;
+}
+
+.text {
+  display: grid;
+  gap: 8px;
+}
+
+.count {
+  align-items: center;
+  border: 1px solid var(--nh-line-strong);
+  border-radius: 50%;
+  display: inline-flex;
+  font-family: var(--nh-serif);
+  font-size: 17px;
+  font-variation-settings: "SOFT" 100;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.body {
+  color: var(--nh-muted);
+  font-size: 17px;
+  line-height: 1.6;
+  max-width: 32ch;
+}
+
+.water {
+  display: none;
+}
+
+/* ---------- Wide, landscape screens: the sliding sequence ---------- */
+
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) and (min-height: 600px) {
+  .day {
+    height: 300vh;
+    height: 300svh;
+    padding-block: 0;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    padding: calc(var(--nh-header) + 36px) 0 36px;
+    position: sticky;
+    top: 0;
+  }
+
+  .head {
+    margin-bottom: 28px;
+  }
+
+  .title {
+    font-size: clamp(34px, 3.6vw, 54px);
+    max-width: none;
+  }
+
+  .track {
+    display: flex;
+    gap: 6vw;
+    min-height: 0;
+    padding-inline: max(var(--nh-gutter), calc((100vw - var(--nh-max)) / 2));
+    will-change: transform;
+  }
+
+  .panel {
+    align-items: center;
+    flex: none;
+    gap: clamp(28px, 3vw, 48px);
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    height: 100%;
+    width: min(64vw, 960px);
+  }
+
+  .photo {
+    aspect-ratio: auto;
+    height: 100%;
+    max-height: 560px;
+  }
+
+  .text {
+    gap: 12px;
+  }
+
+  .water {
+    display: grid;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  /* The waterline: a hairline the drop rolls along. */
+  .line {
+    align-items: center;
+    background: linear-gradient(90deg, var(--nh-line-strong), var(--nh-line-strong)) 0 50% / 100% 1px no-repeat;
+    display: flex;
+    height: 40px;
+    margin-inline: 20px;
+  }
+
+  .line .slot {
+    margin-left: -20px;
+    width: 40px;
+  }
+
+  .stops {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .stop {
+    color: var(--nh-muted);
+    font-size: 15px;
+    font-weight: 600;
+    transition: color var(--nh-ui) var(--nh-ease);
+  }
+
+  .day[data-step="0"] .stop[data-index="0"],
+  .day[data-step="1"] .stop[data-index="1"],
+  .day[data-step="2"] .stop[data-index="2"] {
+    color: var(--nh-deep);
+  }
+
+  .count {
+    transition: background-color var(--nh-ui) var(--nh-ease), color var(--nh-ui) var(--nh-ease);
+  }
+}
+
+/* Phones: the drop waits beside the heading. */
+@media not ((min-width: 900px) and (min-aspect-ratio: 1/1) and (min-height: 600px)) {
+  .water {
+    display: block;
+    height: 0;
+    overflow: visible;
+  }
+
+  .line {
+    height: 0;
+  }
+
+  .stops {
+    display: none;
+  }
+
+  .water .slot {
+    position: absolute;
+    right: var(--nh-gutter);
+    top: calc(var(--nh-section) / 2 - 18px);
+    width: 36px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 899px), (max-aspect-ratio: 1/1) and (min-width: 600px) {
+  .track {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .photo {
+    aspect-ratio: 3 / 4;
+  }
+}

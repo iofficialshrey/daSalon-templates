@@ -1,0 +1,218 @@
+/*
+ * Shared type, buttons and reveals for Néroli. Sections set --tone-* to switch
+ * between the light water and the deep.
+ */
+
+.container {
+  margin-inline: auto;
+  max-width: calc(var(--nh-max) + 2 * var(--nh-gutter));
+  padding-inline: var(--nh-gutter);
+  width: 100%;
+}
+
+.section {
+  padding-block: var(--nh-section);
+  position: relative;
+}
+
+.light {
+  --tone-text: var(--nh-deep);
+  --tone-muted: var(--nh-muted);
+  --tone-line: var(--nh-line);
+  --tone-line-strong: var(--nh-line-strong);
+  --btn-fill: var(--nh-deep);
+  --btn-ink: var(--nh-white);
+  --btn-hover: #24453f;
+  color: var(--tone-text);
+}
+
+.dark {
+  --focus: var(--nh-celadon);
+  --tone-text: var(--nh-mineral);
+  --tone-muted: var(--nh-muted-dark);
+  --tone-line: var(--nh-line-dark);
+  --tone-line-strong: rgb(238 243 240 / 42%);
+  --btn-fill: var(--nh-celadon);
+  --btn-ink: var(--nh-deep);
+  --btn-hover: var(--nh-mineral);
+  color: var(--tone-text);
+}
+
+/* ---------- Type: Fraunces, soft ---------- */
+
+.h1,
+.h2,
+.h3 {
+  font-family: var(--nh-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 340;
+}
+
+.h1 {
+  font-size: clamp(52px, 8vw, 116px);
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+}
+
+.h2 {
+  font-size: clamp(36px, 4.6vw, 66px);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.h3 {
+  font-size: clamp(24px, 2.1vw, 30px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+/* The second voice: the same face, deeper in the water. */
+.soft {
+  color: var(--tone-muted);
+}
+
+.lead {
+  color: var(--tone-muted);
+  font-size: clamp(17px, 1.3vw, 19px);
+  line-height: 1.6;
+  max-width: 44ch;
+}
+
+/* ---------- Buttons: soft rectangles ---------- */
+
+.btn {
+  align-items: center;
+  border-radius: var(--nh-button);
+  display: inline-flex;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 12px;
+  justify-content: center;
+  line-height: 1;
+  min-height: 52px;
+  padding: 0 22px;
+  transition:
+    background-color var(--nh-ui) var(--nh-ease),
+    border-color var(--nh-ui) var(--nh-ease),
+    color var(--nh-ui) var(--nh-ease),
+    transform var(--nh-ui) var(--nh-ease);
+  white-space: nowrap;
+}
+
+.btn svg {
+  flex: none;
+  transition: transform var(--nh-ui) var(--nh-ease);
+}
+
+.primary {
+  background: var(--btn-fill);
+  color: var(--btn-ink);
+}
+
+.outline {
+  border: 1px solid var(--tone-line-strong);
+  color: var(--tone-text);
+}
+
+.sm {
+  font-size: 14px;
+  min-height: 44px;
+  padding: 0 16px;
+}
+
+.block {
+  width: 100%;
+}
+
+@media (hover: hover) {
+  .primary:hover {
+    background: var(--btn-hover);
+  }
+
+  .outline:hover {
+    border-color: var(--tone-text);
+  }
+
+  .btn:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* A text link with a line that fills from the left. */
+.link {
+  align-items: center;
+  display: inline-flex;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 8px;
+  min-height: 44px;
+}
+
+.link > span {
+  background:
+    linear-gradient(currentColor, currentColor) 0 100% / 0% 1px no-repeat,
+    linear-gradient(var(--tone-line-strong), var(--tone-line-strong)) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 500ms var(--nh-ease);
+}
+
+@media (hover: hover) {
+  .link:hover > span {
+    background-size: 100% 1px, 100% 1px;
+  }
+}
+
+.srOnly {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ---------- Reveals: a surfacing, scroll-driven where supported ---------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .surface {
+      animation: nh-surface linear both;
+      animation-range: entry 0% entry 60%;
+      animation-timeline: view();
+    }
+
+    .surface2 {
+      animation-range: entry 10% entry 70%;
+    }
+  }
+}
+
+@keyframes nh-surface {
+  from {
+    clip-path: inset(0 0 30% 0);
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    clip-path: inset(0);
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn svg,
+  .link > span {
+    transition: none;
+  }
+}

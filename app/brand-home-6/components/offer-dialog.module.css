@@ -1,0 +1,294 @@
+/*
+ * The offer checkout: a native modal dialog in the deep water. Phones: a
+ * sheet from the bottom, the face above the details. Wide screens: the face
+ * on the left over soft light, the details on a mineral panel to the right.
+ */
+
+.dialog {
+  --tone-text: var(--nh-deep);
+  --tone-muted: var(--nh-muted);
+  --tone-line: var(--nh-line);
+  --tone-line-strong: var(--nh-line-strong);
+  --btn-fill: var(--nh-deep);
+  --btn-ink: var(--nh-white);
+  --btn-hover: #24453f;
+
+  background: transparent;
+  border: 0;
+  color: var(--nh-deep);
+  height: 100%;
+  inset: 0;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.dialog[open] {
+  align-items: flex-end;
+  display: flex;
+  justify-content: center;
+}
+
+.dialog::backdrop {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: rgb(15 35 33 / 66%);
+}
+
+.window {
+  background: var(--nh-mineral);
+  border-radius: var(--nh-radius) var(--nh-radius) 0 0;
+  display: grid;
+  max-height: calc(100svh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  position: relative;
+  width: 100%;
+}
+
+.close {
+  align-items: center;
+  background: rgb(251 253 252 / 90%);
+  border-radius: var(--nh-button);
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  transition: background-color var(--nh-ui) var(--nh-ease), color var(--nh-ui) var(--nh-ease);
+  width: 44px;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .close:hover {
+    background: var(--nh-deep);
+    color: var(--nh-white);
+  }
+}
+
+.stage {
+  background:
+    radial-gradient(70% 60% at 30% 20%, rgb(134 185 181 / 40%), transparent 70%),
+    linear-gradient(160deg, var(--nh-deep), var(--nh-abyss));
+  display: grid;
+  padding: 40px 28px 32px;
+  place-items: center;
+}
+
+.faceWrap {
+  width: min(78vw, 320px);
+}
+
+.body {
+  display: grid;
+  gap: 14px;
+  padding: 28px var(--nh-gutter) calc(28px + env(safe-area-inset-bottom));
+}
+
+.kind {
+  color: var(--nh-coral-ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.title {
+  font-size: clamp(30px, 3vw, 40px);
+}
+
+.title:focus {
+  outline: none;
+}
+
+.line {
+  color: var(--nh-muted);
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 46ch;
+}
+
+.details {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.details li {
+  align-items: flex-start;
+  display: flex;
+  font-size: 15px;
+  gap: 10px;
+  line-height: 1.45;
+}
+
+.details svg {
+  color: var(--nh-pool);
+  flex: none;
+  margin-top: 3px;
+}
+
+.fieldLabel {
+  display: grid;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.input {
+  background: var(--nh-white);
+  border: 1px solid var(--nh-line-strong);
+  border-radius: var(--nh-button);
+  font-size: 16px;
+  font-weight: 400;
+  min-height: 50px;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--nh-muted);
+}
+
+.rows {
+  border-top: 1px solid var(--nh-line);
+  margin-top: 6px;
+}
+
+.rowItem {
+  align-items: baseline;
+  border-bottom: 1px solid var(--nh-line);
+  display: flex;
+  font-size: 15px;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 11px 0;
+}
+
+.rowItem dt {
+  color: var(--nh-muted);
+}
+
+.rowItem dd {
+  font-weight: 600;
+  margin: 0;
+  text-align: right;
+}
+
+.rowItem:last-child dd {
+  font-family: var(--nh-serif);
+  font-size: 22px;
+  font-variant-numeric: lining-nums;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.small {
+  color: var(--nh-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.tick {
+  align-items: center;
+  background: var(--nh-pool);
+  border-radius: 50%;
+  color: var(--nh-deep);
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+@media (min-width: 820px) {
+  .dialog[open] {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .window {
+    border-radius: var(--nh-radius);
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    max-height: min(760px, calc(100svh - 48px));
+    max-width: 1000px;
+    overflow: hidden;
+  }
+
+  .stage {
+    padding: 48px;
+  }
+
+  .faceWrap {
+    width: min(100%, 380px);
+  }
+
+  .body {
+    align-content: center;
+    overflow-y: auto;
+    padding: 56px 44px 44px;
+  }
+
+  .close {
+    right: 18px;
+    top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] .window {
+    animation: offer-up 520ms var(--nh-ease) both;
+  }
+
+  .dialog[open]::backdrop {
+    animation: offer-fade 320ms linear both;
+  }
+
+  .faceWrap {
+    animation: offer-face 900ms var(--nh-ease) 120ms both;
+  }
+
+  .faceWrap[data-done] {
+    animation: offer-done 900ms var(--nh-ease) both;
+  }
+
+  .tick {
+    animation: offer-tick 700ms var(--nh-ease) both;
+  }
+}
+
+@keyframes offer-up {
+  from { opacity: 0; transform: translateY(40px); }
+}
+
+@keyframes offer-fade {
+  from { opacity: 0; }
+}
+
+@keyframes offer-face {
+  from { opacity: 0; transform: translateY(18px) scale(0.94); }
+}
+
+@keyframes offer-done {
+  40% { transform: translateY(-8px) scale(1.03); }
+}
+
+@keyframes offer-tick {
+  from { opacity: 0; transform: scale(0.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .close {
+    transition: none;
+  }
+}
