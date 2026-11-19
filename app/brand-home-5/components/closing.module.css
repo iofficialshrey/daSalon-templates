@@ -1,0 +1,197 @@
+/*
+ * The closing invitation and the footer share one aubergine band with a
+ * rounded top. The invitation: a small arch, the line, and the round Book.
+ */
+
+.closing {
+  background: var(--oru-aubergine);
+  border-radius: var(--oru-radius) var(--oru-radius) 0 0;
+  margin-top: calc(var(--oru-radius) * -1);
+  position: relative;
+}
+
+.invite {
+  align-items: center;
+  display: grid;
+  gap: 32px;
+  justify-items: center;
+  padding-block: var(--oru-section) calc(var(--oru-section) * 0.8);
+  text-align: center;
+}
+
+.window {
+  aspect-ratio: 3 / 4;
+  border-radius: 999px 999px 16px 16px;
+  overflow: hidden;
+  position: relative;
+  width: min(46vw, 220px);
+}
+
+.windowImg {
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+.title {
+  font-size: clamp(48px, 8.4vw, 124px);
+  max-width: 11ch;
+}
+
+/* The round Book, in vermilion. */
+.round {
+  align-items: center;
+  background: var(--oru-vermilion);
+  border-radius: 50%;
+  color: var(--oru-aubergine);
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 16px;
+  font-weight: 700;
+  gap: 10px;
+  height: 156px;
+  justify-content: center;
+  line-height: 1.25;
+  transition: background-color var(--oru-ui) var(--oru-ease), transform 600ms var(--oru-ease);
+  width: 156px;
+}
+
+.round svg {
+  transition: transform var(--oru-ui) var(--oru-ease);
+}
+
+@media (hover: hover) {
+  .round:hover {
+    background: var(--oru-chalk);
+    transform: scale(1.06);
+  }
+
+  .round:hover svg {
+    transform: translateX(5px);
+  }
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  border-top: 1px solid var(--oru-line-dark);
+  padding-block: 48px calc(32px + env(safe-area-inset-bottom));
+}
+
+.cols {
+  display: grid;
+  gap: 40px;
+}
+
+.wordmark {
+  align-items: center;
+  display: flex;
+  font-family: var(--oru-serif);
+  font-size: 36px;
+  gap: 12px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.wordmark svg {
+  color: var(--oru-vermilion);
+}
+
+.wordmark span {
+  padding-bottom: 5px;
+}
+
+.tagline {
+  color: var(--oru-muted-dark);
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.rooms {
+  display: grid;
+  gap: 18px 32px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.roomName {
+  display: block;
+  font-family: var(--oru-serif);
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.address {
+  color: var(--oru-muted-dark);
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 2px;
+  transition: color var(--oru-ui) var(--oru-ease);
+}
+
+.links {
+  display: grid;
+  gap: 2px 32px;
+  grid-template-columns: repeat(2, max-content);
+}
+
+.footLink {
+  align-items: center;
+  color: var(--oru-chalk);
+  display: inline-flex;
+  font-size: 15px;
+  font-weight: 500;
+  gap: 6px;
+  min-height: 40px;
+  opacity: 0.82;
+  transition: opacity var(--oru-ui) var(--oru-ease);
+}
+
+@media (hover: hover) {
+  .footLink:hover,
+  .address:hover {
+    color: var(--oru-chalk);
+    opacity: 1;
+  }
+}
+
+.base {
+  border-top: 1px solid var(--oru-line-dark);
+  display: grid;
+  gap: 12px;
+  margin-top: 40px;
+  padding-top: 20px;
+}
+
+.legal {
+  color: var(--oru-muted-dark);
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+
+.end {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 28px;
+}
+
+@media (min-width: 1000px) {
+  .cols {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) auto;
+  }
+
+  .base {
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .round,
+  .round svg,
+  .footLink,
+  .address {
+    transition: none;
+  }
+}

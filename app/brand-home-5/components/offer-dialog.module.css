@@ -1,0 +1,291 @@
+/*
+ * The offer checkout: a native modal dialog. Phones: a sheet from the bottom,
+ * the face above the details. Wide screens: the face on a lavender stage to
+ * the left, the details to the right.
+ */
+
+.dialog {
+  --tone-text: var(--oru-aubergine);
+  --tone-muted: var(--oru-muted);
+  --tone-accent: var(--oru-vermilion-deep);
+  --tone-line: var(--oru-line);
+  --btn-fill: var(--oru-aubergine);
+  --btn-ink: var(--oru-chalk);
+  --btn-hover: var(--oru-vermilion-deep);
+
+  background: transparent;
+  border: 0;
+  color: var(--oru-aubergine);
+  height: 100%;
+  inset: 0;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.dialog[open] {
+  align-items: flex-end;
+  display: flex;
+  justify-content: center;
+}
+
+.dialog::backdrop {
+  backdrop-filter: blur(6px);
+  background: rgb(45 32 48 / 62%);
+}
+
+.window {
+  background: var(--oru-porcelain);
+  border-radius: var(--oru-radius) var(--oru-radius) 0 0;
+  display: grid;
+  max-height: calc(100svh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  position: relative;
+  width: 100%;
+}
+
+.close {
+  align-items: center;
+  background: var(--oru-chalk);
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgb(45 32 48 / 14%);
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  transition: background-color var(--oru-ui) var(--oru-ease), color var(--oru-ui) var(--oru-ease);
+  width: 44px;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .close:hover {
+    background: var(--oru-aubergine);
+    color: var(--oru-chalk);
+  }
+}
+
+.stage {
+  background: var(--oru-mist);
+  display: grid;
+  padding: 32px 24px 28px;
+  place-items: center;
+}
+
+.faceWrap {
+  width: min(52vw, 210px);
+}
+
+.body {
+  display: grid;
+  gap: 14px;
+  padding: 28px var(--oru-gutter) calc(28px + env(safe-area-inset-bottom));
+}
+
+.kind {
+  color: var(--oru-vermilion-deep);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.title {
+  font-size: clamp(30px, 3vw, 40px);
+}
+
+.title:focus {
+  outline: none;
+}
+
+.line {
+  color: var(--oru-muted);
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 46ch;
+}
+
+.details {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.details li {
+  align-items: flex-start;
+  display: flex;
+  font-size: 15px;
+  gap: 10px;
+  line-height: 1.45;
+}
+
+.details svg {
+  color: var(--oru-eucalyptus);
+  flex: none;
+  margin-top: 3px;
+}
+
+.fieldLabel {
+  display: grid;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.input {
+  background: var(--oru-chalk);
+  border: 1px solid var(--oru-line-strong);
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 400;
+  min-height: 50px;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--oru-muted);
+}
+
+.rows {
+  border-top: 1px solid var(--oru-line);
+  margin-top: 6px;
+}
+
+.rowItem {
+  align-items: baseline;
+  border-bottom: 1px solid var(--oru-line);
+  display: flex;
+  font-size: 15px;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 11px 0;
+}
+
+.rowItem dt {
+  color: var(--oru-muted);
+}
+
+.rowItem dd {
+  font-weight: 600;
+  margin: 0;
+  text-align: right;
+}
+
+.rowItem:last-child dd {
+  font-family: var(--oru-serif);
+  font-size: 22px;
+  font-variant-numeric: lining-nums;
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.small {
+  color: var(--oru-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.tick {
+  align-items: center;
+  background: var(--oru-eucalyptus);
+  border-radius: 50%;
+  color: var(--oru-chalk);
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+@media (min-width: 820px) {
+  .dialog[open] {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .window {
+    border-radius: var(--oru-radius);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    max-height: min(760px, calc(100svh - 48px));
+    max-width: 980px;
+    overflow: hidden;
+  }
+
+  .stage {
+    padding: 48px;
+  }
+
+  .faceWrap {
+    width: min(100%, 290px);
+  }
+
+  .body {
+    align-content: center;
+    overflow-y: auto;
+    padding: 56px 48px 44px;
+  }
+
+  .close {
+    right: 18px;
+    top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] .window {
+    animation: offer-up 520ms var(--oru-ease) both;
+  }
+
+  .dialog[open]::backdrop {
+    animation: offer-fade 320ms linear both;
+  }
+
+  .faceWrap {
+    animation: offer-face 900ms var(--oru-ease) 120ms both;
+  }
+
+  .faceWrap[data-done] {
+    animation: offer-done 900ms var(--oru-ease) both;
+  }
+
+  .tick {
+    animation: offer-tick 700ms var(--oru-ease) both;
+  }
+}
+
+@keyframes offer-up {
+  from { opacity: 0; transform: translateY(40px); }
+}
+
+@keyframes offer-fade {
+  from { opacity: 0; }
+}
+
+@keyframes offer-face {
+  from { opacity: 0; transform: translateY(18px) scale(0.94); }
+}
+
+@keyframes offer-done {
+  40% { transform: scale(1.05) rotate(-2deg); }
+}
+
+@keyframes offer-tick {
+  from { opacity: 0; transform: scale(0.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .close {
+    transition: none;
+  }
+}

@@ -1,0 +1,14 @@
+/*
+ * Everything after the hero rides on one sheet with a rounded top edge. The
+ * hero is sticky beneath it, so the sheet rises over the photograph.
+ */
+
+.sheet {
+  background: var(--oru-porcelain);
+  border-radius: var(--oru-radius) var(--oru-radius) 0 0;
+  box-shadow: 0 -24px 60px rgb(45 32 48 / 18%);
+  margin-top: calc(var(--oru-radius) * -1);
+  overflow: clip;
+  position: relative;
+  z-index: 1;
+}
