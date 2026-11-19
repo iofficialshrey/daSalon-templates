@@ -1,0 +1,218 @@
+/*
+ * The houses. Phones: the heading, then rows with a small round photograph.
+ * Wide screens: the heading and a round lens (the house you point at) on the
+ * left, the rows on the right; the drop sits at the start of the active row.
+ */
+
+.houses {
+  background: linear-gradient(180deg, #d3e3de, var(--nh-celadon));
+}
+
+.grid {
+  display: grid;
+  gap: 40px;
+}
+
+.side {
+  align-content: start;
+  display: grid;
+  gap: 20px;
+}
+
+.lens {
+  display: none;
+}
+
+.list {
+  border-top: 1px solid var(--nh-line-strong);
+}
+
+.row {
+  align-items: center;
+  border-bottom: 1px solid var(--nh-line-strong);
+  column-gap: 16px;
+  display: grid;
+  grid-template-areas:
+    "thumb main"
+    "live live"
+    "actions actions";
+  grid-template-columns: 64px minmax(0, 1fr);
+  padding: 20px 0;
+  position: relative;
+  row-gap: 14px;
+}
+
+.slot {
+  left: -34px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+}
+
+.thumb {
+  border-radius: 50%;
+  grid-area: thumb;
+  height: 64px;
+  overflow: hidden;
+  position: relative;
+  width: 64px;
+}
+
+.thumbImg {
+  object-fit: cover;
+}
+
+.main {
+  display: grid;
+  gap: 2px;
+  grid-area: main;
+  min-width: 0;
+}
+
+.name {
+  transition: color var(--nh-ui) var(--nh-ease);
+}
+
+.trade {
+  color: var(--nh-muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.live {
+  display: grid;
+  gap: 2px;
+  grid-area: live;
+}
+
+.status {
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 8px;
+}
+
+.dot {
+  background: var(--nh-deep);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgb(24 48 46 / 14%);
+  height: 7px;
+  width: 7px;
+}
+
+.facts {
+  color: var(--nh-muted);
+  font-size: 14px;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  grid-area: actions;
+  justify-content: space-between;
+}
+
+@media (min-width: 760px) {
+  .row {
+    grid-template-areas: "thumb main live actions";
+    grid-template-columns: 72px minmax(0, 1.2fr) minmax(0, 1fr) auto;
+    padding: 22px 0;
+  }
+
+  .thumb {
+    height: 72px;
+    width: 72px;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    align-items: start;
+    column-gap: clamp(56px, 6vw, 104px);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  }
+
+  .side {
+    position: sticky;
+    top: calc(var(--nh-header) + 40px);
+  }
+
+  /* The lens: the active house's room, cross-fading as you move down the list. */
+  .lens {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 55%), 0 40px 70px -40px rgb(24 48 46 / 55%);
+    display: block;
+    margin-top: 16px;
+    overflow: hidden;
+    position: relative;
+    width: min(100%, 360px);
+  }
+
+  .lensImg {
+    inset: 0;
+    opacity: 0;
+    position: absolute;
+    transform: scale(1.08);
+    transition: opacity 700ms var(--nh-ease), transform 1.4s var(--nh-ease);
+  }
+
+  .lensImg[data-on] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .img {
+    object-fit: cover;
+  }
+
+  /* With the lens beside them, the rows keep only the words. */
+  .thumb {
+    display: none;
+  }
+
+  .row {
+    grid-template-areas: "main live actions";
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
+    padding: 26px 0 26px 4px;
+  }
+
+  .row[data-active] .name {
+    color: var(--nh-deep);
+  }
+
+  .row:not([data-active]) .name {
+    color: var(--nh-muted);
+  }
+}
+
+/* Below 1100px the drop rests on the corner of the active row's photograph. */
+@media (max-width: 1099px) {
+  .slot {
+    left: 46px;
+    top: 16px;
+    transform: none;
+    z-index: 1;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1099px) {
+  .slot {
+    left: 54px;
+    top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lensImg,
+  .name {
+    transition: none;
+  }
+}

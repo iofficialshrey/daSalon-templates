@@ -2961,69 +2961,178 @@
   }
 }
 
-/* 06 · Néroli — a soft water path with lotus geometry. */
+/*
+ * 06 · Néroli: mineral light and deep green, Fraunces (soft) for the display
+ * type, soft rectangles. The left panel holds the courtyard pool. Labels are
+ * sentence case at a readable size.
+ */
 .salon-booking-overlay.booking-experience-overlay.booking-overlay-neroli {
-  background: rgb(16 36 34 / 68%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: rgb(15 35 33 / 64%);
 }
 
 .salon-booking-overlay.booking-experience-overlay .booking-theme-neroli {
-  --booking-paper: #edf2ee;
+  --booking-paper: #eef3f0;
   --booking-ink: #18302e;
-  --booking-scene: #b8d7d2;
-  --booking-scene-ink: #18302e;
-  --booking-accent: #b9573f;
-  --booking-accent-ink: #fff;
-  --booking-label: #a94a35;
-  --booking-line: rgb(24 48 46 / 16%);
-  --booking-option: rgb(255 255 255 / 45%);
-  --booking-selected: #1b3a37;
-  --booking-selected-ink: #f5faf7;
-  --booking-summary: #d8e6e1;
-  --booking-display: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif;
-  --booking-service-display: "Iowan Old Style", "Palatino Linotype", Baskerville, Georgia, serif;
-  --booking-service-size: 1.12rem;
-  --booking-service-weight: 400;
-  --booking-button-radius: 999px;
-  --booking-chip-radius: 22px;
-  --booking-option-radius: 40px;
-  --booking-summary-radius: 28px;
-  border-radius: 34px;
-  height: min(800px, calc(100dvh - 52px));
+  --booking-scene: #18302e;
+  --booking-scene-ink: #eef3f0;
+  --booking-accent: #18302e;
+  --booking-accent-ink: #fbfdfc;
+  --booking-label: #4f6663;
+  --booking-scene-accent: #b9d2ca;
+  --booking-line: rgb(24 48 46 / 14%);
+  --booking-option: #fbfdfc;
+  --booking-selected: #18302e;
+  --booking-selected-ink: #fbfdfc;
+  --booking-summary: #dce8e5;
+  --booking-field: #fbfdfc;
+  --booking-error: #a5371f;
+  --booking-display: var(--nh-font-serif, "Fraunces"), "Iowan Old Style", Georgia, serif;
+  --booking-service-display: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+  --booking-display-weight: 360;
+  --booking-tracking: -.025em;
+  --booking-transform: none;
+  --booking-service-size: 1.0625rem;
+  --booking-service-weight: 600;
+  --booking-button-radius: 14px;
+  --booking-chip-radius: 14px;
+  --booking-option-radius: 18px;
+  --booking-summary-radius: 20px;
+  --booking-close-radius: 14px;
+  --booking-confirm-radius: 50%;
+  --booking-control-line: rgb(24 48 46 / 44%);
+  border-radius: 28px;
+  font-family: var(--font-manrope), "Helvetica Neue", Arial, sans-serif;
+  height: min(820px, calc(100dvh - 52px));
   max-width: 1140px;
 }
 
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli :is(.salon-booker-atmosphere h2, .salon-booker-head h2, .salon-booker-service-meta b, .salon-booker-dates strong) {
+  font-variation-settings: "SOFT" 100;
+}
+
 .salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-atmosphere {
-  background: radial-gradient(circle at 30% 24%, #f3faf6 0 4%, transparent 22%), linear-gradient(155deg, #cee3df, #8cbab3);
-  border-radius: 34px 0 0 34px;
-}
-
-.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-dates button {
-  border-radius: 999px;
-}
-
-.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service {
-  padding-inline: 24px;
+  background:
+    linear-gradient(180deg, rgb(24 48 46 / 6%) 0%, rgb(24 48 46 / 70%) 54%, #18302e 100%),
+    #18302e url("/brand-home-6/neroli-booking.v1.webp") center 30% / cover no-repeat;
+  border-radius: 28px 0 0 28px;
 }
 
 .salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament {
-  height: 280px;
-  left: 50%;
-  top: 9%;
-  transform: translateX(-50%);
-  width: 280px;
+  display: none;
 }
 
-.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament i {
-  background: rgb(255 255 255 / 28%);
-  border: 1px solid rgb(255 255 255 / 62%);
-  border-radius: 70% 30% 67% 33%;
-  inset: 28px 82px;
-  transform: rotate(45deg);
-  transform-origin: 50% 100%;
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-atmosphere h2 {
+  font-size: clamp(2.5rem, 3.4vw, 3.5rem);
+  font-weight: 360;
+  line-height: .98;
 }
 
-.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament i:nth-child(2) { transform: rotate(165deg); }
-.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-ornament i:nth-child(3) { transform: rotate(285deg); }
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-atmosphere > p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Labels: sentence case, 13px and up, never tracked-out capitals. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-atmosphere > small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-head small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-venue > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-field > label,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-confirmation-eyebrow,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-progress span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-itinerary span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-itinerary b,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service-group h3,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-review dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-confirmation-details dt,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-powered,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-back,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-secondary,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-periods button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-periods span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-label-row > span,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-footer-summary small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-footer-summary > b small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-review button,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-status button {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-progress i {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service-group h3 {
+  color: #4f6663;
+  opacity: 1;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-periods small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-dates small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-dates span {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-dates button {
+  border-radius: 16px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-times button {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service-copy small,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service-meta small {
+  font-size: 13px;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-service-meta b {
+  font-family: var(--booking-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-field input,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-field textarea,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-field select,
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-venue select {
+  border-radius: 14px;
+}
+
+/* The primary move: a deep-green soft rectangle, as on the page. */
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-next {
+  background: #18302e;
+  border-radius: 14px;
+  color: #fbfdfc;
+  filter: none;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+  min-height: 54px;
+  padding: 0 24px;
+  text-transform: none;
+  transition: background-color 220ms ease, opacity 220ms ease;
+}
+
+.salon-booking-overlay.booking-experience-overlay .booking-theme-neroli .salon-booker-next:hover:not(:disabled) {
+  background: #b94a3c;
+}
+
+@media (max-width: 760px) {
+  .salon-booking-overlay.booking-experience-overlay .booking-theme-neroli {
+    border-radius: 24px 24px 0 0;
+  }
+}
 
 /* 07 · STUDIO — black / ivory precision instrument. */
 .salon-booking-overlay.booking-experience-overlay.booking-overlay-studio {

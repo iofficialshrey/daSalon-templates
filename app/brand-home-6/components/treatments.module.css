@@ -1,0 +1,351 @@
+/*
+ * The menu. The heading with the house switch beside it; a cluster of
+ * bubbles (one per kind of treatment, sized by count) that the drop fills
+ * when chosen; then the treatments as glass tiles.
+ */
+
+.treatments {
+  background: linear-gradient(180deg, var(--nh-mineral), var(--nh-mist));
+}
+
+.head {
+  display: grid;
+  gap: 28px;
+  margin-bottom: 48px;
+}
+
+.title {
+  max-width: 14ch;
+}
+
+/* ---------- House switch ---------- */
+
+.house {
+  align-content: start;
+  display: grid;
+  gap: 6px;
+}
+
+.houseLabel {
+  color: var(--nh-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.select {
+  align-items: center;
+  border-bottom: 1px solid var(--nh-line-strong);
+  display: inline-flex;
+  justify-self: start;
+  position: relative;
+}
+
+.select select {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: var(--nh-serif);
+  font-size: 30px;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 360;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  min-height: 52px;
+  padding: 0 36px 4px 0;
+}
+
+.select svg {
+  pointer-events: none;
+  position: absolute;
+  right: 4px;
+}
+
+.select:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.select select:focus-visible {
+  outline: none;
+}
+
+.houseLine {
+  color: var(--nh-muted);
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.houseStatus {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 15px;
+  font-weight: 600;
+  gap: 0 6px;
+}
+
+.houseFacts {
+  color: var(--nh-muted);
+  font-size: 15px;
+}
+
+.dot {
+  background: var(--nh-pool);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgb(134 185 181 / 30%);
+  height: 8px;
+  margin-right: 4px;
+  width: 8px;
+}
+
+/* ---------- Bubbles ---------- */
+
+.bubbles {
+  align-items: flex-end;
+  display: flex;
+  gap: 18px 26px;
+  margin-inline: calc(var(--nh-gutter) * -1);
+  overflow-x: auto;
+  padding: 8px var(--nh-gutter) 16px;
+  scrollbar-width: none;
+}
+
+.bubbles::-webkit-scrollbar {
+  display: none;
+}
+
+.bubble {
+  align-items: center;
+  cursor: pointer;
+  display: grid;
+  flex: none;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  width: max(var(--size), 112px);
+}
+
+/* Unchosen, a ring of water; chosen, the drop fills it. */
+.circle {
+  align-items: center;
+  background: radial-gradient(circle at 36% 30%, rgb(255 255 255 / 70%), rgb(255 255 255 / 0%) 46%), rgb(255 255 255 / 30%);
+  border: 1px solid rgb(24 48 46 / 18%);
+  border-radius: 50%;
+  display: flex;
+  height: var(--size);
+  justify-content: center;
+  margin-bottom: 10px;
+  transition: transform 500ms var(--nh-ease), border-color var(--nh-ui) var(--nh-ease), background-color var(--nh-ui) var(--nh-ease);
+  width: var(--size);
+}
+
+.circle[data-on] {
+  background: rgb(134 185 181 / 14%);
+  border-color: rgb(24 48 46 / 34%);
+}
+
+.slot {
+  width: 82%;
+}
+
+.bubbleName {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.bubbleCount {
+  color: var(--nh-muted);
+  font-size: 14px;
+}
+
+.bubble:has(input:focus-visible) .circle {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) {
+  .bubble:hover .circle {
+    border-color: rgb(24 48 46 / 40%);
+    transform: scale(1.04);
+  }
+}
+
+/* ---------- Tiles ---------- */
+
+.tiles {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  margin-top: 36px;
+}
+
+.tileItem {
+  display: flex;
+}
+
+.tile {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: rgb(251 253 252 / 66%);
+  border: 1px solid rgb(255 255 255 / 80%);
+  border-radius: 20px;
+  box-shadow: 0 1px 0 rgb(24 48 46 / 6%), 0 20px 40px -32px rgb(24 48 46 / 40%);
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto 1fr auto;
+  padding: 22px 22px 18px;
+  text-align: left;
+  transition: transform 500ms var(--nh-ease), box-shadow 500ms var(--nh-ease), background-color var(--nh-ui) var(--nh-ease);
+  width: 100%;
+}
+
+.tileName {
+  font-family: var(--nh-serif);
+  font-size: 23px;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 380;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.tileText {
+  color: var(--nh-muted);
+  display: -webkit-box;
+  font-size: 15px;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.tileFoot {
+  align-items: center;
+  border-top: 1px solid var(--nh-line);
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 14px;
+}
+
+.tileTime {
+  color: var(--nh-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tilePrice {
+  font-family: var(--nh-serif);
+  font-size: 22px;
+  font-variant-numeric: lining-nums;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 400;
+  line-height: 1;
+  margin-left: auto;
+}
+
+.tileGo {
+  align-items: center;
+  background: var(--nh-deep);
+  border-radius: 12px;
+  color: var(--nh-white);
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  transition: background-color var(--nh-ui) var(--nh-ease);
+  width: 36px;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .tile:hover {
+    background: rgb(251 253 252 / 92%);
+    box-shadow: 0 1px 0 rgb(24 48 46 / 6%), 0 28px 50px -30px rgb(24 48 46 / 50%);
+    transform: translateY(-4px);
+  }
+}
+
+@media (hover: hover) {
+  .tile:hover .tileGo {
+    background: var(--nh-coral-ink);
+  }
+}
+
+/* ---------- States ---------- */
+
+.waiting {
+  display: grid;
+  gap: 20px;
+}
+
+.pulse {
+  animation: bubble-pulse 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes bubble-pulse {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+.state {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.stateText {
+  font-family: var(--nh-serif);
+  font-size: 24px;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 360;
+  line-height: 1.3;
+  max-width: 30ch;
+}
+
+@media (min-width: 900px) {
+  .head {
+    align-items: end;
+    column-gap: 64px;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, auto);
+    margin-bottom: 56px;
+  }
+
+  .bubbles {
+    flex-wrap: wrap;
+    margin-inline: 0;
+    overflow: visible;
+    padding-inline: 0;
+  }
+
+  .tiles {
+    gap: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tileItem {
+    animation: tile-in 700ms var(--nh-ease) both;
+  }
+
+  .tileItem:nth-child(2) { animation-delay: 50ms; }
+  .tileItem:nth-child(3) { animation-delay: 100ms; }
+  .tileItem:nth-child(n + 4) { animation-delay: 150ms; }
+}
+
+@keyframes tile-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+
+  .circle,
+  .tile,
+  .tileGo {
+    transition: none;
+  }
+}

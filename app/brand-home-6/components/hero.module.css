@@ -1,0 +1,159 @@
+/*
+ * The surface. Phones: the lens on top, the copy under it. Wide screens: the
+ * copy left, the lens right. The lens drifts and the light in it moves as the
+ * page leaves (scroll-driven; still where unsupported).
+ */
+
+.hero {
+  background:
+    radial-gradient(60% 70% at 78% 40%, rgb(185 210 202 / 50%), transparent 70%),
+    var(--nh-mineral);
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: clip;
+  padding: calc(var(--nh-header) + 20px) 0 56px;
+  position: relative;
+}
+
+.grid {
+  align-content: center;
+  display: grid;
+  gap: 36px;
+}
+
+.copy {
+  order: 2;
+}
+
+.line {
+  display: inline-block;
+}
+
+/* The full stop: a resting place for the drop, sized to the type. */
+.stop {
+  margin-left: 0.06em;
+  vertical-align: baseline;
+  width: 0.3em;
+}
+
+.lead {
+  margin-top: 22px;
+  max-width: 32ch;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  margin-top: 32px;
+}
+
+/* ---------- The lens ---------- */
+
+.lens {
+  aspect-ratio: 1;
+  justify-self: center;
+  max-width: 440px;
+  order: 1;
+  position: relative;
+  width: 84%;
+}
+
+/* A ring of light just outside the glass. */
+.lens::before {
+  border: 1px solid rgb(24 48 46 / 16%);
+  border-radius: 50%;
+  content: "";
+  inset: -14px;
+  position: absolute;
+}
+
+.lensInner {
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 60%),
+    0 40px 80px -40px rgb(24 48 46 / 45%);
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.img {
+  object-fit: cover;
+  object-position: 50% 52%;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    align-items: center;
+    column-gap: clamp(40px, 6vw, 96px);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  }
+
+  .copy {
+    order: 0;
+  }
+
+  .lens {
+    max-width: min(600px, calc(100svh - var(--nh-header) - 120px));
+    order: 0;
+    width: 100%;
+  }
+
+  .lead {
+    margin-top: 28px;
+  }
+
+  .actions {
+    margin-top: 40px;
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .line {
+    animation: hero-rise 1.3s var(--nh-ease) both;
+  }
+
+  .line + .line {
+    animation-delay: 120ms;
+  }
+
+  .lead {
+    animation: hero-rise 1.3s var(--nh-ease) 260ms both;
+  }
+
+  .actions {
+    animation: hero-rise 1.3s var(--nh-ease) 380ms both;
+  }
+
+  .lens {
+    animation: hero-lens 1.8s var(--nh-ease) both;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .img {
+      animation: hero-drift linear both;
+      animation-range: 0 100vh;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes hero-lens {
+  from { clip-path: circle(12% at 50% 50%); opacity: 0; }
+  to { clip-path: circle(75% at 50% 50%); opacity: 1; }
+}
+
+@keyframes hero-drift {
+  to { transform: scale(1.12) translateY(4%); }
+}

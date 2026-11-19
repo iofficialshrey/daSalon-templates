@@ -1,0 +1,231 @@
+/*
+ * Membership, rituals and gift cards: the deep band. A row of three tabs
+ * with the drop resting under the chosen one; three cards per panel.
+ */
+
+.offers {
+  background:
+    radial-gradient(70% 50% at 80% 0%, rgb(134 185 181 / 18%), transparent 70%),
+    linear-gradient(180deg, var(--nh-deep), #13292a);
+}
+
+.head {
+  display: grid;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+
+.tabs {
+  border-bottom: 1px solid var(--nh-line-dark);
+  display: flex;
+  gap: clamp(20px, 4vw, 48px);
+  margin-inline: calc(var(--nh-gutter) * -1);
+  overflow-x: auto;
+  padding-inline: var(--nh-gutter);
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Room under each tab for the drop to rest in. */
+.tab {
+  color: var(--nh-muted-dark);
+  flex: none;
+  font-family: var(--nh-serif);
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-variation-settings: "SOFT" 100;
+  font-weight: 340;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  min-height: 72px;
+  padding: 10px 0 34px;
+  position: relative;
+  transition: color var(--nh-ui) var(--nh-ease);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--nh-mineral);
+}
+
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--nh-mineral);
+  }
+}
+
+.slot {
+  bottom: 6px;
+  left: calc(50% - 9px);
+  position: absolute;
+  width: 18px;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.panelLine {
+  color: var(--nh-muted-dark);
+  font-size: clamp(17px, 1.3vw, 19px);
+  line-height: 1.55;
+  margin: 28px 0 40px;
+  max-width: 46ch;
+}
+
+/* ---------- Cards ---------- */
+
+.list {
+  display: grid;
+  gap: 16px;
+  grid-auto-columns: min(82vw, 360px);
+  grid-auto-flow: column;
+  margin-inline: calc(var(--nh-gutter) * -1);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 10px var(--nh-gutter) 24px;
+  scroll-padding-inline: var(--nh-gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.card {
+  color: var(--nh-mineral);
+  display: grid;
+  gap: 22px;
+  text-align: left;
+  width: 100%;
+}
+
+.text {
+  display: grid;
+  gap: 8px;
+}
+
+.line {
+  color: var(--nh-muted-dark);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 3em;
+}
+
+.foot {
+  align-items: baseline;
+  border-top: 1px solid var(--nh-line-dark);
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 14px;
+}
+
+.pay {
+  font-family: var(--nh-serif);
+  font-size: 26px;
+  font-variant-numeric: lining-nums;
+  font-variation-settings: "SOFT" 100;
+  font-weight: 380;
+  line-height: 1;
+}
+
+.worth {
+  color: var(--nh-muted-dark);
+  font-size: 14px;
+}
+
+.go,
+.bought {
+  align-self: center;
+  margin-left: auto;
+}
+
+.go {
+  align-items: center;
+  background: rgb(238 243 240 / 10%);
+  border-radius: 12px;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  transition: background-color var(--nh-ui) var(--nh-ease), color var(--nh-ui) var(--nh-ease);
+  width: 36px;
+}
+
+.bought {
+  align-items: center;
+  background: var(--nh-celadon);
+  border-radius: 10px;
+  color: var(--nh-deep);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 6px;
+  line-height: 1;
+  padding: 8px 10px;
+}
+
+@media (hover: hover) {
+  .card:hover .go {
+    background: var(--nh-celadon);
+    color: var(--nh-deep);
+  }
+}
+
+.note {
+  color: var(--nh-muted-dark);
+  font-size: 14px;
+  margin-top: 32px;
+}
+
+@media (min-width: 900px) {
+  .list {
+    gap: clamp(24px, 3vw, 44px);
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-inline: 0;
+    overflow: visible;
+    padding: 10px 0 0;
+    scroll-snap-type: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  .head {
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .tabs {
+    border-bottom: 0;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel:not([hidden]) .item {
+    animation: offers-rise 800ms var(--nh-ease) both;
+  }
+
+  .panel:not([hidden]) .item:nth-child(2) { animation-delay: 80ms; }
+  .panel:not([hidden]) .item:nth-child(3) { animation-delay: 160ms; }
+}
+
+@keyframes offers-rise {
+  from { opacity: 0; transform: translateY(24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab,
+  .go {
+    transition: none;
+  }
+}
